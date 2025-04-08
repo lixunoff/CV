@@ -1,0 +1,135 @@
+// components/providers/app-provider.tsx
+"use client";
+
+import React, { createContext, useContext, useEffect, useState } from "react";
+import enTranslations from '../../locales/en.js';
+import uaTranslations from '../../locales/ua.js';
+
+type Theme = "light" | "dark";
+type Language = "en" | "ua";
+
+interface AppContextProps {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+  language: Language;
+  setLanguage: (language: Language) => void;
+  t: (key: string) => string | any;
+}
+
+const translations = {
+  en: enTranslations,
+  ua: uaTranslations
+};
+
+const AppContext = createContext<AppContextProps | undefined>(undefined);
+
+export function AppProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<Theme>("light");
+  const [language, setLanguage] = useState<Language>("en");
+  const [mounted, setMounted] = useState(false);
+
+  // Функция для определения текущей системной темы
+  const getSystemTheme = (): Theme => {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return 'light'; // Fallback на случай, если matchMedia недоступен
+  };
+
+  // Эффект для первоначальной настройки
+  useEffect(() => {
+    // Инициализация темы
+    const savedTheme = localStorage.getItem("theme") as Theme;
+    if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
+      setTheme(savedTheme);
+    } else {
+      const systemPreference = getSystemTheme();
+      console.log("System theme detected:", systemPreference);
+      setTheme(systemPreference);
+    }
+
+    // Инициализация языка
+    const savedLanguage = localStorage.getItem("language") as Language;
+    if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ua")) {
+      setLanguage(savedLanguage);
+    }
+    
+    setMounted(true);
+  }, []);
+
+  // Отдельный эффект для обновления DOM после установки темы
+  useEffect(() => {
+    if (mounted) {
+      document.documentElement.classList.toggle("dark", theme === "dark");
+      localStorage.setItem("theme", theme);
+    }
+  }, [theme, mounted]);
+
+  // Обновление localStorage при изменении языка
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem("language", language);
+    }
+  }, [language, mounted]);
+
+  // Function to get translation by key
+  const t = (key: string): any => {
+    try {
+      const keys = key.split('.');
+      let value: any = translations[language];
+      
+      for (const k of keys) {
+        if (!value || typeof value !== 'object' || !(k in value)) {
+          console.warn(`Translation key not found: ${key}`);
+          return key;
+        }
+        value = value[k];
+      }
+      
+      return value;
+    } catch (error) {
+      console.error('Translation error:', error);
+      return key;
+    }
+  };
+
+  // Предотвращаем проблемы с SSR
+  if (!mounted) {
+    return <>{children}</>;
+  }
+
+  return (
+    <AppContext.Provider value={{ theme, setTheme, language, setLanguage, t }}>
+      {children}
+    </AppContext.Provider>
+  );
+}
+
+export function useApp() {
+    const context = useContext(AppContext);
+    
+    // Защитная проверка: если мы во время серверного рендеринга или вне AppProvider,
+    // возвращаем заглушки вместо выброса ошибки
+    if (typeof window === 'undefined' || context === undefined) {
+      return {
+        theme: 'light',
+        setTheme: () => {},
+        language: 'en',
+        setLanguage: () => {},
+        t: (key: string) => key
+      };
+    }
+    
+    return context;
+}  
+
+// Для совместимости с существующим кодом
+export function useTheme() {
+  const { theme, setTheme } = useApp();
+  return { theme, setTheme };
+}
+
+export function useLanguage() {
+  const { language, setLanguage, t } = useApp();
+  return { language, setLanguage, t };
+}

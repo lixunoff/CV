@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+    --muted: #606060;
+    --accent: #ff0000;
+    --border: #d9d9d9;
+    
+    --background-dark: #1b1b1b;
+    --foreground-dark: #ffffff;
+    --muted-dark: #bbbbbb;
+    --accent-dark: #ff6363;
+    --border-dark: #3b3b3b;
+    
+    --font-inter: 'Inter', sans-serif;
+  }
+
+  .dark {
+    --background: var(--background-dark);
+    --foreground: var(--foreground-dark);
+    --muted: var(--muted-dark);
+    --accent: var(--accent-dark);
+    --border: var(--border-dark);
+  }
+}
+
+@layer base {
+  :root {
+    --font-inter: 'Inter', sans-serif;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-inter);
+  }
+}
