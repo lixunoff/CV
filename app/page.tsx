@@ -30,8 +30,9 @@ export default function Home() {
   return (
     <main className="w-full px-4 py-10 flex justify-center items-start">
       <div className="flex-1 max-w-[676px] flex flex-col justify-start items-start gap-40">
+        <Header />
+
         <div className="self-stretch flex flex-col justify-start items-center gap-20">
-          <Header />
           <ProfileHero />
           
           <div className="self-stretch flex flex-col justify-start items-start gap-10">

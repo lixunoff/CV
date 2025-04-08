@@ -12,7 +12,7 @@ export function ProfileHero() {
 
   return (
     <div className="self-stretch inline-flex justify-between items-start">
-      <div className="flex-1 inline-flex flex-col justify-start items-start gap-6">
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-3">
         <div className="w-24 h-24 relative">
           <Image
             src="/images/avatar.jpg"

@@ -27,6 +27,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
   const [language, setLanguage] = useState<Language>("en");
   const [mounted, setMounted] = useState(false);
+  const [translationsLoaded, setTranslationsLoaded] = useState(false);
 
   // Функция для определения текущей системной темы
   const getSystemTheme = (): Theme => {
@@ -55,6 +56,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     
     setMounted(true);
+    
+    // Имитация задержки загрузки переводов
+    const timer = setTimeout(() => {
+      setTranslationsLoaded(true);
+    }, 500);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   // Отдельный эффект для обновления DOM после установки темы
@@ -93,9 +101,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Предотвращаем проблемы с SSR
-  if (!mounted) {
-    return <>{children}</>;
+  // Предотвращаем проблемы с SSR и ожидаем загрузку переводов
+  if (!mounted || !translationsLoaded) {
+    // Просто пустой фон без элементов
+    return (
+      <div className="min-h-screen bg-background dark:bg-background-dark"></div>
+    );
   }
 
   return (
@@ -106,22 +117,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useApp() {
-    const context = useContext(AppContext);
-    
-    // Защитная проверка: если мы во время серверного рендеринга или вне AppProvider,
-    // возвращаем заглушки вместо выброса ошибки
-    if (typeof window === 'undefined' || context === undefined) {
-      return {
-        theme: 'light',
-        setTheme: () => {},
-        language: 'en',
-        setLanguage: () => {},
-        t: (key: string) => key
-      };
-    }
-    
-    return context;
-}  
+  const context = useContext(AppContext);
+  if (context === undefined) {
+    throw new Error("useApp must be used within an AppProvider");
+  }
+  return context;
+}
 
 // Для совместимости с существующим кодом
 export function useTheme() {

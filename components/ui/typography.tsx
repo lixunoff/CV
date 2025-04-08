@@ -52,7 +52,7 @@ export function LeadText({ children, className }: TypographyProps) {
 export function TabText({ children, className, active = false }: TypographyProps & { active?: boolean }) {
     return (
       <div className={cn(
-        "text-sm font-semibold font-Inter uppercase transition-colors duration-200",
+        "text-sm font-normal font-Inter uppercase transition-colors duration-200",
         active 
           ? "text-accent dark:text-accent-dark" 
           : "text-muted hover:text-foreground dark:text-muted-dark dark:hover:text-foreground-dark",
