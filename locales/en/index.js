@@ -1,4 +1,6 @@
-// locales/en.js
+// locales/en/index.js
+import cases from './cases';
+
 export default {
   profile: {
     name: "Denis Liksunov",
@@ -8,7 +10,8 @@ export default {
   nav: {
     experience: "Experience",
     cases: "Cases",
-    blog: "Blog"
+    blog: "Articles",
+    backToPortfolio: "Home"
   },
   work: {
     title: "Work",
@@ -95,5 +98,9 @@ export default {
     email: "Send email",
     telegram: "Telegram",
     linkedin: "LinkedIn"
+  },
+  cases: {
+    title: "Cases",
+    items: cases
   }
 };

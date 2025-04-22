@@ -11,12 +11,14 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="self-stretch inline-flex justify-between items-center">
-      <FooterText>{currentYear}</FooterText>
-      <div className="flex justify-start items-center gap-10">
+    <div className="self-stretch flex justify-between items-center w-full">
+      <div>
+        <FooterText>{currentYear}</FooterText>
+      </div>
+      <div className="flex justify-end items-center gap-10">
         <a 
           href="mailto:lixunoff@gmail.com" 
-          className={`transition-colors hover:underline ${theme === 'light' ? 'text-muted' : 'text-muted'}`}
+          className="transition-colors hover:underline text-muted"
         >
           <FooterText>{t('footer.email')}</FooterText>
         </a>
@@ -24,7 +26,7 @@ export function Footer() {
           href="https://t.me/lixunoff" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className={`transition-colors hover:underline ${theme === 'light' ? 'text-muted' : 'text-muted'}`}
+          className="transition-colors hover:underline text-muted"
         >
           <FooterText>{t('footer.telegram')}</FooterText>
         </a>
@@ -32,7 +34,7 @@ export function Footer() {
           href="https://linkedin.com/in/lixunoff" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className={`transition-colors hover:underline ${theme === 'light' ? 'text-muted' : 'text-muted'}`}
+          className="transition-colors hover:underline text-muted"
         >
           <FooterText>{t('footer.linkedin')}</FooterText>
         </a>

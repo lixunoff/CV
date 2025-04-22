@@ -1,4 +1,6 @@
-// locales/ua.js
+// locales/en/index.js
+import cases from './cases';
+
 export default {
   profile: {
     name: "Денис Ліксунов",
@@ -8,7 +10,8 @@ export default {
   nav: {
     experience: "Досвід",
     cases: "Кейси",
-    blog: "Блог"
+    blog: "Статті",
+    backToPortfolio: "Додому"
   },
   work: {
     title: "Робота",
@@ -95,5 +98,9 @@ export default {
     email: "Надіслати email",
     telegram: "Telegram",
     linkedin: "LinkedIn"
+  },
+  cases: {
+      title: "Cases",
+      items: cases
   }
 };

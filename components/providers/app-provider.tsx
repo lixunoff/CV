@@ -2,8 +2,8 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import enTranslations from '../../locales/en.js';
-import uaTranslations from '../../locales/ua.js';
+import enTranslations from '../../locales/en/index.js';
+import uaTranslations from '../../locales/ua/index.js';
 
 type Theme = "light" | "dark";
 type Language = "en" | "ua";
@@ -85,6 +85,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     try {
       const keys = key.split('.');
       let value: any = translations[language];
+      
+      // Для отладки
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Key requested:', key);
+      }
       
       for (const k of keys) {
         if (!value || typeof value !== 'object' || !(k in value)) {

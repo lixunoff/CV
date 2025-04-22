@@ -1,7 +1,7 @@
 // components/layout/navigation-tabs.tsx
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useTheme, useLanguage } from "../providers/app-provider";
 import { TabText } from '../ui/typography';
 

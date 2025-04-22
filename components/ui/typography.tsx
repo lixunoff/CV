@@ -8,7 +8,7 @@ interface TypographyProps {
 
 export function Heading1({ children, className }: TypographyProps) {
   return (
-    <h1 className={cn("text-[32px] font-semibold font-Inter", className)}>
+    <h1 className={cn("text-[32px] font-semibold font-Inter leading-10", className)}>
       {children}
     </h1>
   );
@@ -16,7 +16,7 @@ export function Heading1({ children, className }: TypographyProps) {
 
 export function Heading2({ children, className }: TypographyProps) {
   return (
-    <h2 className={cn("text-2xl font-semibold font-Inter leading-loose", className)}>
+    <h2 className={cn("text-2xl font-semibold font-Inter leading-8", className)}>
       {children}
     </h2>
   );

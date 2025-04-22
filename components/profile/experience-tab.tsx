@@ -15,7 +15,7 @@ export function ExperienceTab() {
   const experienceItems = t('work.experience');
 
   return (
-    <div className="self-stretch flex flex-col justify-start items-start gap-10">
+    <div className="self-stretch flex flex-col justify-start items-start gap-12">
       <LeadText>{t('profile.bio')}</LeadText>
 
       <Heading2>{workTitle}</Heading2>
