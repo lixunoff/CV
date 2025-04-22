@@ -126,7 +126,7 @@ export default function CasePage() {
                 <span className="text-[80px] mx-4">🐱</span>
               </>
             ) : (
-              <span className="text-[100px]">{caseData.emoji}</span>
+              <span className="text-[80px] mx-4">{caseData.emoji}</span>
             )}
           </div>
           
