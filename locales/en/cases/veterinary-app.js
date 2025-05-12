@@ -81,8 +81,11 @@ export default {
                 "Evaluation criteria: ease of appointment booking, availability of reminders for treatments and vaccinations, possibility of online consultations, support for multiple pets in one account, UX/UI quality."
               ],
               figmaPreview: {
-                  url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=35-40&t=I4DCY9AAF86MYyiW-4",
-                  title: "Full competitor analysis and comparison table:"
+                id: "figma-prototype",
+                type: "figmaImageLink",
+                title: "Прототип онбордингу та запису на офлайн-візит",
+                imageUrl: "/images/Vet-Prototype.png",
+                figmaUrl: "https://www.figma.com/proto/qYnVmPsceXBUqKwYktOK56/Vet?page-id=0%3A1&node-id=19-4478&viewport=1329%2C219%2C0.12&scaling=scale-down"
               }
             },
             {
@@ -591,6 +594,29 @@ export default {
         }
       ]
     },      
+    {
+      id: "section11",
+      title: "Application design",
+      components: [
+        {
+          id: "design-intro",
+          type: "richText",
+          content:
+            "The goal of the Discovery stage was not to create a complete application design. The main task was to present the client with a visual concept — what the application could be in terms of style, interface structure, and UX principles. Full design development involves creating interactive prototypes, testing key scenarios, collecting feedback, iterations, and improving the user experience.",
+          details: [
+            {
+              label: "What was done:",
+              items: [
+                "Built a visual concept of the main scenario.",
+                "Demonstrated onboarding of a current offline clinic client.",
+                "The prototype covers the scenario of booking an offline visit.",
+                "All screens correspond to the formed insights and requirements of the user role."
+              ]
+            }
+          ]
+        }
+      ]
+    },
     {
       id: "section12",
       title: "Discovery stage summary",

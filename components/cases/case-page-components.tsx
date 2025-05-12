@@ -3,7 +3,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import Link from 'next/link';
-import { useTheme } from '../providers/app-provider';
+import { useTheme, useLanguage } from '../providers/app-provider';
 import { getColorByIndex, getColorClassByIndex } from '../../lib/color-utils';
 
 // Typography components for case pages
@@ -70,41 +70,28 @@ export const CaseLink = ({ href, children }: { href: string, children: React.Rea
     );
 };
 
-export const FigmaPreview = ({ url, title }: { url: string, title?: string }) => {
-    // Проверяем тип ссылки Figma (файл или борда)
-    const isFigmaBoard = url.includes('/board/');
-    
-    // Создаем URL для встраивания
-    let embedUrl = '';
-    
-    if (isFigmaBoard) {
-      // Для Figma Board
-      const boardId = url.match(/\/board\/([^/?]+)/)?.[1] || '';
-      const nodeId = url.match(/node-id=([^&]+)/)?.[1] || '';
-      embedUrl = `https://embed.figma.com/board/${boardId}/${url.split('?')[0].split('/').pop()}?node-id=${nodeId}&embed-host=share`;
-    } else {
-      // Для обычных Figma файлов
-      const fileId = url.match(/file\/([^/?]+)/)?.[1] || '';
-      const nodeId = url.match(/node-id=([^&]+)/)?.[1] || '';
-      embedUrl = `https://www.figma.com/embed?embed_host=share&url=https://www.figma.com/file/${fileId}?node-id=${nodeId}`;
-    }
-    
-    return (
-      <div className="mt-4 mb-8 w-full">
-        {title && <div className="text-muted text-sm mb-2">{title}</div>}
-        <div className="w-full h-[250px] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
-          <iframe 
-            style={{ border: "1px solid rgba(0, 0, 0, 0.1)" }} 
-            width="100%" 
-            height="100%" 
-            src={embedUrl}
-            allowFullScreen
-            title={title || "Figma Preview"}
-          />
-        </div>
-      </div>
-    );
-}; 
+// Обновленный компонент FigmaImageLink с изображением вверху и текстом внизу
+export const FigmaImageLink = ({ imageUrl, figmaUrl, title }: { imageUrl: string, figmaUrl: string, title?: string }) => {
+  const { language } = useLanguage();
+  
+  const linkText = language === 'ua' 
+    ? 'подивитися у Figma' 
+    : 'view in Figma';
+  
+  return (
+    <div className="w-full my-6">
+      <p className="mb-2">
+        {title && <>{title} </>}
+        <CaseLink href={figmaUrl}>{linkText}</CaseLink>
+      </p>
+      <img 
+        src={imageUrl} 
+        alt={title || "Figma Preview"} 
+        className="w-full h-auto" 
+      />
+    </div>
+  );
+};
 
 // Universal iframe embed for prototypes or maps
 export const CaseIframe = ({ title, src }: { title?: string; src: string }) => {

@@ -80,10 +80,11 @@ export default {
                   "Досліджені сервіси: PetDesk, PawSquad, Vets Now.",
                   "Критерії оцінки: простота запису на прийом, наявність нагадувань про обробки і вакцинації, можливість онлайн-консультацій, підтримка кількох тварин в обліковому записі, UX/UI якість."
                 ],
-                figmaPreview: {
-                    url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=35-40&t=I4DCY9AAF86MYyiW-4",
-                    title: "Повний аналіз конкурентів та таблиця порівнянь:"
-                }
+                figmaLink: {
+                  url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=35-40&t=I4DCY9AAF86MYyiW-4",
+                  title: "Повний аналіз конкурентів та таблиця порівнянь –",
+                  imageUrl: "/images/Vet-Competitors.png"
+              }
               },
               {
                 label: "Онлайн-опитування користувачів",
@@ -93,10 +94,12 @@ export default {
                   "Формат: анонімне опитування із 24 питань.",
                   "Мета: краще зрозуміти бар'єри, очікування та реальні потреби як поточних клієнтів клініки, так і потенційних нових користувачів."
                 ],
-                figmaPreview: {
-                    url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Survey-for-Pet-Owners--Experience-with-Veterinary-Clinics-and-Digital-Service?node-id=69-84&t=rwXYuCAN6fRoAbOF-4",
-                    title: "Приклад форми та опрацювання відповідей:"
-                }
+                figmaLink: {
+                  url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Survey-for-Pet-Owners--Experience-with-Veterinary-Clinics-and-Digital-Service?node-id=69-84&t=rwXYuCAN6fRoAbOF-4",
+                  title: "Приклад форми та опрацювання відповідей –",
+                  imageUrl: "/images/Vet-Survey.png"
+              }
+              
               },
               {
                 label: "Ключові висновки з аналізу ринку та потреб користувачів",
@@ -381,10 +384,11 @@ export default {
                   "Щоб спростити постановку задач для дизайнерів і розробників.",
                   "Щоб зберегти фокус на реальних потребах користувачів у процесі розробки."
                 ],
-                figmaPreview: {
+                figmaLink: {
                   url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=230-1980&t=NslWTNXFmnjQqh1X-4",
-                  title: "Перелік User Stories у Figma:"
-                }
+                  title: "Перелік User Stories –",
+                  imageUrl: "/images/Vet-UserScenarios.png"
+              }
               }
             ]
           }
@@ -409,10 +413,11 @@ export default {
                   "Створити персоналізовану комунікацію без прямого тиску.",
                   "Передбачити бар'єри та емоційний стан користувача на кожному етапі."
                 ],
-                figmaPreview: {
-                    url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Survey-for-Pet-Owners--Experience-with-Veterinary-Clinics-and-Digital-Service?node-id=35-45&t=HE3QyvnAETdQnZ14-4",
-                    title: "Повна Customer Journey Map:"
-                }
+                figmaLink: {
+                  url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Survey-for-Pet-Owners--Experience-with-Veterinary-Clinics-and-Digital-Service?node-id=35-45&t=HE3QyvnAETdQnZ14-4",
+                  title: "Повна Customer Journey Map –",
+                  imageUrl: "/images/Vet-CJM.png"
+              }
               }
             ]
           }
@@ -509,9 +514,10 @@ export default {
                   "Визначити залежності між модулями й відфільтрувати зайві або необґрунтовані екрани.",
                   "Виявити потенційні дублювання функціоналу або зони, що залишаються непокритими."
                 ],
-                figmaPreview: {
+                figmaLink: {
                   url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=485-12502&t=NslWTNXFmnjQqh1X-4",
-                  title: "Карта екранів у Figma"
+                  title: "Карта екранів –",
+                  imageUrl: "/images/Vet-ScreenMap.png"
                 }
               },
               {
@@ -523,9 +529,10 @@ export default {
                   "Функціональне призначення кожного розділу — від реєстрації та запису до візиту, до підтримки після консультації.",
                   "Взаємозв'язки між ключовими модулями: профіль, улюбленці, консультації, запис, історія візитів, чат підтримки."
                 ],
-                figmaPreview: {
+                figmaLink: {
                   url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=826-3047&t=NslWTNXFmnjQqh1X-4",
-                  title: "Інформаційна архітектура у Figma"
+                  title: "Інформаційна архітектура –",
+                  imageUrl: "/images/Vet-IA.png"
                 }
               },
               {
@@ -562,15 +569,17 @@ export default {
                 ]
               },
               {
-                figmaPreview: {
+                figmaLink: {
                   url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=1098-4343&t=I1eMDwowlNXfBWWH-4",
-                  title: "User Flow — Sign in / Sign up"
-                }
+                  title: "User Flow Sign in/up –",
+                  imageUrl: "/images/Vet-UserFlow.png"
+              }
               },
               {
-                figmaPreview: {
+                figmaLink: {
                   url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=1073-2197&t=I1eMDwowlNXfBWWH-4",
-                  title: "User Flow — Онлайн / Офлайн запис"
+                  title: "User Flow Онлайн/Офлайн запис –",
+                  imageUrl: "/images/Vet-UserFlow.png"
                 }
               },
               {
@@ -591,6 +600,36 @@ export default {
           }
         ]
       },      
+      {
+        id: "section11",
+        title: "Дизайн застосунку",
+        components: [
+          {
+            id: "design-intro",
+            type: "richText",
+            content:
+              "Ціллю Discovery-етапу не було створення повного дизайну застосунку. Основним завданням було представити замовнику візуальний концепт — яким може бути застосунок з точки зору стилю, структури інтерфейсу та UX-принципів. Повноцінна розробка дизайну передбачає створення інтерактивних прототипів, тестування ключових сценаріїв, збір фідбеку, ітерації та покращення досвіду користувача.",
+            details: [
+              {
+                label: "Що було зроблено:",
+                items: [
+                  "Побудовано візуальний концепт основного сценарію.",
+                  "Продемонстровано онбординг поточного офлайн-клієнта клініки.",
+                  "Прототип охоплює сценарій запису на офлайн-візит.",
+                  "Усі екрани відповідають сформованим інсайтам та вимогам ролі користувача."
+                ]
+              },
+              {
+              figmaLink: {
+                url: "https://www.figma.com/proto/qYnVmPsceXBUqKwYktOK56/Vet?page-id=0%3A1&node-id=19-4478&viewport=1329%2C219%2C0.12&scaling=scale-down",
+                title: "Прототип онбордингу та запису на офлайн-візит –",
+                imageUrl: "/images/Vet-Prototype.png"
+              }
+             }
+            ]
+          }
+        ]
+      },
       {
         id: "section12",
         title: "Підсумки Discovery-етапу",

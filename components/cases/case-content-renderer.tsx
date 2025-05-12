@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { 
   CaseTitle, 
   CaseText, 
@@ -12,8 +12,8 @@ import {
   CaseTwoColumns,
   CaseColumn,
   CaseLink,
-  FigmaPreview,
-  CaseIframe
+  CaseIframe,
+  FigmaImageLink
 } from './case-page-components';
 import { useTheme, useLanguage } from '../providers/app-provider';
 
@@ -23,27 +23,7 @@ interface CaseContentRendererProps {
 
 export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
   const { theme } = useTheme();
-  const { language } = useLanguage(); // Импортируем хук useLanguage
-  const [isMobile, setIsMobile] = useState(false);
-  
-  // Определяем тип устройства при монтировании компонента и при изменении размера окна
-  useEffect(() => {
-    // Функция для определения мобильного устройства
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    // Проверяем сразу при загрузке
-    checkMobile();
-    
-    // Добавляем слушатель изменения размера окна
-    window.addEventListener('resize', checkMobile);
-    
-    // Удаляем слушатель при размонтировании компонента
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-    };
-  }, []);
+  const { language } = useLanguage();
   
   // Если нет секций, возвращаем null
   if (!sections || !Array.isArray(sections) || sections.length === 0) return null;
@@ -99,11 +79,12 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
                     </div>
                   )}
       
-                  {/* Figma превью */}
-                  {detail.figmaPreview && (
-                    <FigmaPreview 
-                      url={detail.figmaPreview.url} 
-                      title={detail.figmaPreview.title} 
+                  {/* Используем обновленный компонент FigmaImageLink */}
+                  {detail.figmaLink && (
+                    <FigmaImageLink 
+                      imageUrl={detail.figmaLink.imageUrl}
+                      figmaUrl={detail.figmaLink.url}
+                      title={detail.figmaLink.title} 
                     />
                   )}
                 </React.Fragment>
@@ -246,56 +227,27 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
           </div>
         );
       
-      // Обработка типа iframe - на мобильных показываем ссылку вместо iframe
-      case 'iframe':
-        if (isMobile) {
-          // Для мобильных устройств показываем только ссылку
-          // Преобразуем URL embed iframe в обычный URL Figma
-          const figmaUrl = component.src.replace('embed.figma.com/proto', 'www.figma.com/proto');
-          
-          // Мультиязычные тексты
-          const langText: {[key: string]: {message: string, button: string}} = {
-            en: {
-              message: "For mobile devices, the prototype is available at a direct link:",
-              button: "Open prototype in Figma"
-            },
-            ua: {
-              message: "Для мобільних пристроїв прототип доступний за прямим посиланням:",
-              button: "Відкрити прототип у Figma"
-            }
-          };
-          
-          // Получаем текст в зависимости от текущего языка
-          const text = langText[language] || langText.en;
-          
-          return (
-            <div key={component.id} className="mt-6 mb-8">
-              <div className="text-muted text-sm mb-2">{component.title}</div>
-              <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 text-center">
-                <p className="text-muted mb-4">{text.message}</p>
-                <a 
-                  href={figmaUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-4 py-2 bg-accent text-white rounded-md hover:bg-opacity-80 transition-colors"
-                >
-                  {text.button}
-                </a>
-              </div>
-            </div>
-          );
-        } else {
-          // Для десктопов показываем iframe как обычно
-          return (
-            <CaseIframe
-              key={component.id}
-              title={component.title}
-              src={component.src}
-            />
-          );
-        }
+      // Добавляем новый тип компонента - figmaImageLink
+      case 'figmaImageLink':
+        return (
+          <FigmaImageLink
+            key={component.id}
+            title={component.title}
+            imageUrl={component.imageUrl}
+            figmaUrl={component.figmaUrl}
+          />
+        );
       
-      // Поддержка для типа custom
+      // Для iframe используем стандартный компонент
+      case 'iframe':
+        return (
+          <CaseIframe
+            key={component.id}
+            title={component.title}
+            src={component.src}
+          />
+        );
+      
       case 'custom':
         return (
           <div key={component.id}>
