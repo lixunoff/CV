@@ -106,6 +106,25 @@ export const FigmaPreview = ({ url, title }: { url: string, title?: string }) =>
     );
 }; 
 
+// Universal iframe embed for prototypes or maps
+export const CaseIframe = ({ title, src }: { title?: string; src: string }) => {
+  return (
+    <div className="w-full mt-4 mb-8">
+      {title && <div className="text-muted text-sm mb-2">{title}</div>}
+      <div className="w-full h-[450px] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+        <iframe
+          src={src}
+          width="100%"
+          height="100%"
+          allowFullScreen
+          title={title || "Embedded View"}
+          style={{ border: "1px solid rgba(0, 0, 0, 0.1)" }}
+        />
+      </div>
+    </div>
+  );
+};
+
 export const CaseEmoji = ({ emoji, size = "8xl" }: { emoji: string, size?: "8xl" | "6xl" | "4xl" }) => {
   const sizeClasses = {
     "8xl": "text-8xl",

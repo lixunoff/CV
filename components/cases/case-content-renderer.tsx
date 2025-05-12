@@ -1,4 +1,3 @@
-// components/cases/case-content-renderer.tsx
 "use client";
 
 import React from 'react';
@@ -13,7 +12,8 @@ import {
   CaseTwoColumns,
   CaseColumn,
   CaseLink,
-  FigmaPreview
+  FigmaPreview,
+  CaseIframe
 } from './case-page-components';
 import { useTheme } from '../providers/app-provider';
 
@@ -36,61 +36,60 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
       case 'text':
         return <CaseText key={component.id}>{component.content}</CaseText>;
       
-        case 'richText':
-            return (
-              <div key={component.id}>
-                <CaseText>
-                  {/* Сам основной текст */}
-                  <span>{component.content}</span>
-                  <br />
-          
-                  {component.details?.map((detail: any, index: number) => (
-                    <React.Fragment key={index}>
-                      {/* Подписи жирным */}
-                      {detail.label && (
-                        <>
-                          <br/><CaseBoldText>{detail.label}</CaseBoldText><br/>
-                        </>
-                      )}
-          
-                      {/* Обычный текст подписи */}
-                      {detail.text && (
-                        <>
-                        <span className="text-muted">{detail.text}</span>
-                        <br />
-                      </>
-                      )}
-                      
-                      {/* Списки */}
-                      {detail.items && detail.items.length > 0 && (
-                        <ul className="list-disc pl-5 mt-2">
-                          {detail.items.map((item: string, idx: number) => (
-                            <li key={idx} className="text-muted mt-1">{item}</li>
-                          ))}
-                        </ul>
-                      )}
-                      
-                      {/* Ссылки */}
-                      {detail.link && (
-                        <div className="mt-2">
-                          <span className="text-muted">{detail.linkText || ''} </span>
-                          <CaseLink href={detail.link.url}>{detail.link.text}</CaseLink>
-                        </div>
-                      )}
-          
-                      {/* Figma превью */}
-                      {detail.figmaPreview && (
-                        <FigmaPreview 
-                          url={detail.figmaPreview.url} 
-                          title={detail.figmaPreview.title} 
-                        />
-                      )}
-                    </React.Fragment>
-                  ))}
-                </CaseText>
-              </div>
-            );
-          
+      case 'richText':
+        return (
+          <div key={component.id}>
+            <CaseText>
+              {/* Сам основной текст */}
+              <span>{component.content}</span>
+              <br />
+      
+              {component.details?.map((detail: any, index: number) => (
+                <React.Fragment key={index}>
+                  {/* Подписи жирным */}
+                  {detail.label && (
+                    <>
+                      <br/><CaseBoldText>{detail.label}</CaseBoldText><br/>
+                    </>
+                  )}
+      
+                  {/* Обычный текст подписи */}
+                  {detail.text && (
+                    <>
+                    <span className="text-muted">{detail.text}</span>
+                    <br />
+                  </>
+                  )}
+                  
+                  {/* Списки */}
+                  {detail.items && detail.items.length > 0 && (
+                    <ul className="list-disc pl-5 mt-2">
+                      {detail.items.map((item: string, idx: number) => (
+                        <li key={idx} className="text-muted mt-1">{item}</li>
+                      ))}
+                    </ul>
+                  )}
+                  
+                  {/* Ссылки */}
+                  {detail.link && (
+                    <div className="mt-2">
+                      <span className="text-muted">{detail.linkText || ''} </span>
+                      <CaseLink href={detail.link.url}>{detail.link.text}</CaseLink>
+                    </div>
+                  )}
+      
+                  {/* Figma превью */}
+                  {detail.figmaPreview && (
+                    <FigmaPreview 
+                      url={detail.figmaPreview.url} 
+                      title={detail.figmaPreview.title} 
+                    />
+                  )}
+                </React.Fragment>
+              ))}
+            </CaseText>
+          </div>
+        );
       
       case 'card':
         // Определяем цвет фона в зависимости от темы
@@ -125,78 +124,78 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
           </div>
         );
       
-        case 'personaCard':
-            // Определяем цвет фона для карточки персоны
-            const personaBgColor = theme === 'dark' && component.darkBackgroundColor
-              ? component.darkBackgroundColor
-              : component.backgroundColor;
-            
-            return (
-              <div 
-                key={component.id}
-                className="p-8 rounded-3xl flex flex-col justify-start h-full"
-                style={{ backgroundColor: personaBgColor }}
-              >
-                <div className="self-stretch inline-flex justify-start items-center gap-6">
-                  {/* Используем указанное изображение из папки public/images */}
-                  {component.image ? (
-                    <img 
-                      src={`/images/${component.image}`} 
-                      alt={component.name} 
-                      className="w-16 h-16 object-cover rounded-[60px]" 
-                    />
-                  ) : (
-                    <div className="w-16 h-16 relative bg-gray-200 rounded-[60px]"></div>
-                  )}
-                  <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
-                    <div className="self-stretch text-foreground text-2xl font-semibold">{component.name}</div>
-                    <div className="self-stretch text-muted text-base">{component.role}</div>
-                  </div>
-                </div>
-                
-                <div className="self-stretch text-muted text-base mt-4">
-                  {component.description}
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                  <div>
-                    <CaseBoldText>{component.columns[0].title}</CaseBoldText>
-                    <ul className="list-disc pl-6 mt-2">
-                      {component.columns[0].items.map((item: string, idx: number) => (
-                        <li key={idx} className="text-muted mb-1">{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <CaseBoldText>{component.columns[1].title}</CaseBoldText>
-                    <ul className="list-disc pl-6 mt-2">
-                      {component.columns[1].items.map((item: string, idx: number) => (
-                        <li key={idx} className="text-muted mb-1">{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                  <div>
-                    <CaseBoldText>{component.columns[2].title}</CaseBoldText>
-                    <ul className="list-disc pl-6 mt-2">
-                      {component.columns[2].items.map((item: string, idx: number) => (
-                        <li key={idx} className="text-muted mb-1">{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <CaseBoldText>{component.columns[3].title}</CaseBoldText>
-                    <ul className="list-disc pl-6 mt-2">
-                      {component.columns[3].items.map((item: string, idx: number) => (
-                        <li key={idx} className="text-muted mb-1">{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+      case 'personaCard':
+        // Определяем цвет фона для карточки персоны
+        const personaBgColor = theme === 'dark' && component.darkBackgroundColor
+          ? component.darkBackgroundColor
+          : component.backgroundColor;
+        
+        return (
+          <div 
+            key={component.id}
+            className="p-8 rounded-3xl flex flex-col justify-start h-full"
+            style={{ backgroundColor: personaBgColor }}
+          >
+            <div className="self-stretch inline-flex justify-start items-center gap-6">
+              {/* Используем указанное изображение из папки public/images */}
+              {component.image ? (
+                <img 
+                  src={`/images/${component.image}`} 
+                  alt={component.name} 
+                  className="w-16 h-16 object-cover rounded-[60px]" 
+                />
+              ) : (
+                <div className="w-16 h-16 relative bg-gray-200 rounded-[60px]"></div>
+              )}
+              <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+                <div className="self-stretch text-foreground text-2xl font-semibold">{component.name}</div>
+                <div className="self-stretch text-muted text-base">{component.role}</div>
               </div>
-            );
+            </div>
+            
+            <div className="self-stretch text-muted text-base mt-4">
+              {component.description}
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <div>
+                <CaseBoldText>{component.columns[0].title}</CaseBoldText>
+                <ul className="list-disc pl-6 mt-2">
+                  {component.columns[0].items.map((item: string, idx: number) => (
+                    <li key={idx} className="text-muted mb-1">{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <CaseBoldText>{component.columns[1].title}</CaseBoldText>
+                <ul className="list-disc pl-6 mt-2">
+                  {component.columns[1].items.map((item: string, idx: number) => (
+                    <li key={idx} className="text-muted mb-1">{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <div>
+                <CaseBoldText>{component.columns[2].title}</CaseBoldText>
+                <ul className="list-disc pl-6 mt-2">
+                  {component.columns[2].items.map((item: string, idx: number) => (
+                    <li key={idx} className="text-muted mb-1">{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <CaseBoldText>{component.columns[3].title}</CaseBoldText>
+                <ul className="list-disc pl-6 mt-2">
+                  {component.columns[3].items.map((item: string, idx: number) => (
+                    <li key={idx} className="text-muted mb-1">{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
       
       case 'twoColumns':
         // Используем grid для двухколоночной верстки с адаптивностью
@@ -226,8 +225,25 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
           </div>
         );
       
-      default:
-        return null;
+        case 'iframe':
+          return (
+            <CaseIframe
+              key={component.id}
+              title={component.title}
+              src={component.src}
+            />
+          );
+        
+        // Также оставьте обработчик для типа custom (если он вам понадобится в будущем)
+        case 'custom':
+          return (
+            <div key={component.id}>
+              {component.component}
+            </div>
+          );
+        
+        default:
+          return null;
     }
   };
 
