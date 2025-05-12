@@ -80,12 +80,10 @@ export default {
                 "Services examined: PetDesk, PawSquad, Vets Now.",
                 "Evaluation criteria: ease of appointment booking, availability of reminders for treatments and vaccinations, possibility of online consultations, support for multiple pets in one account, UX/UI quality."
               ],
-              figmaPreview: {
-                id: "figma-prototype",
-                type: "figmaImageLink",
-                title: "Прототип онбордингу та запису на офлайн-візит",
-                imageUrl: "/images/Vet-Prototype.png",
-                figmaUrl: "https://www.figma.com/proto/qYnVmPsceXBUqKwYktOK56/Vet?page-id=0%3A1&node-id=19-4478&viewport=1329%2C219%2C0.12&scaling=scale-down"
+              figmaLink: {
+                url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=35-40&t=I4DCY9AAF86MYyiW-4",
+                title: "Full competitor analysis and comparison table –",
+                imageUrl: "/images/Vet-Competitors.png"
               }
             },
             {
@@ -96,9 +94,10 @@ export default {
                 "Format: anonymous survey with 24 questions.",
                 "Goal: to better understand barriers, expectations, and real needs of both current clinic clients and potential new users."
               ],
-              figmaPreview: {
-                  url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Survey-for-Pet-Owners--Experience-with-Veterinary-Clinics-and-Digital-Service?node-id=69-84&t=rwXYuCAN6fRoAbOF-4",
-                  title: "Example of the form and response processing:"
+              figmaLink: {
+                url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Survey-for-Pet-Owners--Experience-with-Veterinary-Clinics-and-Digital-Service?node-id=69-84&t=rwXYuCAN6fRoAbOF-4",
+                title: "Example of the form and response processing –",
+                imageUrl: "/images/Vet-Survey.png"
               }
             },
             {
@@ -384,9 +383,10 @@ export default {
                 "To simplify task setting for designers and developers.",
                 "To maintain focus on real user needs during the development process."
               ],
-              figmaPreview: {
+              figmaLink: {
                 url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=230-1980&t=NslWTNXFmnjQqh1X-4",
-                title: "List of User Stories in Figma:"
+                title: "List of User Stories –",
+                imageUrl: "/images/Vet-UserScenarios.png"
               }
             }
           ]
@@ -412,9 +412,10 @@ export default {
                 "Create personalized communication without direct pressure.",
                 "Anticipate barriers and the emotional state of the user at each stage."
               ],
-              figmaPreview: {
-                  url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Survey-for-Pet-Owners--Experience-with-Veterinary-Clinics-and-Digital-Service?node-id=35-45&t=HE3QyvnAETdQnZ14-4",
-                  title: "Full Customer Journey Map:"
+              figmaLink: {
+                url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Survey-for-Pet-Owners--Experience-with-Veterinary-Clinics-and-Digital-Service?node-id=35-45&t=HE3QyvnAETdQnZ14-4",
+                title: "Full Customer Journey Map –",
+                imageUrl: "/images/Vet-CJM.png"
               }
             }
           ]
@@ -512,9 +513,10 @@ export default {
                 "To identify dependencies between modules and filter out unnecessary or unjustified screens.",
                 "To identify potential functionality duplications or areas that remain uncovered."
               ],
-              figmaPreview: {
+              figmaLink: {
                 url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=485-12502&t=NslWTNXFmnjQqh1X-4",
-                title: "Screen map in Figma"
+                title: "Screen map –",
+                imageUrl: "/images/Vet-ScreenMap.png"
               }
             },
             {
@@ -526,9 +528,10 @@ export default {
                 "Functional purpose of each section — from registration and appointment booking to post-consultation support.",
                 "Relationships between key modules: profile, pets, consultations, appointments, visit history, support chat."
               ],
-              figmaPreview: {
+              figmaLink: {
                 url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=826-3047&t=NslWTNXFmnjQqh1X-4",
-                title: "Information architecture in Figma"
+                title: "Information architecture –",
+                imageUrl: "/images/Vet-IA.png"
               }
             },
             {
@@ -565,15 +568,17 @@ export default {
               ]
             },
             {
-              figmaPreview: {
+              figmaLink: {
                 url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=1098-4343&t=I1eMDwowlNXfBWWH-4",
-                title: "User Flow — Sign in / Sign up"
+                title: "User Flow Sign in/up –",
+                imageUrl: "/images/Vet-UserFlow.png"
               }
             },
             {
-              figmaPreview: {
+              figmaLink: {
                 url: "https://www.figma.com/board/yb0aq19zELS4fZBf70jrpx/Discovery-stage-of-developing-a-mobile-application-for-a-network-of-veterinary-clinics?node-id=1073-2197&t=I1eMDwowlNXfBWWH-4",
-                title: "User Flow — Online / Offline appointment"
+                title: "User Flow Online/Offline appointment –",
+                imageUrl: "/images/Vet-UserFlow.png"
               }
             },
             {
@@ -612,6 +617,13 @@ export default {
                 "The prototype covers the scenario of booking an offline visit.",
                 "All screens correspond to the formed insights and requirements of the user role."
               ]
+            },
+            {
+              figmaLink: {
+                url: "https://www.figma.com/proto/qYnVmPsceXBUqKwYktOK56/Vet?page-id=0%3A1&node-id=19-4478&viewport=1329%2C219%2C0.12&scaling=scale-down",
+                title: "Prototype of onboarding and booking an offline visit –",
+                imageUrl: "/images/Vet-Prototype.png"
+              }
             }
           ]
         }
