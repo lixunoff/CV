@@ -592,35 +592,6 @@ export default {
       ]
     },      
     {
-      id: "section11",
-      title: "Application design",
-      components: [
-        {
-          id: "design-intro",
-          type: "richText",
-          content:
-            "The goal of the Discovery stage was not to create a complete application design. The main task was to present the client with a visual concept — what the application could be in terms of style, interface structure, and UX principles. Full design development involves creating interactive prototypes, testing key scenarios, collecting feedback, iterations, and improving the user experience.",
-          details: [
-            {
-              label: "What was done:",
-              items: [
-                "Built a visual concept of the main scenario.",
-                "Demonstrated onboarding of a current offline clinic client.",
-                "The prototype covers the scenario of booking an offline visit.",
-                "All screens correspond to the formed insights and requirements of the user role."
-              ]
-            }
-          ]
-        },
-        {
-          id: "figma-prototype",
-          type: "iframe",
-          title: "Prototype of onboarding and offline visit booking",
-          src: "https://embed.figma.com/proto/qYnVmPsceXBUqKwYktOK56/Vet?page-id=0%3A1&node-id=19-4478&viewport=1329%2C219%2C0.12&scaling=scale-down&content-scaling=fixed&starting-point-node-id=19%3A4478&embed-host=share"
-        }
-      ]
-    },
-    {
       id: "section12",
       title: "Discovery stage summary",
       components: [
