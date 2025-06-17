@@ -732,7 +732,8 @@ export default {
                 items: [
                   "Consistency with Card and Market product components",
                   "Elimination of horizontal scrolls for main actions",
-                  "Clear action hierarchy: main vs secondary"
+                  "Clear action hierarchy: main vs secondary",
+                  "Maintaining familiar experience in main user scenarios"
                 ]
               }
             ]
