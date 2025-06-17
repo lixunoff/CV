@@ -965,7 +965,7 @@ export default {
                 label: "Why exactly these changes:",
                 items: [
                   "Based on real research and user feedback",
-                  "Don't break familiar experience (4.56 rating is valuable)",
+                  "Don't break familiar experience (4.55 rating is valuable)",
                   "Reduce cognitive load",
                   "Give users more control",
                   "Support consistency with other Monobank products"
