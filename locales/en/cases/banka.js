@@ -641,7 +641,7 @@ export default {
                 darkBackgroundColor: "#5c3636",
                 items: [
                   "Place main banka actions without horizontal scroll",
-                  "Main actions placed without horizontal scroll",
+                  "Create clear visual action hierarchy based on usage frequency",
                   "Remove favorite bankas functionality"
                 ]
               }
@@ -661,10 +661,9 @@ export default {
                 darkBackgroundColor: "#5c4f30",
                 items: [
                   "Add ability to add banka to Apple Pay",
-                  "Ability to pay for monomarke products from banka",
-                  "Ability to create bankas through market interface",
                   "Add ability to withdraw or transfer funds to other cards",
-                  "Auto-payment capability from banka (mobile top-up, various subscription services, etc.)"
+                  "Auto-payment capability from banka",
+                  "Ability to pay for monomarke products from banka"
                 ]
               },
               {
@@ -675,8 +674,8 @@ export default {
                 darkBackgroundColor: "#2c5e28",
                 items: [
                   "Add ability to top up bankas through Apple Pay, GPay or payment form",
-                  "Ability to top up bankas through Apple Pay",
-                  "Add toggle «Want to remain incognito» or «Top up banka anonymously» on top-up screen"
+                  "Add «Top up banka anonymously» toggle on top-up screen",
+                  "Move «Break banka» function to settings"
                 ]
               }
             ]
@@ -696,8 +695,7 @@ export default {
                 items: [
                   "Add ability to add co-owner to banka with limited rights",
                   "Allow withdrawing all funds from banka",
-                  "Keep banka open even with zero balance",
-                  "Requires additional resources"
+                  "Keep banka open even with zero balance"
                 ]
               },
               {
@@ -709,7 +707,7 @@ export default {
                 items: [
                   "Create design based on updated mono product components (Cards, Market)",
                   "Add typical banka names to first creation screen",
-                  "Remove target amount input step as it's not mandatory"
+                  "Ability to create bankas through market interface"
                 ]
               }
             ]
