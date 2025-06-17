@@ -25,7 +25,7 @@ const AppContext = createContext<AppContextProps | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
-  const [language, setLanguage] = useState<Language>("en");
+  const [language, setLanguage] = useState<Language>("ua");
   const [mounted, setMounted] = useState(false);
   const [translationsLoaded, setTranslationsLoaded] = useState(false);
 
@@ -53,6 +53,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const savedLanguage = localStorage.getItem("language") as Language;
     if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ua")) {
       setLanguage(savedLanguage);
+    } else {
+      // Если нет сохраненного языка, используем украинский по умолчанию
+      setLanguage("ua");
     }
     
     setMounted(true);
