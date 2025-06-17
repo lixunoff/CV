@@ -17,7 +17,7 @@ export const CaseTitle = ({ children }: { children: React.ReactNode }) => {
 
 export const CaseSectionTitle = ({ children }: { children: React.ReactNode }) => {
   return (
-    <h2 className="self-stretch text-foreground text-2xl font-semibold leading-loose">
+    <h2 className="self-stretch text-foreground text-2xl font-semibold leading-8">
       {children}
     </h2>
   );
@@ -70,19 +70,33 @@ export const CaseLink = ({ href, children }: { href: string, children: React.Rea
     );
 };
 
-// Обновленный компонент FigmaImageLink с изображением вверху и текстом внизу
-export const FigmaImageLink = ({ imageUrl, figmaUrl, title }: { imageUrl: string, figmaUrl: string, title?: string }) => {
+
+// Обновленный компонент FigmaImageLink с возможностью кастомного текста ссылки
+export const FigmaImageLink = ({ 
+  imageUrl, 
+  figmaUrl, 
+  title, 
+  linkText 
+}: { 
+  imageUrl: string, 
+  figmaUrl: string, 
+  title?: string,
+  linkText?: string 
+}) => {
   const { language } = useLanguage();
   
-  const linkText = language === 'ua' 
+  // Если linkText не передан, используем дефолтный текст в зависимости от языка
+  const defaultLinkText = language === 'ua' 
     ? 'подивитися у Figma' 
     : 'view in Figma';
+  
+  const finalLinkText = linkText || defaultLinkText;
   
   return (
     <div className="w-full my-6">
       <p className="mb-2">
         {title && <>{title} </>}
-        <CaseLink href={figmaUrl}>{linkText}</CaseLink>
+        <CaseLink href={figmaUrl}>{finalLinkText}</CaseLink>
       </p>
       <img 
         src={imageUrl} 
@@ -108,6 +122,40 @@ export const CaseIframe = ({ title, src }: { title?: string; src: string }) => {
           style={{ border: "1px solid rgba(0, 0, 0, 0.1)" }}
         />
       </div>
+    </div>
+  );
+};
+
+// Video component for case content
+export const CaseVideo = ({ src, title, className }: { src: string, title?: string, className?: string }) => {
+  return (
+    <div className={cn("w-full mt-4 mb-8", className)}>
+      {title && <div className="text-muted text-sm mb-2">{title}</div>}
+      <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+        <video
+          src={src}
+          controls
+          className="w-full h-auto"
+          style={{ maxHeight: "500px" }}
+          preload="metadata"
+        >
+          Ваш браузер не підтримує відео.
+        </video>
+      </div>
+    </div>
+  );
+};
+
+// Image component for case content
+export const CaseImage = ({ src, alt, title, className }: { src: string, alt?: string, title?: string, className?: string }) => {
+  return (
+    <div className={cn("w-full my-6", className)}>
+      {title && <div className="text-muted text-sm mb-2">{title}</div>}
+      <img
+        src={src}
+        alt={alt || title || ""}
+        className="w-full h-auto"
+      />
     </div>
   );
 };

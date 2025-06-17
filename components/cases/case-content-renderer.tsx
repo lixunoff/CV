@@ -13,7 +13,9 @@ import {
   CaseColumn,
   CaseLink,
   CaseIframe,
-  FigmaImageLink
+  FigmaImageLink,
+  CaseVideo,
+  CaseImage
 } from './case-page-components';
 import { useTheme, useLanguage } from '../providers/app-provider';
 
@@ -30,6 +32,7 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
 
   // Рендерер разных типов компонентов
   const renderComponent = (component: any) => {
+    
     switch (component.type) {
       case 'title':
         return <CaseSectionTitle key={component.id}>{component.content}</CaseSectionTitle>;
@@ -84,7 +87,17 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
                     <FigmaImageLink 
                       imageUrl={detail.figmaLink.imageUrl}
                       figmaUrl={detail.figmaLink.url}
-                      title={detail.figmaLink.title} 
+                      title={detail.figmaLink.title}
+                      linkText={detail.figmaLink.linkText}
+                    />
+                  )}
+
+                  {/* Поддержка вложенных компонентов в richText */}
+                  {detail.type === 'image' && (
+                    <CaseImage
+                      src={detail.src}
+                      alt={detail.alt}
+                      title={detail.title}
                     />
                   )}
                 </React.Fragment>
@@ -139,15 +152,13 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
             style={{ backgroundColor: personaBgColor }}
           >
             <div className="self-stretch inline-flex justify-start items-center gap-6">
-              {/* Используем указанное изображение из папки public/images */}
-              {component.image ? (
+              {/* Показываем аватар только если он есть */}
+              {component.image && (
                 <img 
                   src={`/images/${component.image}`} 
                   alt={component.name} 
                   className="w-16 h-16 object-cover rounded-[60px]" 
                 />
-              ) : (
-                <div className="w-16 h-16 relative bg-gray-200 rounded-[60px]"></div>
               )}
               <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
                 <div className="self-stretch text-foreground text-2xl font-semibold">{component.name}</div>
@@ -155,9 +166,11 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
               </div>
             </div>
             
-            <div className="self-stretch text-muted text-base mt-4">
-              {component.description}
-            </div>
+            {component.description && (
+              <div className="self-stretch text-muted text-base mt-4">
+                {component.description}
+              </div>
+            )}
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div>
@@ -178,24 +191,29 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              <div>
-                <CaseBoldText>{component.columns[2].title}</CaseBoldText>
-                <ul className="list-disc pl-6 mt-2">
-                  {component.columns[2].items.map((item: string, idx: number) => (
-                    <li key={idx} className="text-muted mb-1">{item}</li>
-                  ))}
-                </ul>
+            {/* Показываем третью и четвертую колонки только если они существуют */}
+            {component.columns.length > 2 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div>
+                  <CaseBoldText>{component.columns[2].title}</CaseBoldText>
+                  <ul className="list-disc pl-6 mt-2">
+                    {component.columns[2].items.map((item: string, idx: number) => (
+                      <li key={idx} className="text-muted mb-1">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                {component.columns[3] && (
+                  <div>
+                    <CaseBoldText>{component.columns[3].title}</CaseBoldText>
+                    <ul className="list-disc pl-6 mt-2">
+                      {component.columns[3].items.map((item: string, idx: number) => (
+                        <li key={idx} className="text-muted mb-1">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-              <div>
-                <CaseBoldText>{component.columns[3].title}</CaseBoldText>
-                <ul className="list-disc pl-6 mt-2">
-                  {component.columns[3].items.map((item: string, idx: number) => (
-                    <li key={idx} className="text-muted mb-1">{item}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            )}
           </div>
         );
       
@@ -235,6 +253,7 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
             title={component.title}
             imageUrl={component.imageUrl}
             figmaUrl={component.figmaUrl}
+            linkText={component.linkText}
           />
         );
       
@@ -245,6 +264,27 @@ export function CaseContentRenderer({ sections }: CaseContentRendererProps) {
             key={component.id}
             title={component.title}
             src={component.src}
+          />
+        );
+      
+      // Компонент для видео
+      case 'video':
+        return (
+          <CaseVideo
+            key={component.id}
+            src={component.src}
+            title={component.title}
+          />
+        );
+      
+      // Компонент для изображений
+      case 'image':
+        return (
+          <CaseImage
+            key={component.id}
+            src={component.src}
+            alt={component.alt}
+            title={component.title}
           />
         );
       
