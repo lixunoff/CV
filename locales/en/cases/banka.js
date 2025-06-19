@@ -53,12 +53,6 @@ export default {
             id: "user-roles",
             type: "richText",
             content: "So I decided to focus on solutions, not verification. Waiting for feedback, and meanwhile — thank you for your attention 💜",
-          },
-          {
-            id: "trailer-video",
-            type: "video",
-            src: "/videos/trailer-3.mp4",
-            title: "Enjoy"
           }
         ]
       },
