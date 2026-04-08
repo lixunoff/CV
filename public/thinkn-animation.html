@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thinkn</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  body { display: flex; height: 100vh; }
+  .side {
+    flex: 1; height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center;
+  }
+  .side-white { background: #ffffff; }
+  .side-black { background: #000000; }
+  .top-bar { display: none; }
+  #topbar {
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 100;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    padding: 4px; border-radius: 999px;
+  }
+  .scene { flex: 1; display: flex; align-items: center; justify-content: center; }
+  .footer { padding-bottom: 80px; flex-shrink: 0; }
+  .btn {
+    font-family: sans-serif; font-size: 12px;
+    padding: 6px 14px; border: 1.5px solid currentColor;
+    border-radius: 20px; background: transparent; cursor: pointer;
+    opacity: 0.4; transition: opacity 0.2s;
+  }
+  .btn.active { opacity: 1; }
+  .side-white .btn { color: black; }
+  .side-black .btn { color: white; }
+  #topbar .btn { color: #333; border-color: #333; }
+  #topbar .btn.active { color: #000; border-color: #000; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <button class="btn active" id="bw0" onclick="setTheme(0)">B/W</button>
+  <button class="btn" id="cmy0" onclick="setTheme(1)">CMY</button>
+  <button class="btn" id="org0" onclick="setTheme(2)">Orange</button>
+  <button class="btn" id="blu0" onclick="setTheme(3)">Blue</button>
+  <button class="btn" id="prp0" onclick="setTheme(4)">Purple</button>
+  <button class="btn" id="rb0" onclick="setTheme(5)">Red-Blue</button>
+  <button class="btn" id="ty0" onclick="setTheme(6)">Teal-Yellow</button>
+</div>
+
+<div class="side side-white">
+  <div class="top-bar">
+    <button class="btn active" id="bw0" onclick="setTheme(0)">B/W</button>
+    <button class="btn" id="cmy0" onclick="setTheme(1)">CMY</button>
+  </div>
+  <div class="scene">
+    <canvas id="canvasL" width="1000" height="1000" id="cvs" style="width:min(600px, 42vw);height:min(600px, 42vw);"></canvas>
+  </div>
+  <div class="footer"><svg height="32" viewBox="0 0 363 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M236 98.9977V3H253V60L276 30.9765H295L267 65L295 98.9977L276 99L253 70V98.9977H236Z" fill="black"/>
+<path d="M144 99V31H161V99H144Z" fill="black"/>
+<circle cx="152.5" cy="11.5" r="11.5" fill="black"/>
+<path d="M74 98.9977V3H91V38.9306C93.3766 35.7307 96.1298 33.3536 100.06 31.7993C104.082 30.1536 108.104 29.3308 112.126 29.3308C119.987 29.3308 126.431 31.8907 131.459 37.0106C136.486 42.0391 139 49.3532 139 58.953V98.9977L122 99.004V63C122 57.8801 120.675 53.0566 118.024 49.9481C115.464 46.7482 111.527 45 106.5 45C101.473 45 97.7313 46.7482 94.9891 49.9481C92.3382 53.0566 91 57.8801 91 63V98.9977H74Z" fill="black"/>
+<path d="M166 99V31H183V38.9318C185.377 35.7319 188.13 33.3548 192.06 31.8005C196.082 30.1549 200.104 29.332 204.126 29.332C211.987 29.332 218.431 31.892 223.459 37.0118C228.486 42.0403 231 49.3544 231 58.9542V99H214V63.0012C214 57.8813 212.675 53.0578 210.024 49.9493C207.464 46.7494 203.527 45.0012 198.5 45.0012C193.473 45.0012 189.731 46.7494 186.989 49.9493C184.338 53.0578 183 57.8813 183 63.0012V99H166Z" fill="black"/>
+<path d="M298 99V31H315V38.9318C317.377 35.7319 320.13 33.3548 324.06 31.8005C328.082 30.1549 332.104 29.332 336.126 29.332C343.987 29.332 350.431 31.892 355.459 37.0118C360.486 42.0403 363 49.3544 363 58.9542V99H346V63.0012C346 57.8813 344.675 53.0578 342.024 49.9493C339.464 46.7494 335.527 45.0012 330.5 45.0012C325.473 45.0012 321.731 46.7494 318.989 49.9493C316.338 53.0578 315 57.8813 315 63.0012V99H298Z" fill="black"/>
+<path d="M26 98.9977V18H0V3H69V18H43V98.9977H26Z" fill="black"/>
+</svg></div>
+</div>
+
+<div class="side side-black">
+  <div class="top-bar">
+    <button class="btn active" id="bw1" onclick="setTheme(0)">B/W</button>
+    <button class="btn" id="cmy1" onclick="setTheme(1)">CMY</button>
+  </div>
+  <div class="scene">
+    <canvas id="canvasR" width="1000" height="1000" id="cvs" style="width:min(600px, 42vw);height:min(600px, 42vw);"></canvas>
+  </div>
+  <div class="footer"><svg height="32" viewBox="0 0 363 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M236 98.9977V3H253V60L276 30.9765H295L267 65L295 98.9977L276 99L253 70V98.9977H236Z" fill="white"/>
+<path d="M144 99V31H161V99H144Z" fill="white"/>
+<circle cx="152.5" cy="11.5" r="11.5" fill="white"/>
+<path d="M74 98.9977V3H91V38.9306C93.3766 35.7307 96.1298 33.3536 100.06 31.7993C104.082 30.1536 108.104 29.3308 112.126 29.3308C119.987 29.3308 126.431 31.8907 131.459 37.0106C136.486 42.0391 139 49.3532 139 58.953V98.9977L122 99.004V63C122 57.8801 120.675 53.0566 118.024 49.9481C115.464 46.7482 111.527 45 106.5 45C101.473 45 97.7313 46.7482 94.9891 49.9481C92.3382 53.0566 91 57.8801 91 63V98.9977H74Z" fill="white"/>
+<path d="M166 99V31H183V38.9318C185.377 35.7319 188.13 33.3548 192.06 31.8005C196.082 30.1549 200.104 29.332 204.126 29.332C211.987 29.332 218.431 31.892 223.459 37.0118C228.486 42.0403 231 49.3544 231 58.9542V99H214V63.0012C214 57.8813 212.675 53.0578 210.024 49.9493C207.464 46.7494 203.527 45.0012 198.5 45.0012C193.473 45.0012 189.731 46.7494 186.989 49.9493C184.338 53.0578 183 57.8813 183 63.0012V99H166Z" fill="white"/>
+<path d="M298 99V31H315V38.9318C317.377 35.7319 320.13 33.3548 324.06 31.8005C328.082 30.1549 332.104 29.332 336.126 29.332C343.987 29.332 350.431 31.892 355.459 37.0118C360.486 42.0403 363 49.3544 363 58.9542V99H346V63.0012C346 57.8813 344.675 53.0578 342.024 49.9493C339.464 46.7494 335.527 45.0012 330.5 45.0012C325.473 45.0012 321.731 46.7494 318.989 49.9493C316.338 53.0578 315 57.8813 315 63.0012V99H298Z" fill="white"/>
+<path d="M26 98.9977V18H0V3H69V18H43V98.9977H26Z" fill="white"/>
+</svg></div>
+</div>
+
+<script>
+let theme = 0;
+const themeIds = ['bw0','cmy0','org0','blu0','prp0','rb0','ty0'];
+function setTheme(t) {
+  theme = t;
+  themeIds.forEach((id,i) => document.getElementById(id).classList.toggle('active', t===i));
+}
+
+function seededRand(seed) {
+  const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+const CX=500, CY=500, OUTER_R=400, INNER_R=200, AMPLITUDE=36, SPEED=0.001, N=12, SIZE=1000;
+
+const sineParams1 = Array.from({length:N}, (_,i) => ({ freq:0.3+seededRand(i*3+1)*0.7, phase:seededRand(i*3+2)*Math.PI*2, amp:0.6+seededRand(i*3+3)*0.4 }));
+const sineParams2 = Array.from({length:N}, (_,i) => ({ freq:0.3+seededRand(i*3+101)*0.7, phase:seededRand(i*3+102)*Math.PI*2, amp:0.6+seededRand(i*3+103)*0.4 }));
+const sineParams3 = Array.from({length:N}, (_,i) => ({ freq:0.3+seededRand(i*3+201)*0.7, phase:seededRand(i*3+202)*Math.PI*2, amp:0.6+seededRand(i*3+203)*0.4 }));
+
+function catmullRomPath(pts) {
+  const n = pts.length;
+  function cp(p0, p1, p2, p3) {
+    return {
+      cp1: { x: p1.x + (p2.x - p0.x) / 6, y: p1.y + (p2.y - p0.y) / 6 },
+      cp2: { x: p2.x - (p3.x - p1.x) / 6, y: p2.y - (p3.y - p1.y) / 6 }
+    };
+  }
+  let d = `M ${pts[0].x.toFixed(2)},${pts[0].y.toFixed(2)}`;
+  for (let i = 0; i < n; i++) {
+    const p0 = pts[(i - 1 + n) % n];
+    const p1 = pts[i];
+    const p2 = pts[(i + 1) % n];
+    const p3 = pts[(i + 2) % n];
+    const { cp1, cp2 } = cp(p0, p1, p2, p3);
+    d += ` C ${cp1.x.toFixed(2)},${cp1.y.toFixed(2)} ${cp2.x.toFixed(2)},${cp2.y.toFixed(2)} ${p2.x.toFixed(2)},${p2.y.toFixed(2)}`;
+  }
+  return d + ' Z';
+}
+function circlePath(cx, cy, r) {
+  return `M ${cx},${cy-r} A ${r},${r} 0 1,0 ${cx+0.001},${cy-r} Z`;
+}
+function buildRing(t, params) {
+  const pts = [];
+  for (let i = 0; i < N; i++) {
+    const angle = (i / N) * Math.PI * 2;
+    const { freq, phase, amp } = params[i];
+    const deform = Math.sin(t * freq + phase) * amp;
+    const r = OUTER_R + deform * AMPLITUDE;
+    pts.push({ x: CX + r * Math.cos(angle - Math.PI / 2), y: CY + r * Math.sin(angle - Math.PI / 2) });
+  }
+  return catmullRomPath(pts);
+}
+
+const ctxL = document.getElementById('canvasL').getContext('2d');
+const ctxR = document.getElementById('canvasR').getContext('2d');
+const c1 = document.createElement('canvas'); c1.width = c1.height = SIZE;
+const c2 = document.createElement('canvas'); c2.width = c2.height = SIZE;
+const c3 = document.createElement('canvas'); c3.width = c3.height = SIZE;
+
+function drawGrad(off, path, angle, fgVal) {
+  const oc = off.getContext('2d');
+  oc.clearRect(0,0,SIZE,SIZE); oc.save();
+  oc.translate(CX,CY); oc.rotate(angle*Math.PI/180); oc.translate(-CX,-CY);
+  const g = oc.createLinearGradient(CX,CY-OUTER_R-AMPLITUDE,CX,CY+OUTER_R+AMPLITUDE);
+  g.addColorStop(0,`rgba(${fgVal},${fgVal},${fgVal},1)`);
+  g.addColorStop(1,`rgba(${fgVal},${fgVal},${fgVal},0)`);
+  oc.fillStyle=g; oc.fill(new Path2D(path));
+  oc.globalCompositeOperation='destination-out'; oc.fillStyle='black';
+  oc.fill(new Path2D(circlePath(CX,CY,INNER_R)));
+  oc.globalCompositeOperation='source-over'; oc.restore();
+}
+
+function drawColor(off, path, angle, color) {
+  const oc = off.getContext('2d');
+  oc.clearRect(0,0,SIZE,SIZE); oc.save();
+  oc.translate(CX,CY); oc.rotate(angle*Math.PI/180); oc.translate(-CX,-CY);
+  oc.fillStyle=color; oc.fill(new Path2D(path));
+  oc.globalCompositeOperation='destination-out'; oc.fillStyle='black';
+  oc.fill(new Path2D(circlePath(CX,CY,INNER_R)));
+  oc.globalCompositeOperation='source-over'; oc.restore();
+}
+
+function renderColorScreen(ctx, rings, angles, hex) {
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  ctx.clearRect(0,0,SIZE,SIZE);
+  [c1,c2,c3].forEach((off,i)=>{
+    const oc=off.getContext('2d');
+    oc.clearRect(0,0,SIZE,SIZE); oc.save();
+    oc.translate(CX,CY); oc.rotate(angles[i]*Math.PI/180); oc.translate(-CX,-CY);
+    const grad=oc.createLinearGradient(CX,CY-OUTER_R-AMPLITUDE,CX,CY+OUTER_R+AMPLITUDE);
+    grad.addColorStop(0,`rgba(${r},${g},${b},1)`);
+    grad.addColorStop(1,`rgba(${r},${g},${b},0)`);
+    oc.fillStyle=grad; oc.fill(new Path2D(rings[i]));
+    oc.globalCompositeOperation='destination-out'; oc.fillStyle='black';
+    oc.fill(new Path2D(circlePath(CX,CY,INNER_R)));
+    oc.globalCompositeOperation='source-over'; oc.restore();
+  });
+  ctx.globalCompositeOperation='lighter';
+  ctx.drawImage(c1,0,0); ctx.drawImage(c2,0,0); ctx.drawImage(c3,0,0);
+  ctx.globalCompositeOperation='source-over';
+}
+
+function renderBWScreen(ctx, rings, angles) {
+  ctx.clearRect(0,0,SIZE,SIZE);
+  [c1,c2,c3].forEach((off,i)=>drawGrad(off,rings[i],angles[i],255));
+  ctx.globalCompositeOperation='lighter';
+  ctx.drawImage(c1,0,0); ctx.drawImage(c2,0,0); ctx.drawImage(c3,0,0);
+  ctx.globalCompositeOperation='source-over';
+}
+
+function renderColor(ctx, rings, angles, hex, fgVal) {
+  // Parse hex to rgba
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  ctx.clearRect(0,0,SIZE,SIZE);
+  [c1,c2,c3].forEach((off,i)=>{
+    const oc=off.getContext('2d');
+    oc.clearRect(0,0,SIZE,SIZE); oc.save();
+    oc.translate(CX,CY); oc.rotate(angles[i]*Math.PI/180); oc.translate(-CX,-CY);
+    const grad=oc.createLinearGradient(CX,CY-OUTER_R-AMPLITUDE,CX,CY+OUTER_R+AMPLITUDE);
+    grad.addColorStop(0,`rgba(${r},${g},${b},1)`);
+    grad.addColorStop(1,`rgba(${r},${g},${b},0)`);
+    oc.fillStyle=grad; oc.fill(new Path2D(rings[i]));
+    oc.globalCompositeOperation='destination-out'; oc.fillStyle='black';
+    oc.fill(new Path2D(circlePath(CX,CY,INNER_R)));
+    oc.globalCompositeOperation='source-over'; oc.restore();
+  });
+  ctx.globalCompositeOperation='multiply';
+  ctx.drawImage(c1,0,0); ctx.drawImage(c2,0,0); ctx.drawImage(c3,0,0);
+  ctx.globalCompositeOperation='source-over';
+}
+
+
+function renderTwoColor(ctx, rings, angles, hex1, hex2, screen=false) {
+  const parse = h => [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+  const [r1,g1,b1] = parse(hex1);
+  const [r2,g2,b2] = parse(hex2);
+  const offs = [c1,c2,c3];
+  ctx.clearRect(0,0,SIZE,SIZE);
+  offs.forEach((off,i) => {
+    const oc=off.getContext('2d');
+    oc.clearRect(0,0,SIZE,SIZE); oc.save();
+    oc.translate(CX,CY); oc.rotate(angles[i]*Math.PI/180); oc.translate(-CX,-CY);
+    // alternate: even rings get hex1→hex2, odd rings get hex2→hex1
+    const [ra,ga,ba] = i%2===0 ? [r1,g1,b1] : [r2,g2,b2];
+    const [rb,gb,bb] = i%2===0 ? [r2,g2,b2] : [r1,g1,b1];
+    const grad=oc.createLinearGradient(CX,CY-OUTER_R-AMPLITUDE,CX,CY+OUTER_R+AMPLITUDE);
+    grad.addColorStop(0,`rgba(${ra},${ga},${ba},1)`);
+    grad.addColorStop(1,`rgba(${rb},${gb},${bb},0)`);
+    oc.fillStyle=grad; oc.fill(new Path2D(rings[i]));
+    oc.globalCompositeOperation='destination-out'; oc.fillStyle='black';
+    oc.fill(new Path2D(circlePath(CX,CY,INNER_R)));
+    oc.globalCompositeOperation='source-over'; oc.restore();
+  });
+  ctx.globalCompositeOperation = screen ? 'lighter' : 'multiply';
+  ctx.drawImage(c1,0,0); ctx.drawImage(c2,0,0); ctx.drawImage(c3,0,0);
+  ctx.globalCompositeOperation='source-over';
+}
+
+function renderBW(ctx, rings, angles, fgVal) {
+  ctx.clearRect(0,0,SIZE,SIZE);
+  [c1,c2,c3].forEach((off,i)=>drawGrad(off,rings[i],angles[i],fgVal));
+  ctx.globalCompositeOperation='multiply';
+  ctx.drawImage(c1,0,0); ctx.drawImage(c2,0,0); ctx.drawImage(c3,0,0);
+  ctx.globalCompositeOperation='source-over';
+}
+
+function renderCMY(ctx, rings, angles, bg) {
+  const colors = bg===255 ? ['#00FFFF','#FF00FF','#FFFF00'] : ['#FF0000','#00FF00','#0000FF'];
+  [c1,c2,c3].forEach((off,i)=>drawColor(off,rings[i],angles[i],colors[i]));
+  const i1=c1.getContext('2d').getImageData(0,0,SIZE,SIZE);
+  const i2=c2.getContext('2d').getImageData(0,0,SIZE,SIZE);
+  const i3=c3.getContext('2d').getImageData(0,0,SIZE,SIZE);
+  const out=ctx.createImageData(SIZE,SIZE); const dd=out.data;
+  for(let i=0;i<dd.length;i+=4){
+    const a1=i1.data[i+3],a2=i2.data[i+3],a3=i3.data[i+3];
+    if(!(a1>0||a2>0||a3>0)){dd[i+3]=0;continue;}
+    let r=bg,g=bg,b=bg;
+    if(bg===255){
+      // multiply on white
+      if(a1>0){r=r*i1.data[i]/255|0;g=g*i1.data[i+1]/255|0;b=b*i1.data[i+2]/255|0;}
+      if(a2>0){r=r*i2.data[i]/255|0;g=g*i2.data[i+1]/255|0;b=b*i2.data[i+2]/255|0;}
+      if(a3>0){r=r*i3.data[i]/255|0;g=g*i3.data[i+1]/255|0;b=b*i3.data[i+2]/255|0;}
+    } else {
+      // screen on black
+      if(a1>0){r=255-(255-r)*(255-i1.data[i])/255|0;g=255-(255-g)*(255-i1.data[i+1])/255|0;b=255-(255-b)*(255-i1.data[i+2])/255|0;}
+      if(a2>0){r=255-(255-r)*(255-i2.data[i])/255|0;g=255-(255-g)*(255-i2.data[i+1])/255|0;b=255-(255-b)*(255-i2.data[i+2])/255|0;}
+      if(a3>0){r=255-(255-r)*(255-i3.data[i])/255|0;g=255-(255-g)*(255-i3.data[i+1])/255|0;b=255-(255-b)*(255-i3.data[i+2])/255|0;}
+    }
+    dd[i]=r;dd[i+1]=g;dd[i+2]=b;dd[i+3]=255;
+  }
+  ctx.putImageData(out,0,0);
+}
+
+function animate(ts) {
+  const t=ts*SPEED, rot=ts*0.01;
+  const angles=[rot,rot*0.7,-rot*0.85];
+  const rings=[buildRing(t,sineParams1),buildRing(t,sineParams2),buildRing(t,sineParams3)];
+  if(theme===0){ renderBW(ctxL,rings,angles,0); renderBWScreen(ctxR,rings,angles); }
+  else if(theme===1){ renderCMY(ctxL,rings,angles,255); renderCMY(ctxR,rings,angles,0); }
+  else if(theme===2){ renderColor(ctxL,rings,angles,'#FF2120'); renderColorScreen(ctxR,rings,angles,'#FF2120'); }
+  else if(theme===3){ renderColor(ctxL,rings,angles,'#0940FD'); renderColorScreen(ctxR,rings,angles,'#0940FD'); }
+  else if(theme===4){ renderColor(ctxL,rings,angles,'#9933FF'); renderColorScreen(ctxR,rings,angles,'#9933FF'); }
+  else if(theme===5){ renderTwoColor(ctxL,rings,angles,'#0940FD','#FF2120',false); renderTwoColor(ctxR,rings,angles,'#0940FD','#FF2120',true); }
+  else if(theme===6){ renderTwoColor(ctxL,rings,angles,'#114C5A','#FFC801',false); renderTwoColor(ctxR,rings,angles,'#114C5A','#FFC801',true); }
+  
+function resizeCanvases() {
+  const size = Math.min(600, window.innerWidth * 0.42);
+  document.querySelectorAll('canvas').forEach(c => {
+    c.style.width = size + 'px';
+    c.style.height = size + 'px';
+  });
+}
+resizeCanvases();
+window.addEventListener('resize', resizeCanvases);
+
+requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
