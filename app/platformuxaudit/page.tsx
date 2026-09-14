@@ -24,18 +24,14 @@ function getTextContent(children: React.ReactNode): string {
 interface TocItem {
   id: string;
   text: string;
-  level: number;
 }
 
 function extractToc(markdown: string): TocItem[] {
   const items: TocItem[] = [];
   for (const line of markdown.split('\n')) {
     const h2 = line.match(/^## (.+)$/);
-    const h3 = line.match(/^### (.+)$/);
     if (h2 && !h2[1].toLowerCase().includes('table of contents')) {
-      items.push({ level: 2, text: h2[1], id: toId(h2[1]) });
-    } else if (h3) {
-      items.push({ level: 3, text: h3[1], id: toId(h3[1]) });
+      items.push({ text: h2[1], id: toId(h2[1]) });
     }
   }
   return items;
@@ -45,7 +41,7 @@ function stripToc(markdown: string): string {
   return markdown.replace(/## Table of Contents[\s\S]*?(?=\n---\n\n## )/m, '');
 }
 
-function buildComponents(activeId: string): Components {
+function buildComponents(): Components {
   return {
     h1: ({ children }) => (
       <h1
@@ -137,6 +133,8 @@ function buildComponents(activeId: string): Components {
   };
 }
 
+const components = buildComponents();
+
 export default function PlatformUXAudit() {
   const [content, setContent] = useState('');
   const [toc, setToc] = useState<TocItem[]>([]);
@@ -155,35 +153,23 @@ export default function PlatformUXAudit() {
   useEffect(() => {
     if (!content) return;
     observerRef.current?.disconnect();
-
     const timer = setTimeout(() => {
-      const headings = document.querySelectorAll('h2[id], h3[id]');
+      const headings = document.querySelectorAll('h2[id]');
       if (!headings.length) return;
-
       observerRef.current = new IntersectionObserver(
         (entries) => {
           const visible = entries.filter(e => e.isIntersecting);
-          if (visible.length > 0) {
-            setActiveId(visible[0].target.id);
-          }
+          if (visible.length > 0) setActiveId(visible[0].target.id);
         },
         { rootMargin: '-10% 0px -80% 0px', threshold: 0 }
       );
-
       headings.forEach(el => observerRef.current!.observe(el));
     }, 300);
-
-    return () => {
-      clearTimeout(timer);
-      observerRef.current?.disconnect();
-    };
+    return () => { clearTimeout(timer); observerRef.current?.disconnect(); };
   }, [content]);
 
-  const components = buildComponents(activeId);
-
   const scrollTo = useCallback((id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
   return (
@@ -197,18 +183,14 @@ export default function PlatformUXAudit() {
             <div style={{ marginTop: '0.375rem', fontSize: '1.5rem', fontWeight: 700, color: '#111827' }}>UX Review 2026</div>
             <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#6b7280' }}>Full audit of the ZiCMA Carbon Registry portal — flows, usability issues, and proposed solutions.</p>
           </div>
-
-          <ReactMarkdown components={components}>
-            {content}
-          </ReactMarkdown>
-
+          <ReactMarkdown components={components}>{content}</ReactMarkdown>
           <div style={{ marginTop: '5rem', paddingTop: '2rem', borderTop: '1px solid #f3f4f6', textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>ZiCMA UX Review 2026 · Denis Lixunoff</p>
           </div>
         </div>
 
-        {/* Sticky TOC sidebar */}
-        <nav style={{ width: 220, flexShrink: 0, position: 'sticky', top: '2rem', maxHeight: 'calc(100vh - 4rem)', overflowY: 'auto' }}>
+        {/* Sticky TOC */}
+        <nav style={{ width: 200, flexShrink: 0, position: 'sticky', top: '2rem', maxHeight: 'calc(100vh - 4rem)', overflowY: 'auto' }}>
           <p style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>Contents</p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {toc.map(item => {
@@ -224,13 +206,12 @@ export default function PlatformUXAudit() {
                       background: 'none',
                       border: 'none',
                       cursor: 'pointer',
-                      padding: item.level === 2 ? '0.25rem 0' : '0.2rem 0 0.2rem 0.75rem',
-                      fontSize: item.level === 2 ? '0.8125rem' : '0.75rem',
-                      fontWeight: item.level === 2 ? (isActive ? 600 : 500) : 400,
-                      color: isActive ? '#111827' : item.level === 2 ? '#374151' : '#6b7280',
+                      padding: '0.25rem 0',
+                      fontSize: '0.8125rem',
+                      fontWeight: isActive ? 600 : 400,
+                      color: isActive ? '#1d4ed8' : '#2563eb',
                       lineHeight: 1.4,
-                      borderLeft: item.level === 3 ? `2px solid ${isActive ? '#22c55e' : '#f3f4f6'}` : 'none',
-                      transition: 'color 0.15s, border-color 0.15s',
+                      transition: 'font-weight 0.15s',
                     }}
                   >
                     {item.text}
