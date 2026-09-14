@@ -176,7 +176,6 @@ export default function PlatformUXAudit() {
     <div style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
       <div style={{ maxWidth: 1080, margin: '0 auto', padding: '4rem 2rem', display: 'flex', gap: '4rem', alignItems: 'flex-start' }}>
 
-        {/* Main content */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ marginBottom: '3rem' }}>
             <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.1em' }}>ZiCMA Platform</span>
@@ -189,7 +188,6 @@ export default function PlatformUXAudit() {
           </div>
         </div>
 
-        {/* Sticky TOC */}
         <nav style={{ width: 200, flexShrink: 0, position: 'sticky', top: '2rem', maxHeight: 'calc(100vh - 4rem)', overflowY: 'auto' }}>
           <p style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>Contents</p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
@@ -209,9 +207,9 @@ export default function PlatformUXAudit() {
                       padding: '0.25rem 0',
                       fontSize: '0.8125rem',
                       fontWeight: isActive ? 600 : 400,
-                      color: isActive ? '#1d4ed8' : '#2563eb',
+                      color: isActive ? '#111827' : '#2563eb',
                       lineHeight: 1.4,
-                      transition: 'font-weight 0.15s',
+                      transition: 'color 0.15s, font-weight 0.15s',
                     }}
                   >
                     {item.text}
