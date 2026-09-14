@@ -31,7 +31,8 @@ function extractToc(markdown: string): TocItem[] {
   for (const line of markdown.split('\n')) {
     const h2 = line.match(/^## (.+)$/);
     if (h2 && !h2[1].toLowerCase().includes('table of contents')) {
-      items.push({ text: h2[1], id: toId(h2[1]) });
+      const label = h2[1].replace(/\s*\([^)]+\)/g, '').trim();
+      items.push({ text: label, id: toId(h2[1]) });
     }
   }
   return items;
@@ -44,18 +45,14 @@ function stripToc(markdown: string): string {
 function normalizeHeadings(markdown: string): string {
   const lines = markdown.split('\n');
 
-  // Step 1: convert problem h3s (no h4 children) to h4
-  // Only in numbered h2 sections; leave h3s in unnumbered sections (e.g. Summary) as-is
   const step1: string[] = [];
   let inNumberedSection = true;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-
     if (line.startsWith('## ')) {
       inNumberedSection = /^## \d+\./.test(line);
     }
-
     const h3Match = line.match(/^### (.+)$/);
     if (h3Match && inNumberedSection) {
       let isSubSection = false;
@@ -70,7 +67,6 @@ function normalizeHeadings(markdown: string): string {
     }
   }
 
-  // Step 2: add numbers to unnumbered h4s
   let h2Num = '';
   let h3Num = '';
   let h4Counter = 0;
@@ -110,37 +106,19 @@ function normalizeHeadings(markdown: string): string {
 function buildComponents(): Components {
   return {
     h1: ({ children }) => (
-      <h1
-        id={toId(getTextContent(children))}
-        style={{ fontSize: '1.75rem', fontWeight: 700, color: '#111827', marginTop: 0, marginBottom: '2.5rem', scrollMarginTop: '2rem' }}
-      >
-        {children}
-      </h1>
+      <h1 id={toId(getTextContent(children))} style={{ fontSize: '1.75rem', fontWeight: 700, color: '#111827', marginTop: 0, marginBottom: '2.5rem', scrollMarginTop: '2rem' }}>{children}</h1>
     ),
     h2: ({ children }) => (
-      <h2
-        id={toId(getTextContent(children))}
-        style={{ fontSize: '1.0625rem', fontWeight: 600, color: '#111827', marginTop: '4rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', scrollMarginTop: '2rem' }}
-      >
+      <h2 id={toId(getTextContent(children))} style={{ fontSize: '1.0625rem', fontWeight: 600, color: '#111827', marginTop: '4rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', scrollMarginTop: '2rem' }}>
         <span style={{ width: 3, height: 16, backgroundColor: '#22c55e', borderRadius: 999, display: 'inline-block', flexShrink: 0 }} />
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3
-        id={toId(getTextContent(children))}
-        style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#374151', marginTop: '2rem', marginBottom: '0.75rem', scrollMarginTop: '2rem' }}
-      >
-        {children}
-      </h3>
+      <h3 id={toId(getTextContent(children))} style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#374151', marginTop: '2rem', marginBottom: '0.75rem', scrollMarginTop: '2rem' }}>{children}</h3>
     ),
     h4: ({ children }) => (
-      <h4
-        id={toId(getTextContent(children))}
-        style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', marginTop: '1.75rem', marginBottom: '0.5rem', scrollMarginTop: '2rem' }}
-      >
-        {children}
-      </h4>
+      <h4 id={toId(getTextContent(children))} style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', marginTop: '1.75rem', marginBottom: '0.5rem', scrollMarginTop: '2rem' }}>{children}</h4>
     ),
     p: ({ children }) => (
       <p style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginTop: 0, marginBottom: '0.625rem' }}>{children}</p>
@@ -160,24 +138,13 @@ function buildComponents(): Components {
     a: ({ children, href }) => {
       if (href?.startsWith('#')) {
         return (
-          <a
-            href={href}
-            style={{ color: '#2563eb', textDecoration: 'none', cursor: 'pointer' }}
-            onClick={(e) => {
-              e.preventDefault();
-              const el = document.getElementById(href.slice(1));
-              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }}
-          >
+          <a href={href} style={{ color: '#2563eb', textDecoration: 'none', cursor: 'pointer' }}
+            onClick={(e) => { e.preventDefault(); document.getElementById(href.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>
             {children}
           </a>
         );
       }
-      return (
-        <a href={href} style={{ color: '#2563eb', textDecoration: 'none' }} target="_blank" rel="noreferrer">
-          {children}
-        </a>
-      );
+      return <a href={href} style={{ color: '#2563eb', textDecoration: 'none' }} target="_blank" rel="noreferrer">{children}</a>;
     },
     hr: () => null,
     blockquote: ({ children }) => (
@@ -263,23 +230,7 @@ export default function PlatformUXAudit() {
               const isActive = activeId === item.id;
               return (
                 <li key={item.id} style={{ marginBottom: '0.125rem' }}>
-                  <button
-                    onClick={() => scrollTo(item.id)}
-                    style={{
-                      display: 'block',
-                      width: '100%',
-                      textAlign: 'left',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '0.25rem 0',
-                      fontSize: '0.8125rem',
-                      fontWeight: isActive ? 600 : 400,
-                      color: isActive ? '#111827' : '#2563eb',
-                      lineHeight: 1.4,
-                      transition: 'color 0.15s, font-weight 0.15s',
-                    }}
-                  >
+                  <button onClick={() => scrollTo(item.id)} style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem 0', fontSize: '0.8125rem', fontWeight: isActive ? 600 : 400, color: isActive ? '#111827' : '#2563eb', lineHeight: 1.4, transition: 'color 0.15s, font-weight 0.15s' }}>
                     {item.text}
                   </button>
                 </li>
