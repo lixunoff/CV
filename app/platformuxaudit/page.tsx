@@ -199,7 +199,7 @@ export default function PlatformUXAudit() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff', display: 'flex' }}>
 
-      {/* Left 70% — content */}
+      {/* Left 70% — content centered */}
       <div style={{ width: '70%', display: 'flex', justifyContent: 'center', padding: '4rem 2rem' }}>
         <div style={{ width: '100%', maxWidth: 680 }}>
           <div style={{ marginBottom: '3.5rem' }}>
@@ -214,9 +214,9 @@ export default function PlatformUXAudit() {
         </div>
       </div>
 
-      {/* Right 30% — sticky nav */}
-      <div style={{ width: '30%', display: 'flex', justifyContent: 'center', borderLeft: '1px solid #f3f4f6' }}>
-        <nav style={{ width: '100%', maxWidth: 220, padding: '4rem 1rem', position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' }}>
+      {/* Right 30% — nav left-aligned */}
+      <div style={{ width: '30%' }}>
+        <nav style={{ padding: '4rem 2rem', position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' }}>
           <p style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>Contents</p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {toc.map(item => {
