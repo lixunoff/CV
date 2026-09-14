@@ -8,7 +8,7 @@ function toId(text: string): string {
   return String(text)
     .toLowerCase()
     .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-');
+    .replace(/\s/g, '-');
 }
 
 function getTextContent(children: React.ReactNode): string {
