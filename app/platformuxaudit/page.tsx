@@ -45,11 +45,19 @@ function normalizeHeadings(markdown: string): string {
   const lines = markdown.split('\n');
 
   // Step 1: convert problem h3s (no h4 children) to h4
+  // Only in numbered h2 sections; leave h3s in unnumbered sections (e.g. Summary) as-is
   const step1: string[] = [];
+  let inNumberedSection = true;
+
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
+
+    if (line.startsWith('## ')) {
+      inNumberedSection = /^## \d+\./.test(line);
+    }
+
     const h3Match = line.match(/^### (.+)$/);
-    if (h3Match) {
+    if (h3Match && inNumberedSection) {
       let isSubSection = false;
       for (let j = i + 1; j < lines.length; j++) {
         const next = lines[j];
@@ -74,11 +82,7 @@ function normalizeHeadings(markdown: string): string {
     const h4Match = line.match(/^#### (.+)$/);
 
     if (line.startsWith('## ')) {
-      if (h2Match) {
-        h2Num = h2Match[1];
-      } else {
-        h2Num = ''; // unnumbered h2 (e.g. Summary) — disable numbering
-      }
+      h2Num = h2Match ? h2Match[1] : '';
       h3Num = '';
       h4Counter = 0;
       result.push(line);
@@ -89,7 +93,7 @@ function normalizeHeadings(markdown: string): string {
     } else if (h4Match) {
       const text = h4Match[1];
       if (/^\d/.test(text) || !h2Num) {
-        result.push(line); // already numbered, or in unnumbered section
+        result.push(line);
       } else {
         h4Counter++;
         const prefix = h3Num ? `${h3Num}.${h4Counter}` : `${h2Num}.${h4Counter}`;
@@ -125,7 +129,7 @@ function buildComponents(): Components {
     h3: ({ children }) => (
       <h3
         id={toId(getTextContent(children))}
-        style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#374151', marginTop: '2.5rem', marginBottom: '0.5rem', scrollMarginTop: '2rem' }}
+        style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#374151', marginTop: '2rem', marginBottom: '0.75rem', scrollMarginTop: '2rem' }}
       >
         {children}
       </h3>
@@ -133,7 +137,7 @@ function buildComponents(): Components {
     h4: ({ children }) => (
       <h4
         id={toId(getTextContent(children))}
-        style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', marginTop: '1.75rem', marginBottom: '0.375rem', scrollMarginTop: '2rem' }}
+        style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', marginTop: '1.75rem', marginBottom: '0.5rem', scrollMarginTop: '2rem' }}
       >
         {children}
       </h4>
@@ -142,7 +146,7 @@ function buildComponents(): Components {
       <p style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginTop: 0, marginBottom: '0.625rem' }}>{children}</p>
     ),
     ul: ({ children }) => (
-      <ul style={{ paddingLeft: '1.25rem', marginTop: '0.25rem', marginBottom: '0.75rem' }}>{children}</ul>
+      <ul style={{ paddingLeft: '1.25rem', marginTop: '0.25rem', marginBottom: '0.75rem', listStyleType: 'disc' }}>{children}</ul>
     ),
     ol: ({ children }) => (
       <ol style={{ paddingLeft: '1.25rem', marginTop: '0.25rem', marginBottom: '0.75rem' }}>{children}</ol>
