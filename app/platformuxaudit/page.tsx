@@ -41,6 +41,32 @@ function stripToc(markdown: string): string {
   return markdown.replace(/## Table of Contents[\s\S]*?(?=\n---\n\n## )/m, '');
 }
 
+// h3 that have no h4 children are individual problems — convert to h4
+// h3 that have h4 children are sub-section paths (4.1, 4.2, 7.1…) — keep as h3
+function normalizeHeadings(markdown: string): string {
+  const lines = markdown.split('\n');
+  const result: string[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const h3Match = line.match(/^### (.+)$/);
+
+    if (h3Match) {
+      let isSubSection = false;
+      for (let j = i + 1; j < lines.length; j++) {
+        const next = lines[j];
+        if (next.startsWith('## ') || next.startsWith('### ')) break;
+        if (next.startsWith('#### ')) { isSubSection = true; break; }
+      }
+      result.push(isSubSection ? line : '#### ' + h3Match[1]);
+    } else {
+      result.push(line);
+    }
+  }
+
+  return result.join('\n');
+}
+
 function buildComponents(): Components {
   return {
     h1: ({ children }) => (
@@ -63,7 +89,7 @@ function buildComponents(): Components {
     h3: ({ children }) => (
       <h3
         id={toId(getTextContent(children))}
-        style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1f2937', marginTop: '2.5rem', marginBottom: '0.5rem', scrollMarginTop: '2rem' }}
+        style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#374151', marginTop: '2.5rem', marginBottom: '0.5rem', scrollMarginTop: '2rem' }}
       >
         {children}
       </h3>
@@ -71,7 +97,7 @@ function buildComponents(): Components {
     h4: ({ children }) => (
       <h4
         id={toId(getTextContent(children))}
-        style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151', marginTop: '1.75rem', marginBottom: '0.375rem', scrollMarginTop: '2rem' }}
+        style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', marginTop: '1.75rem', marginBottom: '0.375rem', scrollMarginTop: '2rem' }}
       >
         {children}
       </h4>
@@ -145,7 +171,9 @@ export default function PlatformUXAudit() {
     fetch('/ux-review-master.md')
       .then(r => r.text())
       .then(md => {
-        setContent(stripToc(md));
+        const stripped = stripToc(md);
+        const normalized = normalizeHeadings(stripped);
+        setContent(normalized);
         setToc(extractToc(md));
       });
   }, []);
