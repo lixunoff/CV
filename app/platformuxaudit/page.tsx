@@ -41,16 +41,14 @@ function stripToc(markdown: string): string {
   return markdown.replace(/## Table of Contents[\s\S]*?(?=\n---\n\n## )/m, '');
 }
 
-// h3 that have no h4 children are individual problems — convert to h4
-// h3 that have h4 children are sub-section paths (4.1, 4.2, 7.1…) — keep as h3
 function normalizeHeadings(markdown: string): string {
   const lines = markdown.split('\n');
-  const result: string[] = [];
 
+  // Step 1: convert problem h3s (no h4 children) to h4
+  const step1: string[] = [];
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const h3Match = line.match(/^### (.+)$/);
-
     if (h3Match) {
       let isSubSection = false;
       for (let j = i + 1; j < lines.length; j++) {
@@ -58,7 +56,41 @@ function normalizeHeadings(markdown: string): string {
         if (next.startsWith('## ') || next.startsWith('### ')) break;
         if (next.startsWith('#### ')) { isSubSection = true; break; }
       }
-      result.push(isSubSection ? line : '#### ' + h3Match[1]);
+      step1.push(isSubSection ? line : '#### ' + h3Match[1]);
+    } else {
+      step1.push(line);
+    }
+  }
+
+  // Step 2: add numbers to unnumbered h4s
+  let h2Num = '';
+  let h3Num = '';
+  let h4Counter = 0;
+  const result: string[] = [];
+
+  for (const line of step1) {
+    const h2Match = line.match(/^## (\d+)\./);
+    const h3Match = line.match(/^### (\d+\.\d+)/);
+    const h4Match = line.match(/^#### (.+)$/);
+
+    if (h2Match) {
+      h2Num = h2Match[1];
+      h3Num = '';
+      h4Counter = 0;
+      result.push(line);
+    } else if (h3Match) {
+      h3Num = h3Match[1];
+      h4Counter = 0;
+      result.push(line);
+    } else if (h4Match) {
+      const text = h4Match[1];
+      if (/^\d/.test(text)) {
+        result.push(line); // already has a number
+      } else {
+        h4Counter++;
+        const prefix = h3Num ? `${h3Num}.${h4Counter}` : `${h2Num}.${h4Counter}`;
+        result.push(`#### ${prefix} ${text}`);
+      }
     } else {
       result.push(line);
     }
