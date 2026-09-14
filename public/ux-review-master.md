@@ -649,7 +649,6 @@ This review covers the full ZiCMA portal across all user-facing flows. The platf
 - Fix terminology — replace "Rejected" with "Sent Back" across portal and auditor flow
 - Add pricing explanations at all payment steps
 - Add document template links at PIN/PDD steps
-- Add shapefile explanation and format guidance
 - Fix auditor flow — remove intermediate "Validate Project" screen, fix project request and credit request UX issues
 - Align all components and forms to DS across all flows (tracked in Figma audit)
 
