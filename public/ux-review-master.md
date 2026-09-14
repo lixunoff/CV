@@ -638,12 +638,12 @@ This review covers the full ZiCMA portal across all user-facing flows. The platf
 - Add notification center
 - Redesign payment flow — fee breakdown, bank transfer proof of payment instruction, clear success and error screens
 - Add KYC explanation to the Documents step
-- Build dashboard as the primary post-login landing page
 - Redesign Portfolio page from scratch
 - Improve shapefile upload flow — real-time validation, clear error messages, map preview; improve the integrated shapefile creation tool
-- Build a shared component library used across all country deployments — changes to any component should propagate everywhere automatically
 
 🟠 **High**
+- Build dashboard as the primary post-login landing page
+- Build a shared component library used across all country deployments — changes to any component should propagate everywhere automatically
 - Add progress indicators to all multi-step flows (onboarding, issuance, PIN/PDD)
 - Fix navigation — Back button and post-completion redirects throughout all flows
 - Fix terminology — replace "Rejected" with "Sent Back" across portal and auditor flow
