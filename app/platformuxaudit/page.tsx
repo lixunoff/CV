@@ -46,7 +46,7 @@ function buildComponents(): Components {
     h1: ({ children }) => (
       <h1
         id={toId(getTextContent(children))}
-        style={{ fontSize: '1.75rem', fontWeight: 700, color: '#111827', marginBottom: '2rem', marginTop: 0, scrollMarginTop: '2rem' }}
+        style={{ fontSize: '1.75rem', fontWeight: 700, color: '#111827', marginTop: 0, marginBottom: '2.5rem', scrollMarginTop: '2rem' }}
       >
         {children}
       </h1>
@@ -54,7 +54,7 @@ function buildComponents(): Components {
     h2: ({ children }) => (
       <h2
         id={toId(getTextContent(children))}
-        style={{ fontSize: '1.0625rem', fontWeight: 600, color: '#111827', marginTop: '3rem', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: '0.5rem', scrollMarginTop: '2rem' }}
+        style={{ fontSize: '1.0625rem', fontWeight: 600, color: '#111827', marginTop: '4rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', scrollMarginTop: '2rem' }}
       >
         <span style={{ width: 3, height: 16, backgroundColor: '#22c55e', borderRadius: 999, display: 'inline-block', flexShrink: 0 }} />
         {children}
@@ -63,7 +63,7 @@ function buildComponents(): Components {
     h3: ({ children }) => (
       <h3
         id={toId(getTextContent(children))}
-        style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1f2937', marginTop: '2rem', marginBottom: '0.5rem', scrollMarginTop: '2rem' }}
+        style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1f2937', marginTop: '2.5rem', marginBottom: '0.625rem', scrollMarginTop: '2rem' }}
       >
         {children}
       </h3>
@@ -71,22 +71,22 @@ function buildComponents(): Components {
     h4: ({ children }) => (
       <h4
         id={toId(getTextContent(children))}
-        style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151', marginTop: '1.5rem', marginBottom: '0.375rem', scrollMarginTop: '2rem' }}
+        style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151', marginTop: '1.75rem', marginBottom: '0.375rem', scrollMarginTop: '2rem' }}
       >
         {children}
       </h4>
     ),
     p: ({ children }) => (
-      <p style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginBottom: '0.75rem' }}>{children}</p>
+      <p style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginTop: 0, marginBottom: '0.625rem' }}>{children}</p>
     ),
     ul: ({ children }) => (
-      <ul style={{ paddingLeft: '1.25rem', marginBottom: '0.75rem' }}>{children}</ul>
+      <ul style={{ paddingLeft: '1.25rem', marginTop: '0.25rem', marginBottom: '0.75rem' }}>{children}</ul>
     ),
     ol: ({ children }) => (
-      <ol style={{ paddingLeft: '1.25rem', marginBottom: '0.75rem' }}>{children}</ol>
+      <ol style={{ paddingLeft: '1.25rem', marginTop: '0.25rem', marginBottom: '0.75rem' }}>{children}</ol>
     ),
     li: ({ children }) => (
-      <li style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginBottom: '0.25rem' }}>{children}</li>
+      <li style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginBottom: '0.2rem' }}>{children}</li>
     ),
     strong: ({ children }) => (
       <strong style={{ fontWeight: 600, color: '#1f2937' }}>{children}</strong>
@@ -113,14 +113,14 @@ function buildComponents(): Components {
         </a>
       );
     },
-    hr: () => <hr style={{ border: 'none', borderTop: '1px solid #f3f4f6', margin: '1.5rem 0' }} />,
+    hr: () => null,
     blockquote: ({ children }) => (
-      <blockquote style={{ borderLeft: '3px solid #f59e0b', backgroundColor: '#fffbeb', padding: '0.75rem 1rem', borderRadius: '0 0.375rem 0.375rem 0', margin: '1rem 0' }}>
+      <blockquote style={{ borderLeft: '3px solid #f59e0b', backgroundColor: '#fffbeb', padding: '0.75rem 1rem', borderRadius: '0 0.375rem 0.375rem 0', margin: '1.25rem 0' }}>
         <div style={{ color: '#92400e', fontSize: '0.875rem' }}>{children}</div>
       </blockquote>
     ),
     table: ({ children }) => (
-      <div style={{ overflowX: 'auto', marginBottom: '1rem' }}>
+      <div style={{ overflowX: 'auto', margin: '1rem 0' }}>
         <table style={{ width: '100%', fontSize: '0.8125rem', borderCollapse: 'collapse' }}>{children}</table>
       </div>
     ),
@@ -177,13 +177,13 @@ export default function PlatformUXAudit() {
       <div style={{ maxWidth: 1080, margin: '0 auto', padding: '4rem 2rem', display: 'flex', gap: '4rem', alignItems: 'flex-start' }}>
 
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ marginBottom: '3rem' }}>
+          <div style={{ marginBottom: '3.5rem' }}>
             <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.1em' }}>ZiCMA Platform</span>
             <div style={{ marginTop: '0.375rem', fontSize: '1.5rem', fontWeight: 700, color: '#111827' }}>UX Review 2026</div>
             <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#6b7280' }}>Full audit of the ZiCMA Carbon Registry portal — flows, usability issues, and proposed solutions.</p>
           </div>
           <ReactMarkdown components={components}>{content}</ReactMarkdown>
-          <div style={{ marginTop: '5rem', paddingTop: '2rem', borderTop: '1px solid #f3f4f6', textAlign: 'center' }}>
+          <div style={{ marginTop: '6rem', textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>ZiCMA UX Review 2026 · Denis Lixunoff</p>
           </div>
         </div>
