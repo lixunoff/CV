@@ -44,15 +44,12 @@ function stripToc(markdown: string): string {
 
 function normalizeHeadings(markdown: string): string {
   const lines = markdown.split('\n');
-
   const step1: string[] = [];
   let inNumberedSection = true;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (line.startsWith('## ')) {
-      inNumberedSection = /^## \d+\./.test(line);
-    }
+    if (line.startsWith('## ')) inNumberedSection = /^## \d+\./.test(line);
     const h3Match = line.match(/^### (.+)$/);
     if (h3Match && inNumberedSection) {
       let isSubSection = false;
@@ -67,9 +64,7 @@ function normalizeHeadings(markdown: string): string {
     }
   }
 
-  let h2Num = '';
-  let h3Num = '';
-  let h4Counter = 0;
+  let h2Num = '', h3Num = '', h4Counter = 0;
   const result: string[] = [];
 
   for (const line of step1) {
@@ -78,14 +73,10 @@ function normalizeHeadings(markdown: string): string {
     const h4Match = line.match(/^#### (.+)$/);
 
     if (line.startsWith('## ')) {
-      h2Num = h2Match ? h2Match[1] : '';
-      h3Num = '';
-      h4Counter = 0;
+      h2Num = h2Match ? h2Match[1] : ''; h3Num = ''; h4Counter = 0;
       result.push(line);
     } else if (h3Match) {
-      h3Num = h3Match[1];
-      h4Counter = 0;
-      result.push(line);
+      h3Num = h3Match[1]; h4Counter = 0; result.push(line);
     } else if (h4Match) {
       const text = h4Match[1];
       if (/^\d/.test(text) || !h2Num) {
@@ -178,9 +169,7 @@ export default function PlatformUXAudit() {
     fetch('/ux-review-master.md')
       .then(r => r.text())
       .then(md => {
-        const stripped = stripToc(md);
-        const normalized = normalizeHeadings(stripped);
-        setContent(normalized);
+        setContent(normalizeHeadings(stripToc(md)));
         setToc(extractToc(md));
       });
   }, []);
@@ -208,10 +197,11 @@ export default function PlatformUXAudit() {
   }, []);
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: '4rem 2rem', display: 'flex', gap: '4rem', alignItems: 'flex-start' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#fff', display: 'flex' }}>
 
-        <div style={{ flex: 1, minWidth: 0 }}>
+      {/* Left 70% — content */}
+      <div style={{ width: '70%', display: 'flex', justifyContent: 'center', padding: '4rem 2rem' }}>
+        <div style={{ width: '100%', maxWidth: 680 }}>
           <div style={{ marginBottom: '3.5rem' }}>
             <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.1em' }}>ZiCMA Platform</span>
             <div style={{ marginTop: '0.375rem', fontSize: '1.5rem', fontWeight: 700, color: '#111827' }}>UX Review 2026</div>
@@ -222,8 +212,11 @@ export default function PlatformUXAudit() {
             <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>ZiCMA UX Review 2026 · Denis Lixunoff</p>
           </div>
         </div>
+      </div>
 
-        <nav style={{ width: 200, flexShrink: 0, position: 'sticky', top: '2rem', maxHeight: 'calc(100vh - 4rem)', overflowY: 'auto' }}>
+      {/* Right 30% — sticky nav */}
+      <div style={{ width: '30%', display: 'flex', justifyContent: 'center', borderLeft: '1px solid #f3f4f6' }}>
+        <nav style={{ width: '100%', maxWidth: 220, padding: '4rem 1rem', position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' }}>
           <p style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>Contents</p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {toc.map(item => {
@@ -238,8 +231,8 @@ export default function PlatformUXAudit() {
             })}
           </ul>
         </nav>
-
       </div>
+
     </div>
   );
 }
