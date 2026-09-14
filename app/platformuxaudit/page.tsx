@@ -73,8 +73,12 @@ function normalizeHeadings(markdown: string): string {
     const h3Match = line.match(/^### (\d+\.\d+)/);
     const h4Match = line.match(/^#### (.+)$/);
 
-    if (h2Match) {
-      h2Num = h2Match[1];
+    if (line.startsWith('## ')) {
+      if (h2Match) {
+        h2Num = h2Match[1];
+      } else {
+        h2Num = ''; // unnumbered h2 (e.g. Summary) — disable numbering
+      }
       h3Num = '';
       h4Counter = 0;
       result.push(line);
@@ -84,8 +88,8 @@ function normalizeHeadings(markdown: string): string {
       result.push(line);
     } else if (h4Match) {
       const text = h4Match[1];
-      if (/^\d/.test(text)) {
-        result.push(line); // already has a number
+      if (/^\d/.test(text) || !h2Num) {
+        result.push(line); // already numbered, or in unnumbered section
       } else {
         h4Counter++;
         const prefix = h3Num ? `${h3Num}.${h4Counter}` : `${h2Num}.${h4Counter}`;
