@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 
@@ -13,140 +13,234 @@ function toId(text: string): string {
 
 function getTextContent(children: React.ReactNode): string {
   return React.Children.toArray(children)
-    .map(child => (typeof child === 'string' ? child : getTextContent((child as React.ReactElement)?.props?.children ?? '')))
+    .map(child =>
+      typeof child === 'string'
+        ? child
+        : getTextContent((child as React.ReactElement)?.props?.children ?? '')
+    )
     .join('');
 }
 
-const components: Components = {
-  h1: ({ children }) => {
-    const text = getTextContent(children);
-    return (
+interface TocItem {
+  id: string;
+  text: string;
+  level: number;
+}
+
+function extractToc(markdown: string): TocItem[] {
+  const items: TocItem[] = [];
+  for (const line of markdown.split('\n')) {
+    const h2 = line.match(/^## (.+)$/);
+    const h3 = line.match(/^### (.+)$/);
+    if (h2 && !h2[1].toLowerCase().includes('table of contents')) {
+      items.push({ level: 2, text: h2[1], id: toId(h2[1]) });
+    } else if (h3) {
+      items.push({ level: 3, text: h3[1], id: toId(h3[1]) });
+    }
+  }
+  return items;
+}
+
+function stripToc(markdown: string): string {
+  return markdown.replace(/## Table of Contents[\s\S]*?(?=\n---\n\n## )/m, '');
+}
+
+function buildComponents(activeId: string): Components {
+  return {
+    h1: ({ children }) => (
       <h1
-        id={toId(text)}
+        id={toId(getTextContent(children))}
         style={{ fontSize: '1.75rem', fontWeight: 700, color: '#111827', marginBottom: '2rem', marginTop: 0, scrollMarginTop: '2rem' }}
       >
         {children}
       </h1>
-    );
-  },
-  h2: ({ children }) => {
-    const text = getTextContent(children);
-    return (
+    ),
+    h2: ({ children }) => (
       <h2
-        id={toId(text)}
-        style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', marginTop: '3rem', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: '0.5rem', scrollMarginTop: '2rem' }}
+        id={toId(getTextContent(children))}
+        style={{ fontSize: '1.0625rem', fontWeight: 600, color: '#111827', marginTop: '3rem', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: '0.5rem', scrollMarginTop: '2rem' }}
       >
-        <span style={{ width: 3, height: 18, backgroundColor: '#22c55e', borderRadius: 999, display: 'inline-block', flexShrink: 0 }} />
+        <span style={{ width: 3, height: 16, backgroundColor: '#22c55e', borderRadius: 999, display: 'inline-block', flexShrink: 0 }} />
         {children}
       </h2>
-    );
-  },
-  h3: ({ children }) => {
-    const text = getTextContent(children);
-    return (
+    ),
+    h3: ({ children }) => (
       <h3
-        id={toId(text)}
+        id={toId(getTextContent(children))}
         style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1f2937', marginTop: '2rem', marginBottom: '0.5rem', scrollMarginTop: '2rem' }}
       >
         {children}
       </h3>
-    );
-  },
-  h4: ({ children }) => {
-    const text = getTextContent(children);
-    return (
+    ),
+    h4: ({ children }) => (
       <h4
-        id={toId(text)}
+        id={toId(getTextContent(children))}
         style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151', marginTop: '1.5rem', marginBottom: '0.375rem', scrollMarginTop: '2rem' }}
       >
         {children}
       </h4>
-    );
-  },
-  p: ({ children }) => (
-    <p style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginBottom: '0.75rem' }}>{children}</p>
-  ),
-  ul: ({ children }) => (
-    <ul style={{ paddingLeft: '1.25rem', marginBottom: '0.75rem' }}>{children}</ul>
-  ),
-  ol: ({ children }) => (
-    <ol style={{ paddingLeft: '1.25rem', marginBottom: '0.75rem' }}>{children}</ol>
-  ),
-  li: ({ children }) => (
-    <li style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginBottom: '0.25rem' }}>{children}</li>
-  ),
-  strong: ({ children }) => (
-    <strong style={{ fontWeight: 600, color: '#1f2937' }}>{children}</strong>
-  ),
-  a: ({ children, href }) => {
-    if (href?.startsWith('#')) {
+    ),
+    p: ({ children }) => (
+      <p style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginBottom: '0.75rem' }}>{children}</p>
+    ),
+    ul: ({ children }) => (
+      <ul style={{ paddingLeft: '1.25rem', marginBottom: '0.75rem' }}>{children}</ul>
+    ),
+    ol: ({ children }) => (
+      <ol style={{ paddingLeft: '1.25rem', marginBottom: '0.75rem' }}>{children}</ol>
+    ),
+    li: ({ children }) => (
+      <li style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginBottom: '0.25rem' }}>{children}</li>
+    ),
+    strong: ({ children }) => (
+      <strong style={{ fontWeight: 600, color: '#1f2937' }}>{children}</strong>
+    ),
+    a: ({ children, href }) => {
+      if (href?.startsWith('#')) {
+        return (
+          <a
+            href={href}
+            style={{ color: '#2563eb', textDecoration: 'none', cursor: 'pointer' }}
+            onClick={(e) => {
+              e.preventDefault();
+              const el = document.getElementById(href.slice(1));
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+          >
+            {children}
+          </a>
+        );
+      }
       return (
-        <a
-          href={href}
-          style={{ color: '#2563eb', textDecoration: 'none', cursor: 'pointer' }}
-          onClick={(e) => {
-            e.preventDefault();
-            const id = href.slice(1);
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }}
-        >
+        <a href={href} style={{ color: '#2563eb', textDecoration: 'none' }} target="_blank" rel="noreferrer">
           {children}
         </a>
       );
-    }
-    return (
-      <a href={href} style={{ color: '#2563eb', textDecoration: 'none' }} target="_blank" rel="noreferrer">
-        {children}
-      </a>
-    );
-  },
-  hr: () => (
-    <hr style={{ border: 'none', borderTop: '1px solid #f3f4f6', margin: '1.5rem 0' }} />
-  ),
-  blockquote: ({ children }) => (
-    <blockquote style={{ borderLeft: '3px solid #f59e0b', backgroundColor: '#fffbeb', padding: '0.75rem 1rem', borderRadius: '0 0.375rem 0.375rem 0', margin: '1rem 0' }}>
-      <div style={{ color: '#92400e', fontSize: '0.875rem' }}>{children}</div>
-    </blockquote>
-  ),
-  table: ({ children }) => (
-    <div style={{ overflowX: 'auto', marginBottom: '1rem' }}>
-      <table style={{ width: '100%', fontSize: '0.8125rem', borderCollapse: 'collapse' }}>{children}</table>
-    </div>
-  ),
-  th: ({ children }) => (
-    <th style={{ textAlign: 'left', padding: '0.5rem 0.75rem', backgroundColor: '#f9fafb', fontWeight: 600, color: '#374151', borderBottom: '1px solid #e5e7eb' }}>{children}</th>
-  ),
-  td: ({ children }) => (
-    <td style={{ padding: '0.5rem 0.75rem', color: '#4b5563', borderBottom: '1px solid #f3f4f6' }}>{children}</td>
-  ),
-};
+    },
+    hr: () => <hr style={{ border: 'none', borderTop: '1px solid #f3f4f6', margin: '1.5rem 0' }} />,
+    blockquote: ({ children }) => (
+      <blockquote style={{ borderLeft: '3px solid #f59e0b', backgroundColor: '#fffbeb', padding: '0.75rem 1rem', borderRadius: '0 0.375rem 0.375rem 0', margin: '1rem 0' }}>
+        <div style={{ color: '#92400e', fontSize: '0.875rem' }}>{children}</div>
+      </blockquote>
+    ),
+    table: ({ children }) => (
+      <div style={{ overflowX: 'auto', marginBottom: '1rem' }}>
+        <table style={{ width: '100%', fontSize: '0.8125rem', borderCollapse: 'collapse' }}>{children}</table>
+      </div>
+    ),
+    th: ({ children }) => (
+      <th style={{ textAlign: 'left', padding: '0.5rem 0.75rem', backgroundColor: '#f9fafb', fontWeight: 600, color: '#374151', borderBottom: '1px solid #e5e7eb' }}>{children}</th>
+    ),
+    td: ({ children }) => (
+      <td style={{ padding: '0.5rem 0.75rem', color: '#4b5563', borderBottom: '1px solid #f3f4f6' }}>{children}</td>
+    ),
+  };
+}
 
 export default function PlatformUXAudit() {
   const [content, setContent] = useState('');
+  const [toc, setToc] = useState<TocItem[]>([]);
+  const [activeId, setActiveId] = useState('');
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     fetch('/ux-review-master.md')
       .then(r => r.text())
-      .then(setContent);
+      .then(md => {
+        setContent(stripToc(md));
+        setToc(extractToc(md));
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!content) return;
+    observerRef.current?.disconnect();
+
+    const timer = setTimeout(() => {
+      const headings = document.querySelectorAll('h2[id], h3[id]');
+      if (!headings.length) return;
+
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          const visible = entries.filter(e => e.isIntersecting);
+          if (visible.length > 0) {
+            setActiveId(visible[0].target.id);
+          }
+        },
+        { rootMargin: '-10% 0px -80% 0px', threshold: 0 }
+      );
+
+      headings.forEach(el => observerRef.current!.observe(el));
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+      observerRef.current?.disconnect();
+    };
+  }, [content]);
+
+  const components = buildComponents(activeId);
+
+  const scrollTo = useCallback((id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
-      <div style={{ maxWidth: 768, margin: '0 auto', padding: '4rem 1.5rem' }}>
-        <div style={{ marginBottom: '3rem' }}>
-          <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.1em' }}>ZiCMA Platform</span>
-          <div style={{ marginTop: '0.375rem', fontSize: '1.5rem', fontWeight: 700, color: '#111827' }}>UX Review 2026</div>
-          <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#6b7280' }}>Full audit of the ZiCMA Carbon Registry portal — flows, usability issues, and proposed solutions.</p>
+      <div style={{ maxWidth: 1080, margin: '0 auto', padding: '4rem 2rem', display: 'flex', gap: '4rem', alignItems: 'flex-start' }}>
+
+        {/* Main content */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ marginBottom: '3rem' }}>
+            <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.1em' }}>ZiCMA Platform</span>
+            <div style={{ marginTop: '0.375rem', fontSize: '1.5rem', fontWeight: 700, color: '#111827' }}>UX Review 2026</div>
+            <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#6b7280' }}>Full audit of the ZiCMA Carbon Registry portal — flows, usability issues, and proposed solutions.</p>
+          </div>
+
+          <ReactMarkdown components={components}>
+            {content}
+          </ReactMarkdown>
+
+          <div style={{ marginTop: '5rem', paddingTop: '2rem', borderTop: '1px solid #f3f4f6', textAlign: 'center' }}>
+            <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>ZiCMA UX Review 2026 · Denis Lixunoff</p>
+          </div>
         </div>
 
-        <ReactMarkdown components={components}>
-          {content}
-        </ReactMarkdown>
+        {/* Sticky TOC sidebar */}
+        <nav style={{ width: 220, flexShrink: 0, position: 'sticky', top: '2rem', maxHeight: 'calc(100vh - 4rem)', overflowY: 'auto' }}>
+          <p style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>Contents</p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+            {toc.map(item => {
+              const isActive = activeId === item.id;
+              return (
+                <li key={item.id} style={{ marginBottom: '0.125rem' }}>
+                  <button
+                    onClick={() => scrollTo(item.id)}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      textAlign: 'left',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: item.level === 2 ? '0.25rem 0' : '0.2rem 0 0.2rem 0.75rem',
+                      fontSize: item.level === 2 ? '0.8125rem' : '0.75rem',
+                      fontWeight: item.level === 2 ? (isActive ? 600 : 500) : 400,
+                      color: isActive ? '#111827' : item.level === 2 ? '#374151' : '#6b7280',
+                      lineHeight: 1.4,
+                      borderLeft: item.level === 3 ? `2px solid ${isActive ? '#22c55e' : '#f3f4f6'}` : 'none',
+                      transition: 'color 0.15s, border-color 0.15s',
+                    }}
+                  >
+                    {item.text}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
-        <div style={{ marginTop: '5rem', paddingTop: '2rem', borderTop: '1px solid #f3f4f6', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>ZiCMA UX Review 2026 · Denis Lixunoff</p>
-        </div>
       </div>
     </div>
   );
