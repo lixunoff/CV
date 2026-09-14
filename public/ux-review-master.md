@@ -34,45 +34,31 @@
 
 ### 1.1 No Notification System
 
-The platform has no notification mechanism of any kind. Business processes on ZiCMA — KYC review, project audit, payment confirmation, credit issuance — can take days or weeks. During this time, the user receives no in-app signal that anything has changed.
+Business processes on ZiCMA can take days or weeks. While email notifications exist, there is no in-app mechanism to inform users about status changes. Users have to manually check every page to find out if anything has happened.
 
-There is no:
-- Bell icon or notification center in the header
-- Unread event counter
-- In-app alerts or banners for status changes
-- Push notifications
-- Action queue ("you have 2 things that need your attention")
+**Real-world impact:** Users miss critical updates or discover them too late — a confirmed source of support requests ("I didn't know I had to do anything else").
 
-The only way a user learns about a status change is by manually navigating to the relevant page — or by receiving an email that may go unnoticed.
-
-**Real-world impact:** Users don't know their application has been rejected, that an admin left a comment, or that a payment was received. This is a confirmed source of support requests ("I didn't know I had to do anything else"). The platform is entirely reactive — it never tells the user what to do next.
-
-**What's needed:** A notification center in the header showing a chronological feed of events relevant to the user: status changes, admin/auditor comments, payment confirmations, document requests, approvals. Each notification should link directly to the relevant action.
+**Solution:** Add an in-app notification center in the header with a chronological feed of events: status changes, admin/auditor comments, payment confirmations. Each notification should link directly to the relevant action.
 
 ---
 
 ### 1.2 No Dashboard After Login
 
-After signing in, the user lands directly on the Portfolio page (or is redirected based on their last route). There is no summary view — no single place where a user can understand their current state at a glance.
+After signing in, the user lands on the Profile page with no overview of their current situation. There is no single place to understand what's happening, what needs attention, or where to start.
 
-A first-time user sees an empty Portfolio with no guidance. A returning user has no way to quickly see:
-- How many projects they have and what stage each is at
-- Whether any action is required from them right now
-- What has changed since their last visit
+**Real-world impact:** Every session begins with manual navigation to reconstruct context. New users with no projects see an empty screen and have no clear next step.
 
-**Real-world impact:** Users have to navigate through multiple pages to reconstruct context. New users don't know where to start. The absence of a dashboard means every session starts with orientation overhead rather than productive action.
-
-**What's needed:** A dashboard as the post-login landing page showing: active projects with their current stage, pending actions (e.g. "upload payment receipt for Project X"), recent activity, and a clear CTA for users with no projects yet ("Register your first project").
+**Solution:** A dashboard as the default post-login page showing active projects with their current stage, pending actions, and a clear CTA for new users.
 
 ---
 
 ### 1.3 No Shared Component Library Across Products
 
-The platform currently serves multiple countries — Zimbabwe and Togo — each running its own independent codebase with its own set of UI components. Any change to a shared element (a button, a text field, a form) must be made separately in each product. With two countries this is manageable, but as new countries are onboarded the problem will scale significantly.
+Each country deployment (Zimbabwe, Togo) has its own independent UI components. Any change — to a button, a field, a form — has to be made separately in each product.
 
-This is not only a maintenance issue — it directly causes UX inconsistency. Components diverge over time, flows look and behave differently across products, and there is no single source of truth for what a component should look like or do.
+**Real-world impact:** As new countries are added, maintenance cost grows linearly. Components drift apart over time, causing visual inconsistencies across products that are hard to catch and fix.
 
-**What's needed:** A single shared component library consumed by all country deployments. Each country would have its own theme (colors, typography, logo) but use the same underlying components. A change to any component would propagate everywhere automatically, ensuring consistency and dramatically reducing maintenance overhead.
+**Solution:** A single shared component library with per-country theming. Components are built once, each country applies its own colors and typography on top.
 
 ---
 
@@ -82,55 +68,61 @@ This is not only a maintenance issue — it directly causes UX inconsistency. Co
 
 ### 2.1 No Progress Indicator
 
-The onboarding flow spans 7–8 steps: Choose Account Type → Credentials → Confirm Email → Account Details → Documents → KYC → Payment → Submitted. At no point does the user see how many steps remain or where they currently are in the process.
+The onboarding flow spans 7–8 steps but gives no indication of how many remain or where the user currently is.
 
-**Real-world impact:** Users don't know how much time to budget. Many abandon mid-flow assuming the process is longer than it is, or feel frustrated not knowing how close they are to the end.
+**Real-world impact:** Users don't know how long the process takes and may abandon mid-flow, not realizing they're almost done.
 
-**What's needed:** A step indicator (stepper or progress bar) visible throughout the entire flow, showing both completed and remaining steps by name.
+**Solution:** A step indicator visible throughout the entire flow showing completed and remaining steps by name.
 
 ---
 
 ### 2.2 Account Type Hidden in a Dropdown
 
-Choosing an account type (Corporate / Individual / Community / Government) is one of the most consequential decisions in the flow — it determines the entire registration path. Yet the four options are hidden behind a dropdown that requires an extra click to reveal.
+Account type (Corporate / Individual / Community / Government) determines the entire registration path, yet the four options are hidden behind a dropdown requiring an extra click to reveal.
 
-**What's needed:** Show all four options upfront as selectable cards or a segmented control, making the choice visible and scannable without any extra interaction.
+**Real-world impact:** With only 4 options, there's no reason to hide them. Some users won't open the dropdown at all and may miss this step or skip past it without making a conscious choice.
 
----
-
-### 2.3 KYC Step Not Explained
-
-The Documents step asks users to upload identity documents for KYC verification, but the screen provides no explanation of what KYC is, why specific document types are required, or what happens if the uploaded documents don't match requirements.
-
-**Confirmed real-world behavior:** Users upload placeholder or incorrect files just to pass the step and move forward. They then get rejected at the KYC review stage — a wasted cycle for both the user and the admin team.
-
-**What's needed:** Clear copy on the Documents screen explaining what KYC verification is, why correct documents matter, and what happens if the submission is rejected — before the user hits Continue.
+**Solution:** Show all four options upfront as selectable cards or a segmented control.
 
 ---
 
-### 2.4 No Way Back from Documents to Account Details
+### 2.3 KYC Flow Is Confusing and Unexplained
 
-Once a user reaches the Documents step, there is no way to navigate back to correct information entered in the Account Details step. The only workaround is to restart the entire flow from the beginning.
+The KYC process is split across two separate screens — document upload ("Individual Documents") and identity fields ("KYC Verification") — with no explanation connecting them. Neither screen mentions what KYC is, why it's required, or what happens if the submitted documents don't match the requirements.
 
-**What's needed:** Standard back navigation between all onboarding steps, with form state preserved.
+**Real-world impact:** Users treat both screens as optional formalities and upload incorrect or placeholder files just to move forward. This leads to KYC rejections that require admin intervention and force the user to restart — a confirmed recurring support issue.
+
+**Solution:** Combine or clearly connect the two screens under a single KYC step with an upfront explanation: what KYC is, why it matters, what documents are accepted, and what rejection means for their application.
+
+---
+
+### 2.4 No Back Navigation Before Submission
+
+Before the KYC submission step, the user should be able to go back and correct information from previous steps. Currently there is no back navigation — once you move forward, you can't return to fix a mistake without restarting the flow.
+
+**Real-world impact:** A mistake in Account Details or Documents forces a full restart — all entered data is lost.
+
+**Solution:** Allow back navigation between steps up until the point of KYC submission. Once submitted for admin review, locking the form is expected and correct.
 
 ---
 
 ### 2.5 Bank Transfer Step Doesn't Explain What Happens Next
 
-After downloading the invoice and completing the bank payment, users are not told they must return to the portal, upload the proof of payment, and click "Send Receipt" to actually submit their application. Many assume the process is complete once they've paid at the bank.
+After paying at the bank, users are not told they must return to the portal, upload proof of payment, and click "Send Receipt" to complete the submission. Many assume the process is done once they've paid.
 
-**Confirmed real-world impact:** This is a recurring source of support requests. Users' applications sit stuck indefinitely because they don't know a final action is required on their side.
+**Real-world impact:** A recurring source of support requests — applications sit stuck indefinitely because users don't know a final action is required.
 
-**What's needed:** Explicit, prominent copy on the Bank Transfer screen — before the user downloads the invoice — explaining the full sequence: download invoice → pay at bank → return to portal → upload receipt → click Send Receipt.
+**Solution:** Prominent copy on the Bank Transfer screen explaining the full sequence before the user downloads the invoice: pay at bank → return to portal → upload receipt → click Send Receipt.
 
 ---
 
-### 2.6 "Save and Continue" Active with Empty Required Fields
+### 2.6 Inconsistent Form Validation Across Steps
 
-On the Account Details step for Individual accounts, the "Save and Continue" button is enabled even when all required fields are empty. This is inconsistent with the Payment step, where the button is correctly disabled until valid input is provided.
+Some steps disable the CTA until all fields are filled (Payment), while others keep it always active (Account Details). There is no consistent validation pattern across the flow.
 
-**What's needed:** Consistent disabled state on all primary CTAs until required fields are filled and valid across all onboarding steps.
+**Real-world impact:** Users don't know what to expect — the button behaves differently depending on which step they're on.
+
+**Solution:** Pick one pattern and apply it consistently. The preferred approach per UX heuristics: keep the CTA always active, but show inline validation errors on submit — this gives users immediate, specific feedback on what needs to be fixed rather than a silently disabled button.
 
 ---
 
@@ -140,79 +132,95 @@ On the Account Details step for Individual accounts, the "Save and Continue" but
 
 ### 3.1 Unexplained Abbreviations
 
-The Portfolio page displays badge labels — **CA**, **IT**, **ET**, **R** — with no explanation anywhere on the screen. The ongoing request rows read "CA Ongoing request: N/A", "IT ET Transfer request: N/A", "R Retire credits: N/A". A first-time or occasional user has no way to know what these mean without leaving the platform to look it up.
+Request type badges — CA, IT, ET, R — appear throughout the page with no explanation of what they mean.
 
-**What's needed:** Full labels or tooltips on hover: CA = Corresponding Adjustment, IT = Internal Transfer, ET = External Transfer, R = Retirement.
+**Real-world impact:** First-time and occasional users have no way to understand what actions are available without leaving the platform to look it up.
 
----
-
-### 3.2 Action Buttons Always Visible Regardless of State
-
-APPLY CA, TRANSFER, and RETIRE buttons are shown on every credit row at all times — even when an ongoing request already exists or when there are no credits available to act on. There is no visual difference between "action available" and "action blocked due to ongoing request".
-
-**Real-world impact:** Users click a button and only then discover they can't proceed because of an existing request — with no clear explanation of what that request is or where to find it.
-
-**What's needed:** Disabled state with a tooltip explaining why ("You have an ongoing transfer request for this vintage") or hide secondary actions until the ongoing request is resolved.
+**Solution:** Replace abbreviations with full labels, or add tooltips on hover: CA = Corresponding Adjustment, IT = Internal Transfer, ET = External Transfer, R = Retirement.
 
 ---
 
-### 3.3 Unclear Relationship Between the Amount Field and Action Buttons
+### 3.2 Incorrect and Unresponsive Action Buttons on Credit Rows
 
-Each credit row has an input field labeled "Amount" pre-filled with 0, followed by APPLY CA / TRANSFER / RETIRE buttons. It is not obvious that the user needs to enter a quantity first and then press a button. There is no label connecting the input to the actions, no helper text, and no inline validation.
+Two issues with the credit row actions: first, the "Apply CA" button appears on credits that already have CA applied — the action makes no sense in this context. Second, while a Proposal Execution is pending, all action buttons (APPLY CA, TRANSFER, RETIRE) are visible but non-clickable with no explanation why.
 
-**What's needed:** A clear label ("Enter quantity to act on") and disabled buttons until a valid non-zero amount is entered.
+**Real-world impact:** Users see buttons that look available but don't work. There's no feedback explaining what's blocking them or what they need to do.
 
----
-
-### 3.4 Intro Text Takes Up Permanent Space
-
-Two paragraphs of explanatory text occupy the left half of the page on every visit. An experienced user has no way to dismiss or collapse this block.
-
-**What's needed:** Move this content to a one-time onboarding tooltip or a collapsible info block.
+**Solution:** Remove "Apply CA" from credits where CA is already applied. For blocked states (e.g. Awaiting Proposal Execution), keep the buttons clickable and show an inline error on click explaining why the action can't be performed right now — this is better UX than a silent disabled state.
 
 ---
 
-### 3.5 "Updated" Date Has No Context
+### 3.3 Unclear Relationship Between Amount Field and Action Buttons
 
-The top-right corner of the page shows "Updated: 13.05.2025" with no indication of what was updated. Without context the date is meaningless.
+Each credit row has an "Amount" input pre-filled with 0, followed by action buttons. It's not obvious that a quantity must be entered before pressing an action — there's no label connecting the input to the buttons.
 
-**What's needed:** Either a descriptive label ("Portfolio last updated") or remove it entirely.
+**Real-world impact:** Users press the action button without entering an amount and get confused when nothing happens or an error appears.
 
----
-
-### 3.6 HISTORY Buttons Active When There Is No History
-
-The HISTORY button appears next to each request type even when no requests have ever been made. Clicking it opens an empty modal with no empty state message.
-
-**What's needed:** Disable or hide the HISTORY button until at least one request exists.
+**Solution:** Add a clear label connecting the input to the actions, and disable action buttons until a valid non-zero amount is entered.
 
 ---
 
-### 3.7 No Confirmation After a Request Is Executed
+### 3.4 Intro Text Occupies Permanent Space
 
-After a transfer, retirement, or corresponding adjustment is executed, there is no in-app confirmation that the action completed successfully.
+Two paragraphs of onboarding copy occupy the left half of the page on every visit, with no way to dismiss or collapse them.
 
-**What's needed:** A clear success state after execution, with a summary of what changed and a direct link to the updated portfolio view.
+**Real-world impact:** Returning users see the same explanatory text every time, wasting screen space that could show their actual data.
+
+**Solution:** Move this content to a one-time dismissible tooltip or a collapsible info block.
+
+---
+
+### 3.5 "Updated" Date Is Likely a Bug
+
+The page shows "Updated: 13.05.2025" — a date that hasn't changed despite the portfolio being used months later. This suggests the date is either hardcoded or not updating correctly.
+
+**Real-world impact:** The stale date is misleading — users may think the data itself is outdated.
+
+**Solution:** Fix the date to reflect the actual last update time, and add a descriptive label ("Portfolio last updated") to clarify what it refers to.
+
+---
+
+### 3.6 Request History Split Into Three Separate Sections
+
+The history for CA, Transfer, and Retire requests is split into three separate HISTORY buttons, each opening its own modal. A user who wants to see all their past activity has to open three separate modals.
+
+**Real-world impact:** There's no single place to see a complete picture of all credit activity. Users have to check each section individually.
+
+**Solution:** Replace the three separate history buttons with a single unified request history page or panel, filterable by request type.
+
+---
+
+### 3.7 Inconsistent Post-Payment Behavior
+
+After payment, the experience differs depending on the outcome and method: a rejected payment, a successful bank transfer, and a successful card payment all result in different screens. Card payments in particular redirect the user to the public registry — with no explanation why.
+
+**Real-world impact:** Users don't know what to expect after paying. Being redirected to the registry without context feels like an error, not a success.
+
+**Solution:** Define a unified post-payment flow regardless of method or outcome. Always stay on the platform, show a clear status screen (success, rejected, or pending), and only link to the registry as a secondary action — not as the default redirect.
 
 ---
 
 ### 3.8 Three-Level Accordion Is Hard to Parse
 
-The portfolio table uses three levels of nested accordion. The visual distinction between levels relies only on indentation and font size, with no borders or color difference to guide the eye.
+The portfolio table uses three levels of nested accordion: credit group → project → individual credit rows. The visual distinction between levels relies only on indentation and font size.
 
-**What's needed:** Clearer visual separation between accordion levels: distinct background colors, left border accents, or card-based layout for the deepest level.
+**Real-world impact:** The hierarchy is hard to follow, especially when multiple sections are expanded at once.
+
+**Solution:** Add clearer visual separation between levels — distinct backgrounds, left border accents, or a card-based layout for the deepest level.
 
 ---
 
 ### 3.9 No Search or Filters
 
-The portfolio has no way to search or filter by sector, vintage year, project, or credit type.
+The portfolio has no way to filter by sector, vintage year, project, or credit type.
 
-**What's needed:** At minimum, a filter by vintage year and sector.
+**Real-world impact:** Users with multiple projects and vintages must manually expand and scan every group to find what they need.
+
+**Solution:** Add filters by vintage year and sector at minimum.
 
 ---
 
-> **Overall assessment:** The Portfolio page has too many fundamental UX problems to be addressed through incremental fixes. A full redesign is strongly recommended.
+> **Overall assessment:** The Portfolio page has too many fundamental UX problems to be addressed through incremental fixes. The information architecture, the table structure, the action model, and the transaction flows all need to be redesigned from scratch. A full redesign of this page is strongly recommended.
 
 ---
 
@@ -220,146 +228,183 @@ The portfolio has no way to search or filter by sector, vintage year, project, o
 
 ### 4.1 Projects List
 
-#### Project Statuses Are Unclear and the Page Itself May Be Redundant
+---
 
-Project cards don't clearly communicate what is currently happening with a project. All cards look the same regardless of state. Since most users have only one project, a dedicated Projects page may be unnecessary overhead — the same information could be surfaced directly on the dashboard.
+#### Too Many Inconsistent Statuses on Project Cards
+
+Project cards show multiple status labels simultaneously — Published, Approved, PIN: Approved, PDD: Pending — with no clear hierarchy or explanation of what each means. Some cards show a single "Status: PENDING" badge, others show separate PIN/PDD statuses. The terminology is inconsistent and the overall state of the project is hard to read at a glance.
+
+**Real-world impact:** Users can't quickly understand where their project stands or what action is needed next. Multiple status badges showing different things for the same project create confusion rather than clarity.
+
+**Solution:** Define a unified status model with clear, user-friendly labels. Show one primary status per card (e.g. "In Review", "Approved", "Action Required") and move sub-statuses like PIN/PDD to the project detail page.
+
+Since most users have only one project, this page may be redundant altogether — project status could be surfaced directly on the dashboard.
 
 ---
 
 ### 4.2 Project Detail Page
 
+---
+
 #### Project Details Layout Is Hard to Read
 
-The Project Details tab displays information as a grid of individual cards. With 10+ fields, the result is a visually heavy, fragmented layout.
+The Project Details tab displays every field in its own bordered card — 10+ fields with no grouping or hierarchy. Related fields like PDD Application Status and PDD Registration Status sit next to each other with no visual connection.
 
-**What's needed:** Replace the card grid with a simpler layout. Consider splitting content across tabs: **Overview**, **Documents**, **Boundaries**, **Requests**.
+**Real-world impact:** Scanning the page requires significant effort. Users can't quickly find the information they need.
+
+**Solution:** Replace the card grid with a simple label/value list grouped into logical sections. Split the page across tabs to reduce cognitive load: Overview, Documents, Boundaries, Requests.
 
 ---
 
 #### Requests Tab Is Hard to Parse
 
-The current Requests tab displays each request as a complex card with nested tables, status badges, and comment blocks all stacked together.
+Each request is shown as a dense card with nested tables, status badges, and comment blocks stacked together. With multiple requests visible at once, it's hard to tell what each one is or what its current status means.
 
-**What's needed:** Replace with a simple table listing all requests. Clicking a row should open a side panel or modal with full detail.
+**Real-world impact:** Users can't quickly understand the state of their requests or find a specific one.
+
+**Solution:** Replace with a simple table (type, stage, date, status). Clicking a row opens a detail panel with the full history, payment status, and admin comments.
 
 ---
 
 #### PIN Data Is Redundant on the Detail Page
 
-Both PIN and PDD data are shown on the detail page, creating redundancy. The PDD is the authoritative document.
+Both PIN and PDD data are shown on the detail page. The PDD supersedes the PIN and contains the same information in more detail — showing both creates unnecessary duplication.
 
-**What's needed:** Show only PDD data. PIN can be a collapsed section for historical context.
+**Real-world impact:** Users see the same fields twice with potentially different values, which creates confusion about which data is current and authoritative.
+
+**Solution:** Show only PDD data as the primary information. The PIN can be available as a collapsed historical reference.
 
 ---
 
-#### No Timeline or Onboarding Log
+#### No Project Timeline
 
-The project detail page shows current state but gives no sense of history — when it was submitted, when each stage was reviewed, when it was approved.
+The detail page shows the current state but gives no sense of history — when the project was submitted, when each stage was reviewed, when payments were made, when credits were issued.
 
-**What's needed:** A timeline or activity log showing key milestones with dates.
+**Real-world impact:** Users can't tell how long a review has been ongoing or reconstruct what happened at each stage.
+
+**Solution:** Add a chronological activity log showing key milestones with dates: submission, review decisions, payments, issuance.
 
 ---
 
 #### No Overall Project Status on the Page
 
-Nowhere on the page is the overall project status displayed as a clear top-level indicator.
+For projects that have completed onboarding, there is no top-level status indicator showing the current operational state. A project can be Active, Approved, or Suspended — for example, if the annual maintenance fee hasn't been paid or new reports haven't been submitted — but none of this is surfaced clearly on the page.
 
-**What's needed:** A prominent status indicator at the top of the page, next to the project name.
+**Real-world impact:** Users don't know if their project is in good standing or has been suspended. They have to dig through individual fields to piece together the current state.
 
----
+**Solution:** Show a prominent operational status badge at the top of the page (e.g. Active, Suspended, Action Required) with a brief explanation when action is needed — such as an overdue payment or missing report.
 
 ### 4.3 Project Onboarding (New & Existing, PIN / PDD)
 
+---
+
 #### No Progress Indicator in the Flow
 
-The onboarding flow for a new project spans multiple steps. The current stepper component is visually indistinguishable from tab navigation. Users have no sense of progress.
+The project onboarding flow spans multiple steps but the stepper looks identical to tab navigation — there's no indication of how many steps remain or which are completed.
 
-**What's needed:** A clear step-by-step progress indicator distinct from tab navigation.
+**Real-world impact:** Users don't know how long the process takes or how close they are to the end.
+
+**Solution:** A clear step-by-step progress indicator visually distinct from tabs, showing completed, current, and upcoming steps by name.
 
 ---
 
 #### No Links to PIN / PDD Document Templates
 
-The interface provides no link to download official templates. Users must leave the platform to find them.
+At the PIN and PDD stages users must upload structured documents, but the platform provides no link to download the official templates. Users have to leave the platform to find them on the ZiCMA website.
 
-**What's needed:** A direct download link at each document upload step.
+**Real-world impact:** Users submit documents in the wrong format or structure, which causes delays and rejections.
+
+**Solution:** Add a direct template download link inline at each document upload step, before the user is asked to upload anything.
 
 ---
 
 #### Pricing Is Not Transparent
 
-The platform does not explain how fees are calculated or how they vary by project size or stage.
+Fees are charged at multiple stages and differ between them, but the platform never explains how the amount is calculated or what it covers.
 
-**What's needed:** A fee breakdown or explanation at each payment step.
+**Real-world impact:** Users are surprised by payment amounts and don't understand what they're paying for or why it changes between stages.
 
----
-
-#### Shapefile Upload Flow Has Too Many Failure Points
-
-The shapefile upload is one of the most error-prone steps. Users frequently upload incorrect files and only discover the problem after submission. The integrated shapefile creation tool needs significant improvement.
-
-**Real-world impact:** Confirmed recurring source of errors and support requests.
-
-**What's needed:**
-- Improve the integrated shapefile creation tool
-- Add real-time validation with specific error messages
-- Prevent submission of obviously invalid files (e.g. PDFs inside a ZIP)
-- Add inline guidance on valid shapefile format
-- Show a map preview before the user confirms
+**Solution:** Show a fee breakdown at each payment step explaining how the amount was calculated and what stage it corresponds to.
 
 ---
 
-#### UI: Forms and Components Need to Be Aligned with the Design System
+#### Shapefile Upload Has Too Many Failure Points
 
-Several form components deviate from DS specifications: incorrect font styles, wrong hover states, misaligned inputs, outdated date picker.
+The shapefile upload is one of the most error-prone steps on the platform. Users frequently upload incorrect files — PDFs in a ZIP, wrong coordinate systems, malformed archives — and only discover the problem after submission. The integrated shapefile creation tool also needs significant improvement.
+
+**Real-world impact:** A confirmed recurring source of errors and support requests. Users upload invalid files just to pass the step and only learn about the problem later.
+
+**Solution:** Improve the integrated shapefile creation tool. Add real-time validation with specific error messages, block obviously invalid uploads (e.g. PDFs in a ZIP), add inline guidance on accepted formats, and show a map preview of the uploaded boundary before the user confirms.
+
+---
+
+#### UI: Forms and Components Deviate from the Design System
+
+Button fonts, dropdown hover states, credit amount inputs, date picker, and radio button spacing across the PIN/PDD flow don't match DS specifications.
+
+**Solution:** Align all form components with DS tokens and component standards.
 
 ---
 
 ### 4.4 Credit Issuance & Recognition
 
+---
+
 #### No Progress Indicator in the Flow
 
-The stepper looks and behaves like tab navigation. Users cannot tell where they are in the process.
+Same issue as in 4.3 — the stepper looks like tab navigation with no indication of progress or remaining steps.
+
+**Real-world impact:** Users don't know how many steps are left or whether they're close to done.
+
+**Solution:** A clear step-by-step progress indicator visually distinct from tabs.
 
 ---
 
 #### No Way to Go Back to a Previous Step
 
-Once the user moves forward, there is no way to return to correct a mistake.
+Once the user moves forward in the issuance or recognition flow, there's no way to return to a previous step to correct a mistake.
 
-**What's needed:** Back navigation between all steps with form state preserved.
+**Real-world impact:** Any input error requires abandoning and restarting the entire flow.
 
----
-
-#### After Completion — Redirect Goes to Hub Instead of Relevant Page
-
-After a successful issuance or recognition, the user is redirected to the general Projects list.
-
-**What's needed:** Redirect to the project detail page or Portfolio with a clear success message.
+**Solution:** Allow back navigation between all steps with form state preserved.
 
 ---
 
-#### No Visual Confirmation After Execution
+#### "Back" Button Goes to Projects Hub Instead of the Project
 
-After execution, there is no success state — no banner, no summary, no confirmation screen.
+The "Back" button throughout the flow leads to the general Projects list instead of the specific project the user came from.
 
-**What's needed:** A clear success confirmation with a link to the relevant next step.
+**Real-world impact:** Users lose their navigation context and have to manually find their way back to the project.
+
+**Solution:** "Back" should return to the project detail page the flow was initiated from.
+
+---
+
+#### No Clear Confirmation After Payment
+
+After the payment step in the issuance or recognition flow, there is no consistent confirmation screen. The experience varies depending on the payment method and outcome — similar to the issue described in 3.7.
+
+**Real-world impact:** Users don't know if their payment was successful or what happens next, and may try to pay again.
+
+**Solution:** Show a unified payment confirmation screen regardless of method (card or bank transfer) with a clear status and next steps.
 
 ---
 
 #### Pricing Is Not Transparent
 
-Fees in the issuance process are not explained.
+Same issue as in 4.3 — fees are charged without explanation of how the amount is calculated.
 
-**What's needed:** A fee breakdown at the payment step.
+**Real-world impact:** Users are surprised by payment amounts with no context.
+
+**Solution:** Show a fee breakdown at the payment step.
 
 ---
 
-#### "Back" Button Navigates to the Projects Hub
+#### UI: Forms and Components Deviate from the Design System
 
-The "Back" button leads to the general Projects list rather than the specific project.
+Same issues as in 4.3 — button fonts, year selection button margins, and credit amount input alignment don't match DS specifications.
 
-**What's needed:** "Back" should return to the project detail page.
+**Solution:** Align all components with DS tokens and standards.
 
 ---
 
@@ -369,87 +414,129 @@ The "Back" button leads to the general Projects list rather than the specific pr
 
 #### Unnecessary Intermediate Screen
 
-After clicking on a project in the list, the auditor is shown a "Validate Project" screen with an explanatory text block and a single "Review Project" button. This is a redundant step — clicking a project should navigate directly to the project detail view for review.
+Clicking a project opens a "Validate Project" screen with a text block and a single "Review Project" button before the auditor can see anything.
 
-**What's needed:** Remove the intermediate screen. Clicking a project card should open the project immediately.
+**Real-world impact:** An extra click with no value — the screen adds friction without providing new information.
+
+**Solution:** Remove the intermediate screen. Clicking a project card should open the project directly.
+
+---
 
 #### "Rejected" Should Be "Sent Back"
 
-When a project is sent back for revision after the first review, it is labeled "Rejected". This is incorrect — "Rejected" implies a final, unappealable decision, while the user can still make changes and resubmit. The Admin Panel correctly uses "Sent Back" for this state. The mismatch creates confusion for both auditors and project developers.
+When a project is returned for revision, it is labeled "Rejected" — which implies a final decision. The user can still make changes and resubmit, and the Admin Panel correctly uses "Sent Back" for this state.
 
-**What's needed:** Replace "Rejected" with "Sent Back" for all non-final rejection states throughout the auditor flow.
+**Real-world impact:** The label causes panic — developers think their project has been permanently rejected when it hasn't.
 
-#### UI: Components Need to Be Aligned with the Design System
+**Solution:** Replace "Rejected" with "Sent Back" for all non-final revision states throughout the auditor flow.
 
-Several components across the project audit flow deviate from DS standards: typographic hierarchy in containers, redundant UI elements, incorrect icons, and accordion styling. These should be brought in line with DS tokens and component standards.
+---
+
+#### UI: Components Deviate from the Design System
+
+Typographic hierarchy, icons, and accordion styling across the project audit flow don't match DS specifications.
+
+**Solution:** Align all components with DS tokens and standards.
+
+---
 
 ### 5.2 Credit Request Audit
 
 #### Project Developer Name Not Visible in the List
 
-The credit request list does not show the name of the Project Developer who submitted the request. The auditor cannot identify who they are reviewing without opening each request individually.
+The credit request list doesn't show who submitted the request. The auditor has to open each request individually to find out.
 
-**What's needed:** Add the Project Developer's name as a visible column in the credit request list.
+**Real-world impact:** Auditors can't prioritize or scan the list without opening every entry.
+
+**Solution:** Add the Project Developer's name as a visible column in the list.
+
+---
 
 #### "Rejected" Should Be "Sent Back"
 
-The same terminology issue as in the project audit flow applies here. Credit requests that have been sent back for revision are labeled "Rejected", which is misleading.
+Same terminology issue as in 5.1 — credit requests sent back for revision are labeled "Rejected".
 
-**What's needed:** Replace "Rejected" with "Sent Back" for all non-final rejection states.
+**Real-world impact:** Same confusion for developers — they think the request is permanently rejected.
 
-#### UI: Components Need to Be Aligned with the Design System
+**Solution:** Replace "Rejected" with "Sent Back" for all non-final revision states.
 
-The same DS inconsistencies present in the project audit flow appear here, along with an incorrect quantity input component (up/down arrows are impractical for large value changes) and skeleton loading states that currently show zeros instead of a proper loading indicator.
+---
+
+#### UI: Components Deviate from the Design System
+
+Same DS issues as in 5.1, plus an incorrect quantity input (up/down arrows impractical for large values) and skeleton loading states that show zeros instead of a loading indicator.
+
+**Solution:** Align all components with DS tokens and replace the quantity input and loading states.
 
 ## 6. Certificates
 
-#### Filtering Needs to Be Restructured
+#### Filter Order Is Illogical
 
-The current filter state does not follow a logical order for the user. Filtering should start with "Show All" as the default selected option, followed by individual certificate types, and "Expired" as the last filter.
+Filters don't follow a priority order — "Expired" certificates appear alongside active ones with no clear separation.
 
-**What's needed:** Reorder filters to: All → [certificate types] → Expired. "All" should be selected by default on page load.
+**Real-world impact:** Users looking for current certificates have to visually skip past expired ones.
 
----
-
-#### Default View Should Be a List, Not a Grid
-
-A list view is easier to scan for a document index page.
-
-**What's needed:** Set the list view as default. Keep the grid as an optional toggle.
+**Solution:** Set filter order to All → [certificate types] → Expired, with "All" selected by default.
 
 ---
 
-#### Each Certificate Type Should Have Its Own Preview
+#### Default View Is a Grid Instead of a List
 
-All certificate cards currently look identical regardless of type.
+Certificates are shown as cards in a grid, but this page is primarily a document index — users need to scan by type, date, and reference, not browse visually.
 
-**What's needed:** A type-specific thumbnail or visual indicator for each category.
+**Real-world impact:** Finding a specific certificate in grid view is slower and less efficient than a sortable list.
+
+**Solution:** Set list view as the default. Keep grid as an optional toggle.
 
 ---
 
-#### UI: Buttons and Table Fields Need to Be Aligned
+#### All Certificate Cards Look Identical
 
-Button styles and table columns are misaligned and inconsistently spaced. These should be brought in line with DS tokens.
+Cards show no visual distinction between certificate types — a Registration certificate looks the same as a Credit Issuance or Letter of Approval.
+
+**Real-world impact:** Users can't identify documents at a glance and have to read each card individually.
+
+**Solution:** Add a type-specific thumbnail or visual indicator for each certificate category.
+
+---
+
+#### UI: Buttons and Table Columns Deviate from the Design System
+
+Button styles on certificate cards and column alignment in list view don't match DS specifications.
+
+**Solution:** Align buttons and table layout with DS tokens and standards.
 
 ---
 
 ## 7. Transactions
 
-#### Column Order Needs to Be Revised
+#### Column Order Doesn't Reflect User Priority
 
-Columns should be reordered to surface the most relevant data first.
+The column order doesn't surface the most relevant information first when scanning transaction history.
+
+**Real-world impact:** Users have to scan across the full row to find the data they care about most.
+
+**Solution:** Reorder columns to prioritize date, type, amount, and status — moving less relevant fields to the end.
 
 ---
 
-#### Show Fee Breakdown per Transaction
+#### No Fee Breakdown per Transaction
 
 There is no indication of how much fee was applied to each transaction.
 
+**Real-world impact:** Users can't reconcile payments or understand why totals differ from what they expected.
+
+**Solution:** Add a fee column or a breakdown tooltip per transaction row.
+
 ---
 
-#### UI: Align Table Fields and Column Headers
+#### No Search or Filters
 
-Amount values in particular should be right-aligned to make numerical comparison easier.
+The transactions page shows a flat list with no way to search, filter by type, date range, or status.
+
+**Real-world impact:** Users looking for a specific transaction or trying to reconcile payments for a particular period have to scroll through the entire list manually.
+
+**Solution:** Add filters by transaction type, date range, and status. A search by amount or reference would also help.
 
 ---
 
@@ -457,47 +544,63 @@ Amount values in particular should be right-aligned to make numerical comparison
 
 ### 8.1 User Profile
 
-#### Profile Photo Has No Preview or Delete Option
+---
 
-The Profile Photo block shows no avatar preview and has no delete option.
+#### Profile Photo Block Has No Preview or Delete Option
 
-**What's needed:** Show the current avatar as a preview. Add a delete option alongside upload.
+The Profile Photo block shows only a title and description — no current photo preview and no way to remove an uploaded photo.
+
+**Real-world impact:** Users can't see what their profile photo looks like or remove it if needed.
+
+**Solution:** Show the current avatar as a preview inside the block and add a delete option alongside upload.
 
 ---
 
 #### Uploaded Documents Are Not Clickable for Preview
 
-Clicking on a document name does nothing — the user can only download.
+The Uploaded Documents section lists all submitted files but clicking on a document name does nothing — only download is available.
 
-**What's needed:** Make each document row clickable to open a preview.
+**Real-world impact:** Users who want to verify a document have to download it first instead of previewing it inline.
+
+**Solution:** Make each document row clickable to open a preview (PDF viewer or image lightbox).
 
 ---
 
 #### Support Contact Is Just an Email Link
 
-The "Contact us" button simply opens an email client with no tracking or confirmation.
+The "Contact us" button opens an email client with no confirmation, no tracking, and no record that the request was received.
 
-**What's needed:** An in-platform support form that confirms receipt.
+**Real-world impact:** Users have no way to know if their support request was received or when to expect a response.
+
+**Solution:** Replace the email link with an in-platform support form that confirms receipt and provides a reference for follow-up.
 
 ---
 
 ### 8.2 Security
 
+---
+
 #### No Two-Factor Authentication
 
-The profile shows "Two-Factor Authentication: N/A" with no way to enable it.
+The Security page shows "Two-Factor Authentication: N/A" with no way to enable it.
 
-**What's needed:** Add 2FA management (authenticator app or SMS) on the Security page.
+**Real-world impact:** For a regulated platform handling carbon credit transactions, the absence of 2FA is a meaningful security gap.
+
+**Solution:** Add the ability to enable and manage 2FA (authenticator app or SMS) from the Security page.
 
 ---
 
 ### 8.3 Terms & Conditions
 
+---
+
 #### Poor Typographic Hierarchy
 
-Long document with no visual hierarchy, low contrast, and no table of contents.
+The Terms & Conditions page is a long document with no visual structure — headlines aren't clearly distinguished from body text, contrast is low, and there's no table of contents or anchor links to navigate between sections.
 
-**What's needed:** Clear headline styles, better contrast, and a table of contents with anchor links.
+**Real-world impact:** Users can't find specific sections without reading through the entire page.
+
+**Solution:** Add clear headline styles, better contrast, and a table of contents with anchor links at the top of the page.
 
 ---
 
@@ -505,15 +608,17 @@ Long document with no visual hierarchy, low contrast, and no table of contents.
 
 ### No Shared Component Library Across Products
 
-Each country deployment has its own independent component codebase. Any change must be made separately in each product. As new countries are onboarded, this will compound significantly.
+Each country deployment has its own independent UI components. Any change to a shared element must be made separately in each product.
 
-**What's needed:** A single shared component library with per-country theming.
+**Real-world impact:** As new countries are onboarded, maintenance cost grows and components drift apart — causing visual inconsistencies that are hard to catch and fix.
+
+**Solution:** A single shared component library with per-country theming. Components are built once, each country applies its own colors and typography on top.
 
 ---
 
 ### Component and Design System Violations
 
-All UI-level findings are documented with annotated screenshots in the Figma audit file:
+All specific UI findings — incorrect component usage, spacing deviations, wrong font styles, icon inconsistencies, and mismatches with Figma mockups — are documented with annotated screenshots in the Figma audit file:
 
 [UX Audit 2026 — UI Annotations (Figma)](https://www.figma.com/design/Vf3QSoQXIx2I77x5fcPLRH/UX-Audit-2026?node-id=6212-736&p=f&t=S8BHBIMEq7wdQVp6-0)
 
@@ -536,6 +641,7 @@ This review covers the full ZiCMA portal across all user-facing flows. The platf
 - Build dashboard as the primary post-login landing page
 - Redesign Portfolio page from scratch
 - Improve shapefile upload flow — real-time validation, clear error messages, map preview; improve the integrated shapefile creation tool
+- Build a shared component library used across all country deployments — changes to any component should propagate everywhere automatically
 
 🟠 **High**
 - Add progress indicators to all multi-step flows (onboarding, issuance, PIN/PDD)
@@ -545,6 +651,7 @@ This review covers the full ZiCMA portal across all user-facing flows. The platf
 - Add document template links at PIN/PDD steps
 - Add shapefile explanation and format guidance
 - Fix auditor flow — remove intermediate "Validate Project" screen, fix project request and credit request UX issues
+- Align all components and forms to DS across all flows (tracked in Figma audit)
 
 🟡 **Medium**
 - Redesign project detail page with tab structure (Overview, Documents, Boundaries, Requests)
@@ -555,7 +662,3 @@ This review covers the full ZiCMA portal across all user-facing flows. The platf
 - Fix profile photo block — add preview and delete option
 - Replace "Contact us" email link with in-platform support form
 - Improve Terms & Conditions typography and add table of contents
-
-🔵 **UI Issues**
-- Align all components and forms to DS across all flows (tracked in Figma audit)
-- Build a shared component library used across all country deployments — changes to any component should propagate everywhere automatically

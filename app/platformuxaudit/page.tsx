@@ -208,9 +208,6 @@ export default function PlatformUXAudit() {
             <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#6b7280' }}>Full audit of the ZiCMA Carbon Registry portal — flows, usability issues, and proposed solutions.</p>
           </div>
           <ReactMarkdown components={components}>{content}</ReactMarkdown>
-          <div style={{ marginTop: '6rem', textAlign: 'center' }}>
-            <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>ZiCMA UX Review 2026 · Denis Lixunoff</p>
-          </div>
         </div>
       </div>
 
