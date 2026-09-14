@@ -15,14 +15,16 @@
    - 4.2 Project Detail Page
    - 4.3 Project Onboarding (New & Existing, PIN / PDD)
    - 4.4 Credit Issuance & Recognition
-   - 4.5 Auditor Flow
-5. [Certificates](#5-certificates)
-6. [Transactions](#6-transactions)
-7. [Profile](#7-profile)
-   - 7.1 User Profile
-   - 7.2 Security
-   - 7.3 Terms & Conditions
-8. [UI Bugs & Design Inconsistencies](#8-ui-bugs--design-inconsistencies)
+5. [Auditor Flow](#5-auditor-flow)
+   - 5.1 Project Audit
+   - 5.2 Credit Request Audit
+6. [Certificates](#6-certificates)
+7. [Transactions](#7-transactions)
+8. [Profile](#8-profile)
+   - 8.1 User Profile
+   - 8.2 Security
+   - 8.3 Terms & Conditions
+9. [UI Bugs & Design Inconsistencies](#9-ui-bugs--design-inconsistencies)
 
 ---
 
@@ -270,7 +272,7 @@ Nowhere on the page is the overall project status displayed as a clear top-level
 
 #### No Progress Indicator in the Flow
 
-The current stepper component is visually indistinguishable from tab navigation. Users have no sense of progress.
+The onboarding flow for a new project spans multiple steps. The current stepper component is visually indistinguishable from tab navigation. Users have no sense of progress.
 
 **What's needed:** A clear step-by-step progress indicator distinct from tab navigation.
 
@@ -361,47 +363,51 @@ The "Back" button leads to the general Projects list rather than the specific pr
 
 ---
 
-### 4.5 Auditor Flow
+## 5. Auditor Flow
 
-#### 4.5.1 Project Audit
+### 5.1 Project Audit
 
-**Unnecessary Intermediate Screen**
+#### Unnecessary Intermediate Screen
 
-After clicking on a project, the auditor sees a "Validate Project" screen with a text block and a single "Review Project" button. This is a redundant step.
+After clicking on a project in the list, the auditor is shown a "Validate Project" screen with an explanatory text block and a single "Review Project" button. This is a redundant step — clicking a project should navigate directly to the project detail view for review.
 
-**What's needed:** Remove the intermediate screen. Clicking a project should open it directly.
+**What's needed:** Remove the intermediate screen. Clicking a project card should open the project immediately.
 
----
+#### "Rejected" Should Be "Sent Back"
 
-**"Rejected" Should Be "Sent Back"**
+When a project is sent back for revision after the first review, it is labeled "Rejected". This is incorrect — "Rejected" implies a final, unappealable decision, while the user can still make changes and resubmit. The Admin Panel correctly uses "Sent Back" for this state. The mismatch creates confusion for both auditors and project developers.
 
-When a project is sent back for revision, it is labeled "Rejected" — which implies a final decision. The Admin Panel correctly uses "Sent Back".
+**What's needed:** Replace "Rejected" with "Sent Back" for all non-final rejection states throughout the auditor flow.
+
+#### UI: Components Need to Be Aligned with the Design System
+
+Several components across the project audit flow deviate from DS standards: typographic hierarchy in containers, redundant UI elements, incorrect icons, and accordion styling. These should be brought in line with DS tokens and component standards.
+
+### 5.2 Credit Request Audit
+
+#### Project Developer Name Not Visible in the List
+
+The credit request list does not show the name of the Project Developer who submitted the request. The auditor cannot identify who they are reviewing without opening each request individually.
+
+**What's needed:** Add the Project Developer's name as a visible column in the credit request list.
+
+#### "Rejected" Should Be "Sent Back"
+
+The same terminology issue as in the project audit flow applies here. Credit requests that have been sent back for revision are labeled "Rejected", which is misleading.
 
 **What's needed:** Replace "Rejected" with "Sent Back" for all non-final rejection states.
 
----
+#### UI: Components Need to Be Aligned with the Design System
 
-#### 4.5.2 Credit Request Audit
+The same DS inconsistencies present in the project audit flow appear here, along with an incorrect quantity input component (up/down arrows are impractical for large value changes) and skeleton loading states that currently show zeros instead of a proper loading indicator.
 
-**Project Developer Name Not Visible in the List**
-
-The credit request list does not show the name of the Project Developer who submitted the request.
-
-**What's needed:** Add the Project Developer's name as a visible column.
-
----
-
-**"Rejected" Should Be "Sent Back"**
-
-Same terminology issue as in the project audit flow.
-
----
-
-## 5. Certificates
+## 6. Certificates
 
 #### Filtering Needs to Be Restructured
 
-Filtering should start with "Show All" as the default, followed by individual certificate types, and "Expired" as the last filter.
+The current filter state does not follow a logical order for the user. Filtering should start with "Show All" as the default selected option, followed by individual certificate types, and "Expired" as the last filter.
+
+**What's needed:** Reorder filters to: All → [certificate types] → Expired. "All" should be selected by default on page load.
 
 ---
 
@@ -421,7 +427,13 @@ All certificate cards currently look identical regardless of type.
 
 ---
 
-## 6. Transactions
+#### UI: Buttons and Table Fields Need to Be Aligned
+
+Button styles and table columns are misaligned and inconsistently spaced. These should be brought in line with DS tokens.
+
+---
+
+## 7. Transactions
 
 #### Column Order Needs to Be Revised
 
@@ -435,9 +447,15 @@ There is no indication of how much fee was applied to each transaction.
 
 ---
 
-## 7. Profile
+#### UI: Align Table Fields and Column Headers
 
-### 7.1 User Profile
+Amount values in particular should be right-aligned to make numerical comparison easier.
+
+---
+
+## 8. Profile
+
+### 8.1 User Profile
 
 #### Profile Photo Has No Preview or Delete Option
 
@@ -463,7 +481,7 @@ The "Contact us" button simply opens an email client with no tracking or confirm
 
 ---
 
-### 7.2 Security
+### 8.2 Security
 
 #### No Two-Factor Authentication
 
@@ -473,7 +491,7 @@ The profile shows "Two-Factor Authentication: N/A" with no way to enable it.
 
 ---
 
-### 7.3 Terms & Conditions
+### 8.3 Terms & Conditions
 
 #### Poor Typographic Hierarchy
 
@@ -483,7 +501,7 @@ Long document with no visual hierarchy, low contrast, and no table of contents.
 
 ---
 
-## 8. UI Bugs & Design Inconsistencies
+## 9. UI Bugs & Design Inconsistencies
 
 ### No Shared Component Library Across Products
 
@@ -540,4 +558,4 @@ This review covers the full ZiCMA portal across all user-facing flows. The platf
 
 🔵 **UI Issues**
 - Align all components and forms to DS across all flows (tracked in Figma audit)
-- Build a shared component library used across all country deployments
+- Build a shared component library used across all country deployments — changes to any component should propagate everywhere automatically
