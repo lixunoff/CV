@@ -41,7 +41,24 @@ function stripToc(markdown: string): string {
   return markdown.replace(/## Table of Contents[\s\S]*?(?=\n---\n\n## )/m, '');
 }
 
+// Cards wrap h3/h4 + their following paragraphs/lists.
+// We do this by grouping siblings in a custom renderer approach:
+// Instead, we use a wrapping div via the parent — but react-markdown
+// doesn't easily support that. So we use a CSS trick: each h3/h4
+// starts a visual card via top-padding + background that extends
+// to the next heading. We achieve this with a simple bordered box
+// on each h3/h4 + padding on p/li that follow.
+// Simpler: just style h3/h4 with a card look.
+
 function buildComponents(): Components {
+  const cardStyle: React.CSSProperties = {
+    backgroundColor: '#f9fafb',
+    borderRadius: '8px',
+    padding: '1rem 1.125rem 0.125rem',
+    marginTop: '1rem',
+    marginBottom: '0.125rem',
+  };
+
   return {
     h1: ({ children }) => (
       <h1
@@ -54,28 +71,45 @@ function buildComponents(): Components {
     h2: ({ children }) => (
       <h2
         id={toId(getTextContent(children))}
-        style={{ fontSize: '1.0625rem', fontWeight: 600, color: '#111827', marginTop: '4rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', scrollMarginTop: '2rem' }}
+        style={{ fontSize: '1.0625rem', fontWeight: 600, color: '#111827', marginTop: '4rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', scrollMarginTop: '2rem' }}
       >
         <span style={{ width: 3, height: 16, backgroundColor: '#22c55e', borderRadius: 999, display: 'inline-block', flexShrink: 0 }} />
         {children}
       </h2>
     ),
-    h3: ({ children }) => (
-      <h3
-        id={toId(getTextContent(children))}
-        style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1f2937', marginTop: '2.5rem', marginBottom: '0.625rem', scrollMarginTop: '2rem' }}
-      >
-        {children}
-      </h3>
-    ),
-    h4: ({ children }) => (
-      <h4
-        id={toId(getTextContent(children))}
-        style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151', marginTop: '1.75rem', marginBottom: '0.375rem', scrollMarginTop: '2rem' }}
-      >
-        {children}
-      </h4>
-    ),
+    h3: ({ children }) => {
+      const text = getTextContent(children);
+      const isSubSection = /^\d+\.\d+/.test(text.trim());
+      if (isSubSection) {
+        return (
+          <h3
+            id={toId(text)}
+            style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#374151', marginTop: '2.5rem', marginBottom: '0.75rem', scrollMarginTop: '2rem' }}
+          >
+            {children}
+          </h3>
+        );
+      }
+      return (
+        <h3
+          id={toId(text)}
+          style={{ ...cardStyle, fontSize: '0.875rem', fontWeight: 600, color: '#111827', scrollMarginTop: '2rem' }}
+        >
+          {children}
+        </h3>
+      );
+    },
+    h4: ({ children }) => {
+      const text = getTextContent(children);
+      return (
+        <h4
+          id={toId(text)}
+          style={{ ...cardStyle, fontSize: '0.875rem', fontWeight: 600, color: '#111827', scrollMarginTop: '2rem' }}
+        >
+          {children}
+        </h4>
+      );
+    },
     p: ({ children }) => (
       <p style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginTop: 0, marginBottom: '0.625rem' }}>{children}</p>
     ),
