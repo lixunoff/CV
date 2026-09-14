@@ -4,22 +4,65 @@ import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 
+function toId(text: string): string {
+  return String(text)
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-');
+}
+
+function getTextContent(children: React.ReactNode): string {
+  return React.Children.toArray(children)
+    .map(child => (typeof child === 'string' ? child : getTextContent((child as React.ReactElement)?.props?.children ?? '')))
+    .join('');
+}
+
 const components: Components = {
-  h1: ({ children }) => (
-    <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#111827', marginBottom: '2rem', marginTop: 0 }}>{children}</h1>
-  ),
-  h2: ({ children }) => (
-    <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', marginTop: '3rem', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-      <span style={{ width: 3, height: 18, backgroundColor: '#22c55e', borderRadius: 999, display: 'inline-block', flexShrink: 0 }} />
-      {children}
-    </h2>
-  ),
-  h3: ({ children }) => (
-    <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1f2937', marginTop: '2rem', marginBottom: '0.5rem' }}>{children}</h3>
-  ),
-  h4: ({ children }) => (
-    <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151', marginTop: '1.5rem', marginBottom: '0.375rem' }}>{children}</h4>
-  ),
+  h1: ({ children }) => {
+    const text = getTextContent(children);
+    return (
+      <h1
+        id={toId(text)}
+        style={{ fontSize: '1.75rem', fontWeight: 700, color: '#111827', marginBottom: '2rem', marginTop: 0, scrollMarginTop: '2rem' }}
+      >
+        {children}
+      </h1>
+    );
+  },
+  h2: ({ children }) => {
+    const text = getTextContent(children);
+    return (
+      <h2
+        id={toId(text)}
+        style={{ fontSize: '1.125rem', fontWeight: 600, color: '#111827', marginTop: '3rem', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: '0.5rem', scrollMarginTop: '2rem' }}
+      >
+        <span style={{ width: 3, height: 18, backgroundColor: '#22c55e', borderRadius: 999, display: 'inline-block', flexShrink: 0 }} />
+        {children}
+      </h2>
+    );
+  },
+  h3: ({ children }) => {
+    const text = getTextContent(children);
+    return (
+      <h3
+        id={toId(text)}
+        style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1f2937', marginTop: '2rem', marginBottom: '0.5rem', scrollMarginTop: '2rem' }}
+      >
+        {children}
+      </h3>
+    );
+  },
+  h4: ({ children }) => {
+    const text = getTextContent(children);
+    return (
+      <h4
+        id={toId(text)}
+        style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151', marginTop: '1.5rem', marginBottom: '0.375rem', scrollMarginTop: '2rem' }}
+      >
+        {children}
+      </h4>
+    );
+  },
   p: ({ children }) => (
     <p style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: 1.7, marginBottom: '0.75rem' }}>{children}</p>
   ),
@@ -35,9 +78,29 @@ const components: Components = {
   strong: ({ children }) => (
     <strong style={{ fontWeight: 600, color: '#1f2937' }}>{children}</strong>
   ),
-  a: ({ children, href }) => (
-    <a href={href} style={{ color: '#2563eb', textDecoration: 'none' }} target="_blank" rel="noreferrer">{children}</a>
-  ),
+  a: ({ children, href }) => {
+    if (href?.startsWith('#')) {
+      return (
+        <a
+          href={href}
+          style={{ color: '#2563eb', textDecoration: 'none', cursor: 'pointer' }}
+          onClick={(e) => {
+            e.preventDefault();
+            const id = href.slice(1);
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }}
+        >
+          {children}
+        </a>
+      );
+    }
+    return (
+      <a href={href} style={{ color: '#2563eb', textDecoration: 'none' }} target="_blank" rel="noreferrer">
+        {children}
+      </a>
+    );
+  },
   hr: () => (
     <hr style={{ border: 'none', borderTop: '1px solid #f3f4f6', margin: '1.5rem 0' }} />
   ),
