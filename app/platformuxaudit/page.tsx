@@ -198,9 +198,10 @@ export default function PlatformUXAudit() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff', display: 'flex' }}>
+      <style>{`@media (max-width: 768px) { .ux-nav-col { display: none !important; } .ux-content-col { width: 100% !important; } }`}</style>
 
       {/* Left 70% — content centered */}
-      <div style={{ width: '70%', display: 'flex', justifyContent: 'center', padding: '4rem 2rem' }}>
+      <div className="ux-content-col" style={{ width: '70%', display: 'flex', justifyContent: 'center', padding: '4rem 2rem' }}>
         <div style={{ width: '100%', maxWidth: 680 }}>
           <div style={{ marginBottom: '3.5rem' }}>
             <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.1em' }}>ZiCMA Platform</span>
@@ -212,7 +213,7 @@ export default function PlatformUXAudit() {
       </div>
 
       {/* Right 30% — nav left-aligned */}
-      <div style={{ width: '30%' }}>
+      <div className="ux-nav-col" style={{ width: '30%' }}>
         <nav style={{ padding: '4rem 2rem', position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' }}>
           <p style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>Contents</p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
