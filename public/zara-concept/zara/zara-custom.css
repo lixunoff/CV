@@ -1155,3 +1155,84 @@
 .z-ticket .z-field > textarea { height: 104px; min-height: 104px; }
 /* twice the space above the buttons: 12 → 24px */
 .z-ticket-foot p { margin: 0 0 16px; }
+/* ticket created: a plain green Rui check (no circle), 160px; title the size of "Talk to a person", on two lines */
+.z-ticket-done .z-done-ico { width: 160px; height: 160px; margin: 0 auto 16px; border-radius: 0; background: none; color: var(--rui-palette-background-button-primary-default); animation: none; }
+.z-ticket-done .z-done-ico svg { width: 160px; height: 160px; }
+.z-ticket-done h3 { margin: 0 0 8px; font-size: 18px; line-height: 24px; letter-spacing: -.01em; }
+.z-ticket-done .z-done-ico, .z-ticket-done .z-done-ico svg { width: 80px; height: 80px; }
+/* email confirmed: the same plain green check, 80px, no circle */
+.z-gate-ok .z-done-ico { width: 80px; height: 80px; margin: 0 auto; border-radius: 0; background: none; color: var(--rui-palette-background-button-primary-default); animation: none; }
+.z-gate-ok .z-done-ico svg { width: 80px; height: 80px; }
+/* ── ticket in the chat: a user message (dark bubble, right) ── */
+.z-msg--ticket { display: flex; justify-content: flex-end; }
+.z-tmsg {
+  width: min(100%, 320px); box-sizing: border-box; padding: 12px 14px 10px; border-radius: 16px;
+  background: var(--rui-color-neutrals-1000); color: var(--rui-color-neutrals-0);
+}
+.z-tmsg-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.z-tmsg-title { min-width: 0; }
+.z-tmsg-title b { display: block; font: 14px/20px var(--rui-font-bold); font-weight: normal; }
+.z-tmsg-title small { display: block; font: 12px/16px var(--rui-font-regular); color: rgba(255, 255, 255, .6); }
+/* Rui Text Badge, Type=Alert: #F1AE00, white 10/14 bold uppercase, r2 */
+.z-rbadge { flex: none; display: inline-flex; align-items: center; height: 16px; padding: .5px 3px 1.5px; box-sizing: border-box; border-radius: 2px;
+  font: 10px/14px var(--rui-font-bold); letter-spacing: .4px; text-transform: uppercase; white-space: nowrap; }
+.z-rbadge--alert { background: var(--rui-color-yellow-500); color: var(--rui-color-neutrals-0); }
+.z-tmsg-div { height: 1px; margin: 10px 0 8px; border: 0; background: rgba(255, 255, 255, .14); }
+.z-tmsg .z-meta-link { font: 12px/16px var(--rui-font-regular); color: var(--rui-palette-stroke-input-hover); }
+.z-tmsg-details { display: none; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 10px 0 2px; font-size: 12px; line-height: 16px; }
+.z-tmsg.is-open .z-tmsg-details { display: grid; animation: z-in .25s var(--z-ease) both; }
+.z-tmsg-details dt { color: rgba(255, 255, 255, .6); }
+.z-tmsg-details dd { margin: 0; color: var(--rui-color-neutrals-0); word-break: break-word; }
+/* ticket message: full width of the thread, badge centred on the two title lines, "Show details" on the right */
+.z-tmsg { width: 100%; }
+.z-tmsg-top { align-items: center; }
+.z-tmsg .z-tmsg-toggle { display: block; margin-left: auto; }
+.z-tmsg .z-tmsg-toggle { margin-left: 0; }
+.z-tmsg-div { background: var(--rui-color-neutrals-900); }
+/* ticket created: no floating Hide, "Back to chat" is enough */
+.z-ticket.is-done .z-back-btn { display: none; }
+.z-ticket.is-done .z-ticket-card { padding-bottom: 24px; }
+/* Cancel / Back to chat = Rui Base Button, Type=Border, Medium, Light:
+   1px border rgba(145,179,199,.2); hover = text #53607C only; active = border + text green #008400; focus = 2px #006400 */
+.z-btn--ghost, .z-btn--ghost:hover, .z-btn--ghost:active, .z-btn--ghost:focus, .z-btn--ghost:focus-visible {
+  height: 40px; padding: 0 12px; border-radius: 6px; background: transparent !important;
+  border: 1px solid var(--rui-palette-stroke-input-default) !important; box-shadow: none !important; outline: none;
+  font: 12px/16px var(--rui-font-bold); color: var(--rui-color-neutrals-1000);
+  transition: color .15s, border-color .15s;
+}
+.z-btn--ghost:hover { color: var(--rui-color-neutrals-600); }
+.z-btn--ghost:active, .z-btn--ghost:active:hover { border-color: var(--rui-palette-background-button-primary-default) !important; color: var(--rui-palette-background-button-primary-default); }
+.z-btn--ghost:active svg { color: var(--rui-palette-background-button-primary-default); }
+.z-btn--ghost:focus-visible { border: 2px solid var(--rui-color-zicma-800) !important; }
+.z-btn--ghost { color: var(--rui-color-neutrals-1000) !important; outline: none !important; }
+.z-btn--ghost:hover { color: var(--rui-color-neutrals-600) !important; }
+.z-btn--ghost:active, .z-btn--ghost:active:hover { color: var(--rui-palette-background-button-primary-default) !important; }
+.z-tmsg.is-open .z-tmsg-details { animation: none; }
+/* active Ask field: a double ring in our dark (#080C16) — outer line, 2px white gap, inner line */
+.zara[data-state="compose"] .z-pill:focus-within {
+  box-shadow: 0 0 0 1px var(--rui-color-neutrals-1000), 0 0 0 3px var(--rui-color-neutrals-0), 0 0 0 4px var(--rui-color-neutrals-1000);
+}
+/* in the chat the field is flush with the panel edges, so the same double ring is drawn inside */
+.zara.is-mini .z-box:focus-within {
+  box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-1000), inset 0 0 0 3px var(--rui-color-neutrals-0), inset 0 0 0 4px var(--rui-color-neutrals-1000);
+}
+/* active Ask field: one solid 2px ring in our dark — 1px inside the field edge + 1px outside, no gap */
+.zara[data-state="compose"] .z-pill:focus-within { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-1000), 0 0 0 1px var(--rui-color-neutrals-1000); }
+/* chat field touches the panel edges (outside would be clipped): the same 2px, drawn inside */
+.zara.is-mini .z-box:focus-within { box-shadow: inset 0 0 0 2px var(--rui-color-neutrals-1000); }
+/* active Ask field: the same 2px ring, in our green */
+.zara[data-state="compose"] .z-pill:focus-within { box-shadow: inset 0 0 0 1px var(--rui-palette-background-button-primary-default), 0 0 0 1px var(--rui-palette-background-button-primary-default); }
+.zara.is-mini .z-box:focus-within { box-shadow: inset 0 0 0 2px var(--rui-palette-background-button-primary-default); }
+/* answer tables: white card; header white, no line under it, labels tertiary (#BBD2E0);
+   first column (the row's name) in our dark, the other cells grey */
+.z-table th { background: var(--rui-color-neutrals-0); border-bottom: 0; color: var(--rui-color-neutrals-400); }
+.z-table td { color: var(--rui-color-neutrals-600); }
+.z-table td:first-child { color: var(--rui-color-neutrals-800); }
+/* table lines: neutrals-300 (row lines and the outline) */
+.z-table td { border-bottom-color: var(--rui-color-neutrals-300); }
+.z-table-wrap { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300); }
+/* source pills: the title gets the room, the domain / page trails it */
+.z-source span { flex: 0 1 auto; max-width: none; }
+.z-source small { flex: none; }
+/* short trailing text ("p.8") had a 24px min-width, which looked like extra right padding */
+.z-source small { min-width: 0; }

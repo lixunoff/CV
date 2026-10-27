@@ -191,6 +191,10 @@
     about: { t: 'What is ZiCMA?', d: 'zicmatest.info/about', u: SITE + '/about/zicma' },
     onboard: { t: 'How to onboard a project', d: 'zicmatest.info/how-to', u: SITE + '/how-to/how-to-onboard-a-project' },
     contacts: { t: 'Contacts', d: 'zicmatest.info/contacts', u: SITE + '/contacts' },
+    // documents (concept placeholders): shown with the file icon and the page they cite, as in Figma (Zara / Source Item → "p.45")
+    report: { k: 'doc', t: 'Carbon Registry Annual Report 2025', d: 'p.8', u: SITE + '/resources' },
+    regGuide: { k: 'doc', t: 'Project Developer Registration Guide', d: 'p.12', u: SITE + '/resources' },
+    art6Guide: { k: 'doc', t: 'ZiCMA Article 6 Guidelines', d: 'p.45', u: SITE + '/resources' },
   };
 
   const ANSWERS = {
@@ -203,7 +207,7 @@
         { p: 'About <b>1.6%</b> of issued mitigation outcomes (MOs) have been retired so far. Each MO represents one tonne of CO₂e reduced or removed <span class="z-cite" data-n="2">2</span>.' },
         { p: 'Want a breakdown by sector or by year of issuance? I can build a table from the credit registry.' },
       ],
-      sources: ['registry', 'faq'],
+      sources: ['registry', 'report', 'faq'],
       followups: ['Break it down by sector', 'What does “retired” mean?', 'Which projects issued the most?'],
     },
     projects: {
@@ -238,7 +242,7 @@
         ] },
         { p: 'If you get stuck, ZiCMA support is at <a href="mailto:support@zicma.org.zw">support@zicma.org.zw</a> <span class="z-cite" data-n="2">2</span>.' },
       ],
-      sources: ['howDev', 'contacts'],
+      sources: ['howDev', 'regGuide', 'contacts'],
       followups: ['Which documents does a company need?', 'How do I onboard a project?', 'What are the registration fees?'],
     },
     ca: {
@@ -249,7 +253,7 @@
         { p: 'ZiCMA is Zimbabwe’s Designated National Authority under <b>Article 6 of the Paris Agreement</b>. It authorises activities and mitigation outcomes that can be used as ITMOs <span class="z-cite" data-n="2">2</span>. Credits on the registry can be retired with a corresponding adjustment inside the same digital system <span class="z-cite" data-n="3">3</span>.' },
         { p: 'So far, <b>45,595</b> MOs carry a corresponding adjustment on the registry.' },
       ],
-      sources: ['art6', 'about', 'howCA'],
+      sources: ['art6', 'art6Guide', 'about', 'howCA'],
       followups: ['How do I apply a corresponding adjustment?', 'What is an ITMO?', 'Can I use credits for voluntary offsets?'],
     },
     voluntary: {
@@ -382,7 +386,7 @@
               <label class="z-field"><textarea name="msg" rows="4" placeholder=" "></textarea><span>How can we help? <i>*</i></span><em class="z-err">Add a short description.</em></label>
               <div class="z-context">
                 <span class="z-context-label">Shared with the representative</span>
-                <label class="z-attach z-attach-conv"><input type="checkbox" name="conv" checked><span class="z-attach-ico">${ICON.chat}</span><span class="z-attach-text"><b>Attach this chat with Zara to this ticket</b><small class="z-conv-ctx"></small></span><span class="z-check">${ICON.check}</span></label>
+                <label class="z-attach z-attach-conv"><input type="checkbox" name="conv" checked><span class="z-attach-ico">${ICON.chat}</span><span class="z-attach-text"><b>Attach your chat with Zara to the ticket</b><small class="z-conv-ctx"></small></span><span class="z-check">${ICON.check}</span></label>
               </div>
               <footer class="z-ticket-foot">
                 <button type="button" class="z-btn z-btn--ghost" data-act="ticket-close">Cancel</button>
@@ -392,9 +396,9 @@
             </form>
             <div class="z-ticket-done">
               <span class="z-done-ico">${ICON.check}</span>
-              <h3>Ticket <span class="z-ticket-id"></span> created</h3>
+              <h3>Ticket <span class="z-ticket-id"></span><br>created successfully</h3>
               <p>When a ZiCMA representative replies, we’ll notify <b class="z-ticket-mail"></b>. The email quotes the reply, and it also appears in this conversation. You can keep asking Zara in the meantime.</p>
-              <button type="button" class="z-btn z-btn--primary" data-act="ticket-close">Back to Zara</button>
+              <button type="button" class="z-btn z-btn--ghost" data-act="ticket-close">Back to chat</button>
             </div>
           </div>
         </section>
@@ -699,14 +703,27 @@
     requestAnimationFrame(() => { thread.scrollTop = thread.scrollHeight; });
   }
 
+  // the ticket is a message from the user: dark bubble on the right — "Ticket … created", date, Rui Alert badge,
+  // a divider and "Show details" (question, whether the chat was attached)
   function ticketMsg(m) {
     const el = document.createElement('div');
-    el.className = 'z-msg z-msg--ticket';
-    el.innerHTML = `<div class="z-tcard"><span class="z-tcard-ico">${ICON.person}</span>
-      <div class="z-tcard-body"><b>Ticket ${esc(m.id)} sent to ZiCMA</b><span>${esc(m.topic)} · we’ll notify ${esc(m.email)}${m.conv ? ' · conversation shared' : ''}</span></div>
-      <span class="z-tcard-status">Awaiting reply</span></div>`;
+    el.className = 'z-msg z-msg--user z-msg--ticket';
+    el.innerHTML = `<div class="z-tmsg">
+      <div class="z-tmsg-top">
+        <div class="z-tmsg-title"><b>Ticket ${esc(m.id)}</b><small>Created ${(() => { const d = new Date(m.t || Date.now()); return `${d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}, ${d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`; })()}</small></div>
+        <span class="z-rbadge z-rbadge--alert">Awaiting reply</span>
+      </div>
+      <hr class="z-tmsg-div">
+      <button class="z-meta-link z-tmsg-toggle" type="button" data-act="tdetails" aria-expanded="false">Show details</button>
+      <dl class="z-tmsg-details">
+        <dt>Reply to</dt><dd>${esc(m.email || '')}</dd>
+        <dt>Chat with Zara</dt><dd>${m.conv ? 'Attached' : 'Not attached'}</dd>
+        <dt>Question</dt><dd>${m.q ? esc(m.q) : '—'}</dd>
+      </dl>
+    </div>`;
     return el;
   }
+
 
   function userMsg(text) {
     const el = document.createElement('div');
@@ -930,6 +947,24 @@
     const t = e.target.closest('[data-act],[data-ask],[data-session],[data-resume],.z-cite');
     if (!t) return;
     if (t.classList.contains('z-cite')) return flashSource(t);
+    if (t.dataset.act === 'tdetails') {
+      // details unfold / fold like a hatch: height + fade, interruptible
+      const card = t.closest('.z-tmsg'), box = card.querySelector('.z-tmsg-details');
+      const open = !card.classList.contains('is-open');
+      t.textContent = open ? 'Hide details' : 'Show details';
+      t.setAttribute('aria-expanded', open);
+      const from = box.getBoundingClientRect().height;
+      box.getAnimations().forEach((a) => a.cancel());
+      card.classList.add('is-open');
+      box.style.overflow = 'hidden';
+      const to = open ? box.scrollHeight : 0;
+      if (reduced()) { card.classList.toggle('is-open', open); box.style.overflow = ''; return; }
+      const anim = box.animate(
+        [{ height: from + 'px', opacity: open ? 0 : 1, marginTop: open ? '0px' : '10px' }, { height: to + 'px', opacity: open ? 1 : 0, marginTop: open ? '10px' : '0px' }],
+        { duration: open ? 260 : 200, easing: 'cubic-bezier(.23, 1, .32, 1)' });
+      anim.onfinish = () => { box.style.overflow = ''; if (!open) card.classList.remove('is-open'); };
+      return;
+    }
     if (t.dataset.act === 'steps') {
       const steps = t.closest('.z-ai-body').querySelector('.z-steps');
       if (!steps) return;
@@ -1059,7 +1094,7 @@
   function closeTicket() {
     panel.classList.remove('ticket-open');
     if (ticket.classList.contains('is-done')) tForm.reset();
-    setTimeout(() => boxInput.focus({ preventScroll: true }), 250);
+    if (root.contains(document.activeElement)) document.activeElement.blur(); // back in the chat without focusing the field
   }
 
   tForm.addEventListener('submit', (e) => {
@@ -1078,7 +1113,7 @@
       s = { id: 's' + Date.now(), title: 'Ticket: ' + topicName, tag: 'ticket', updated: Date.now(), messages: [] };
       sessions.push(s); activeId = s.id; threadInner.innerHTML = ''; title.textContent = s.title;
     }
-    const m = { role: 'ticket', id, topic: topicName, email, conv: sharing, t: Date.now() };
+    const m = { role: 'ticket', id, topic: topicName, email, conv: sharing, q: msg, name: tForm.name.value.trim(), t: Date.now() };
     s.messages.push(m); s.updated = Date.now(); openSessionId = s.id;
     save(); renderList();
     threadInner.querySelectorAll('.z-followups').forEach((f) => f.remove());
