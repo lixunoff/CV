@@ -1,0 +1,136 @@
+/* Zara — ZiCMA assistant concept: design system components.
+   Only what exists in Rui (zicma.org.zw): base reset, buttons (primary, border, ghost, ghostDark; sizes m and s),
+   and text fields (styled as on the ZiCMA portal). Every value comes from rui-tokens.css.
+   Zara-only elements are in zara-custom.css. Load order: rui-tokens.css → zara.css → zara-custom.css. */
+
+.zara, .zara * { box-sizing: border-box; }
+.zara { font-family: var(--rui-font-regular); color: var(--rui-color-neutrals-800); -webkit-font-smoothing: antialiased; }
+:where(.zara) button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+:where(.zara) svg { display: block; flex: none; }
+.zara [hidden] { display: none !important; }
+
+/* Rui ghost button */
+.z-icon-btn {
+  display: grid; place-items: center;
+  width: 36px; height: 36px; border-radius: 6px;
+  border: 2px solid transparent !important;
+  color: var(--rui-palette-text-button-ghost-default);
+  transition: background-color .15s, color .15s, border-color .15s;
+  margin-bottom: 4px;
+}
+.z-icon-btn:hover { background: var(--rui-palette-background-button-ghost-hover); color: var(--rui-palette-text-button-ghost-hover); }
+.z-icon-btn:active { background: var(--rui-palette-background-button-ghost-pressed); color: var(--rui-palette-text-button-ghost-pressed); }
+.z-icon-btn:focus-visible { outline: none; border-color: var(--rui-palette-stroke-button-ghost-focus) !important; }
+.z-icon-btn svg { width: 16px; height: 16px; }
+
+/* Rui primary button, icon only */
+.z-send {
+  display: grid; place-items: center;
+  width: 40px; height: 40px; border-radius: 6px; margin: 2px 2px 2px 0;
+  background: var(--rui-palette-background-button-primary-default); color: var(--rui-palette-text-button-primary-default);
+  border: 2px solid var(--rui-palette-stroke-button-primary-default) !important;
+  transition: background-color .15s, border-color .15s, color .15s;
+}
+.z-send:hover:not(:disabled) { background: var(--rui-palette-background-button-primary-hover); border-color: var(--rui-palette-stroke-button-primary-hover) !important; }
+.z-send:active:not(:disabled) { background: var(--rui-palette-background-button-primary-pressed); }
+.z-send:focus-visible { outline: none; border-color: var(--rui-palette-stroke-button-primary-focus) !important; }
+.z-send:disabled { background: var(--rui-palette-background-button-primary-disabled); border-color: var(--rui-palette-stroke-button-primary-disabled) !important; color: var(--rui-palette-text-button-primary-disabled); cursor: not-allowed; }
+.z-send svg { width: 16px; height: 16px; transition: transform .25s var(--z-spring); }
+.z-send:not(:disabled):hover svg { transform: translateY(-2px); }
+
+/* Rui border button; above the page it sits on solid white with a lift so it reads over any background */
+.z-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 40px; padding: 0 10px; border-radius: 6px;
+  font-family: var(--rui-font-bold); font-size: 12px; line-height: 16px; color: var(--rui-palette-text-button-border-default);
+  background: var(--rui-color-neutrals-0);
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px var(--rui-palette-stroke-basic-primary), 0 8px 24px rgba(27, 39, 69, .16), 0 1px 3px rgba(27, 39, 69, .10);
+  white-space: nowrap;
+}
+.z-chip:hover { color: var(--rui-palette-text-button-border-hover); box-shadow: 0 0 0 2px var(--rui-palette-stroke-basic-primary), 0 8px 24px rgba(27, 39, 69, .16), 0 1px 3px rgba(27, 39, 69, .10); }
+.z-chip:active { color: var(--rui-palette-text-button-border-pressed); border-color: var(--rui-palette-stroke-button-border-pressed); }
+.z-chip:focus-visible { outline: none; border-color: var(--rui-palette-stroke-button-border-focus); }
+.z-chip svg { width: 16px; height: 16px; }
+
+/* Rui button size s: 24px, r4, tag type (bold 10/14 uppercase), padding 4, 12px icon */
+.z-chip--s { height: 24px; gap: var(--rui-spacer-2); padding: 0 var(--rui-spacer-4); border-radius: var(--rui-border-r-s); font: var(--rui-font-kit-footnote) var(--rui-font-bold); text-transform: uppercase; letter-spacing: var(--rui-letter-spacing-tag); }
+.z-chip--s svg { width: 12px; height: 12px; }
+.zara.is-mini .z-human-btn span { display: none; }
+.z-human-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 40px; padding: 0 10px; border-radius: 6px;
+  border: 2px solid transparent; background: transparent;
+  font-family: var(--rui-font-bold); font-size: 12px; line-height: 16px; color: var(--rui-palette-text-button-ghost-default);
+  transition: color .15s, border-color .15s, background-color .15s;
+}
+
+/* Rui ghost button */
+.z-human-btn:hover { color: var(--rui-palette-text-button-ghost-hover); background: var(--rui-palette-background-button-ghost-hover); }
+.z-human-btn:active { color: var(--rui-palette-text-button-ghost-pressed); background: var(--rui-palette-background-button-ghost-pressed); }
+.z-human-btn:focus-visible { border-color: var(--rui-palette-stroke-button-ghost-focus); }
+.z-human-btn svg { width: 16px; height: 16px; }
+
+/* ZiCMA portal field (portal.zicmatest.info/login, MUI outlined) on the shared variables: 64px, r8, outline
+   neutrals 200 → hover 300 → focus 400, the label sits in the top edge of the outline */
+.z-field { position: relative; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.z-field input, .z-field select, .z-field textarea {
+  width: 100%; height: 64px; margin: 0; border: 1px solid var(--rui-color-neutrals-200); outline: 0;
+  border-radius: var(--rui-border-r-l); padding: 0 14px;
+  font: var(--rui-font-kit-caption) var(--rui-font-regular); color: var(--rui-palette-text-input-default);
+  background-color: var(--rui-palette-background-input-default);
+  transition: border-color .2s;
+}
+.z-field select { appearance: none; -webkit-appearance: none; padding-right: 40px; background: var(--rui-palette-background-input-default) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2391B3C7' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 14px center / 16px no-repeat; }
+.z-field textarea { height: auto; min-height: 96px; padding: 20px 14px 14px; resize: vertical; }
+.z-field input::placeholder, .z-field textarea::placeholder { color: var(--rui-palette-text-input-placeholder); }
+.z-field input:hover, .z-field select:hover, .z-field textarea:hover { border-color: var(--rui-color-neutrals-300); }
+.z-field input:focus, .z-field select:focus, .z-field textarea:focus { border-color: var(--rui-color-neutrals-400); }
+
+/* label in the outline: the gradient opens a notch, parent background above the line, field white below */
+.z-field > span {
+  position: absolute; z-index: 1; top: -6px; left: 10px; max-width: calc(100% - 20px); padding: 0 4px;
+  font-size: 9px; line-height: 12px; color: var(--rui-palette-text-input-placeholder); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  background: linear-gradient(transparent 50%, var(--rui-palette-background-input-default) 50%); pointer-events: none; transition: color .2s;
+}
+.z-field:focus-within > span { color: var(--rui-palette-text-basic-primary); }
+.z-field > span i { font-style: normal; color: var(--rui-palette-text-input-error-label-default); }
+.z-field > span small { font-size: inherit; color: inherit; margin-left: 2px; }
+
+/* leading icon, as on the portal's email and password fields */
+.z-field--icon > svg { position: absolute; left: 14px; top: 23.5px; width: 17px; height: 17px; color: var(--rui-palette-icon-input-enabled); pointer-events: none; }
+.z-field--icon input { padding-left: 43px; }
+
+/* error */
+.z-err { display: none; font-style: normal; font-size: 12px; color: var(--rui-palette-text-input-error-support); }
+.z-field.is-invalid > span { color: var(--rui-palette-text-input-error-label-default); }
+.z-field.is-invalid .z-err { display: block; }
+
+/* Rui buttons, size m: primary (green) and border */
+.z-btn { display: inline-flex; align-items: center; gap: 4px; height: 40px; padding: 0 10px; border-radius: 6px; border: 2px solid transparent !important; font-family: var(--rui-font-bold) !important; font-size: 12px; line-height: 16px; white-space: nowrap; transition: background-color .15s, border-color .15s, color .15s; }
+.z-btn:focus-visible { outline: none; }
+.z-btn--primary { background: var(--rui-palette-background-button-primary-default) !important; border-color: var(--rui-palette-stroke-button-primary-default) !important; color: var(--rui-palette-text-button-primary-default) !important; }
+.z-btn--primary:hover { background: var(--rui-palette-background-button-primary-hover) !important; border-color: var(--rui-palette-stroke-button-primary-hover) !important; }
+.z-btn--primary:active { background: var(--rui-palette-background-button-primary-pressed) !important; }
+.z-btn--primary:focus-visible { border-color: var(--rui-palette-stroke-button-primary-focus) !important; }
+.z-btn--ghost { background: transparent !important; color: var(--rui-palette-text-button-border-default) !important; outline: 1px solid var(--rui-palette-stroke-button-border-default); outline-offset: -1px; }
+.z-btn--ghost:hover { color: var(--rui-palette-text-button-border-hover) !important; outline-width: 2px; outline-offset: -2px; }
+.z-btn--ghost:active { color: var(--rui-palette-text-button-border-pressed) !important; border-color: var(--rui-palette-stroke-button-border-pressed) !important; }
+.z-btn--ghost:focus-visible { border-color: var(--rui-palette-stroke-button-border-focus) !important; }
+
+/* Rui ghost button, size m */
+.z-btn--text { background: transparent; color: var(--rui-palette-text-button-ghost-default); }
+.z-btn--text svg { width: 16px; height: 16px; }
+.z-btn--text:hover:not(:disabled) { background: var(--rui-palette-background-button-ghost-hover); color: var(--rui-palette-text-button-ghost-hover); }
+.z-btn--text:active:not(:disabled) { color: var(--rui-palette-text-button-ghost-pressed); }
+.z-btn--text:focus-visible { border-color: var(--rui-palette-stroke-button-ghost-focus) !important; }
+.z-btn--text:disabled { color: var(--rui-palette-text-button-ghost-disabled); cursor: default; font-variant-numeric: tabular-nums; }
+
+/* Rui ghostDark button on the navy notification */
+.z-btn--toast { margin-left: 8px; background: transparent; color: var(--rui-color-neutrals-0); }
+.z-btn--toast svg { width: 16px; height: 16px; color: inherit; }
+.z-btn--toast:hover { background: var(--rui-color-transparent-500); }
+.z-btn--toast:focus-visible { border-color: var(--rui-color-blue-400) !important; }
+@media (prefers-reduced-motion: reduce) {
+  .zara *, .zara *::before, .zara *::after { animation: none !important; transition-duration: .01ms !important; }
+}

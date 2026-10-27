@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zara — Logo Concepts v3</title>
+<title>Zara — Logo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:Inter,system-ui,sans-serif;background:#F4FAFC;color:#080C16;-webkit-font-smoothing:antialiased}
-  header{padding:48px 48px 24px;max-width:1600px;margin:0 auto}
+  header{padding:48px 48px 24px;max-width:1200px;margin:0 auto}
   h1{font-size:40px;font-weight:700;letter-spacing:-.02em}
   header p{margin-top:8px;color:#5A6472;font-size:16px;max-width:760px;line-height:1.5}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:24px 48px 64px;max-width:1600px;margin:0 auto}
@@ -40,31 +40,37 @@
   .tabs button.on{background:#080C16;color:#fff}
   .solo .grid{grid-template-columns:1fr;max-width:820px}
   .card.hide{display:none}
+  .grid.one{grid-template-columns:1fr;max-width:1200px}
+  .card.one{padding:40px;gap:24px}
+  .card.one .hero>div,.card.one .anim>div{aspect-ratio:auto;height:380px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .two>div{display:flex;flex-direction:column;gap:12px}
+  .two .sizes,.two .ctx,.two .anim-ctx{flex:1}
+  .two .label,.two .anim-bar{min-height:28px;display:flex;align-items:center}
+  .two .anim-bar{justify-content:space-between}
+  @media(max-width:900px){.two{grid-template-columns:1fr}}
   .anim{display:grid;grid-template-columns:1fr 1fr;border-radius:16px;overflow:hidden}
   .anim>div{aspect-ratio:1;display:flex;align-items:center;justify-content:center}
   .anim-ctx{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding:20px;border-radius:16px}
   .anim-bar{display:flex;align-items:center;justify-content:space-between}
+  .seg{display:inline-flex;gap:4px;background:#F4FAFC;padding:4px;border-radius:999px}
+  .seg button{border:0!important;background:transparent!important}
+  .seg button.on{background:#080C16!important;color:#fff!important}
   .anim-bar button{font:500 12px Inter,sans-serif;border:1px solid #D8DEE6;background:#fff;padding:6px 14px;border-radius:999px;cursor:pointer;color:#080C16}
 
   /* Blob spark: white on light surfaces, dark on dark surfaces */
-  .light,.pill.l,.head{--zara-spark:#FFFFFF}
+  .light,.pill.l,.head{--zara-spark:#141418}
   .dark,.pill.d{--zara-spark:#141418}
 </style>
 </head>
 <body>
 <header>
-  <h1>Zara — Logo Concepts v3</h1>
-  <p>Three directions for the Zara AI mark. Each one is shown large, at real UI sizes (96 → 16 px) on light and dark, and in context: launcher button, panel header and message avatar. Pure SVG, ready for animation.</p>
-  <div class="tabs" id="tabs">
-    <button class="on" data-k="all">All</button>
-    <button data-k="facets">A · Facets</button>
-    <button data-k="star">B · Star</button>
-    <button data-k="blob">C · Blob</button>
-  </div>
+  <h1>Zara — Logo</h1>
+  <p>Selected direction: two organic shapes with a dark spark. Shown large on light and dark, at real UI sizes (96 → 16 px), in context, and in the animated “thinking” state. Pure SVG.</p>
 </header>
-<main class="grid" id="grid"></main>
+<main class="grid one" id="grid"></main>
 <script>
-const SVG = {"facets": "<svg width=\"120\" height=\"120\" viewBox=\"0 0 120 120\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n  \n  <g id=\"facet-green\" transform=\"translate(0 5.33)\">\n    <path d=\"M70 2.70943C83.3334 -4.98857 100 4.63392 100 20.0299L100 89.3119C100 104.708 83.3334 114.33 70.0001 106.632L10.0001 71.9915C-3.33326 64.2935 -3.33328 45.0484 10.0001 37.3504L70 2.70943Z\" fill=\"#339F3E\"/>\n  </g>\n  <g id=\"facet-yellow\" transform=\"translate(20 5.33)\" opacity=\"0.8\">\n    <path d=\"M4.19897e-05 89.3118C4.46491e-05 104.708 16.6667 114.33 30 106.632L90 71.9914C103.333 64.2934 103.333 45.0484 90 37.3503L30.0001 2.70934C16.6667 -4.98866 4.10196e-05 4.63383 4.01199e-05 20.0298L4.19897e-05 89.3118Z\" fill=\"#FFEA2F\"/>\n  </g>\n  <g id=\"spark\" transform=\"translate(32 35.33)\" filter=\"url(#facets-spark-shadow)\">\n    <path d=\"M24.4543 2.40695C25.7288 -0.802309 30.2712 -0.802319 31.5457 2.40694L36.0682 13.7943C36.456 14.7707 37.2293 15.544 38.2057 15.9318L49.5931 20.4543C52.8023 21.7288 52.8023 26.2712 49.5931 27.5457L38.2057 32.0682C37.2293 32.456 36.456 33.2293 36.0682 34.2057L31.5457 45.5931C30.2712 48.8023 25.7288 48.8023 24.4543 45.5931L19.9318 34.2057C19.544 33.2293 18.7707 32.456 17.7943 32.0682L6.40695 27.5457C3.19769 26.2712 3.19768 21.7288 6.40694 20.4543L17.7943 15.9318C18.7707 15.544 19.544 14.7707 19.9318 13.7943L24.4543 2.40695Z\" fill=\"#FEFEFE\"/>\n  </g>\n  <defs>\n    <filter id=\"facets-spark-shadow\" x=\"-10%\" y=\"-10%\" width=\"130%\" height=\"140%\" color-interpolation-filters=\"sRGB\">\n      <feDropShadow dx=\"0\" dy=\"4\" stdDeviation=\"2\" flood-color=\"#000\" flood-opacity=\"0.16\"/>\n    </filter>\n  </defs>\n</svg>\n", "star": "<svg width=\"177\" height=\"177\" viewBox=\"0 0 177 177\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n  \n  <defs>\n    <path id=\"star-outer-shape\" d=\"M72.1877 11.746C77.2771 -3.91547 99.4339 -3.91545 104.523 11.746L113.728 40.0718C116.004 47.0756 122.531 51.8176 129.895 51.8178L159.679 51.819C176.147 51.8196 182.993 72.892 169.671 82.5719L145.576 100.079C139.618 104.408 137.125 112.081 139.401 119.085L148.604 147.411C153.692 163.073 135.767 176.097 122.444 166.418L98.3473 148.912C92.3892 144.584 84.3217 144.584 78.3636 148.912L54.2674 166.418C40.9444 176.097 23.0192 163.073 28.1074 147.411L37.31 119.085C39.5855 112.081 37.0925 104.408 31.1347 100.079L7.03978 82.5719C-6.28246 72.8919 0.564381 51.8196 17.032 51.819L46.8158 51.8178C54.1802 51.8176 60.7069 47.0756 62.9829 40.0718L72.1877 11.746Z\"/>\n    <clipPath id=\"star-clip\"><use href=\"#star-outer-shape\"/></clipPath>\n    <linearGradient id=\"star-fallback\" x1=\"20\" y1=\"20\" x2=\"160\" y2=\"160\" gradientUnits=\"userSpaceOnUse\">\n      <stop stop-color=\"#FFEA2F\"/><stop offset=\"0.5\" stop-color=\"#339F3E\"/><stop offset=\"1\" stop-color=\"#D63333\"/>\n    </linearGradient>\n    <filter id=\"star-inner-glow\" x=\"0\" y=\"0\" width=\"177\" height=\"174\" filterUnits=\"userSpaceOnUse\" color-interpolation-filters=\"sRGB\">\n      <feFlood flood-opacity=\"0\" result=\"bg\"/>\n      <feBlend in=\"SourceGraphic\" in2=\"bg\" result=\"shape\"/>\n      <feColorMatrix in=\"SourceAlpha\" type=\"matrix\" values=\"0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0\" result=\"hardAlpha\"/>\n      <feOffset dy=\"4\"/>\n      <feGaussianBlur stdDeviation=\"5\"/>\n      <feComposite in2=\"hardAlpha\" operator=\"arithmetic\" k2=\"-1\" k3=\"1\"/>\n      <feColorMatrix type=\"matrix\" values=\"0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.56 0\"/>\n      <feBlend in2=\"shape\"/>\n    </filter>\n    <filter id=\"star-inner-shadow\" x=\"-15%\" y=\"-15%\" width=\"130%\" height=\"140%\" color-interpolation-filters=\"sRGB\">\n      <feDropShadow dx=\"0\" dy=\"4\" stdDeviation=\"2\" flood-color=\"#000\" flood-opacity=\"0.25\"/>\n    </filter>\n  </defs>\n  <g transform=\"translate(0 3.5)\">\n    <g id=\"star-outer\" filter=\"url(#star-inner-glow)\">\n      <use href=\"#star-outer-shape\" fill=\"url(#star-fallback)\"/>\n      \n      <g clip-path=\"url(#star-clip)\">\n        <foreignObject x=\"0\" y=\"0\" width=\"177\" height=\"177\">\n          <div xmlns=\"http://www.w3.org/1999/xhtml\" class=\"conic\" style=\"width:100%;height:100%;background:conic-gradient(from 141deg at 85.6px 90.2px,#D63333 0deg,#339F3E 118.8deg,#FFEA2F 237.6deg,#D63333 360deg)\"></div>\n        </foreignObject>\n      </g>\n    </g>\n    <g id=\"star-inner\" transform=\"translate(54.28 60.79)\" filter=\"url(#star-inner-shadow)\">\n      <path d=\"M26.4471 5.61172C28.7875 -1.87063 39.3771 -1.87064 41.7175 5.61172L43.2394 10.4774C44.2935 13.8473 47.4321 16.1276 50.9627 16.0887L56.0606 16.0326C63.8999 15.9463 67.1723 26.0176 60.7794 30.5556L56.6221 33.5067C53.743 35.5505 52.5441 39.2401 53.6721 42.5859L55.3008 47.4169C57.8054 54.846 49.2383 61.0703 42.9468 56.3927L38.8555 53.3508C36.022 51.2441 32.1425 51.2441 29.309 53.3508L25.2178 56.3927C18.9263 61.0703 10.3592 54.846 12.8637 47.4169L14.4924 42.5859C15.6204 39.2401 14.4216 35.5505 11.5424 33.5067L7.38516 30.5556C0.992249 26.0176 4.2646 15.9463 12.104 16.0326L17.2018 16.0887C20.7325 16.1276 23.8711 13.8473 24.9251 10.4774L26.4471 5.61172Z\" fill=\"#FFFFFF\" fill-opacity=\"0.8\"/>\n    </g>\n  </g>\n</svg>\n", "blob": "<svg width=\"134\" height=\"134\" viewBox=\"0 0 134 134\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n  \n  <g id=\"blob-green\" transform=\"translate(7.29 3.13)\">\n    <path d=\"M124.842 69C124.842 86.6506 107.974 96.0211 95.842 107C85.1978 116.633 71.3285 130.5 55.842 130.5C38.3146 130.5 22.8119 122.484 11.842 110.5C2.07236 99.827 4.34192 78.1096 4.34192 62.5C4.34192 46.8904 -5.42751 36.173 4.34209 25.5C15.312 13.5156 55.3146 0 72.842 0C90.3695 0 92.3721 18.5156 103.342 30.5C113.112 41.173 124.842 53.3904 124.842 69Z\" fill=\"#339F3E\"/>\n  </g>\n  <g id=\"blob-yellow\" transform=\"translate(1.86 0.36)\" opacity=\"0.8\">\n    <path d=\"M113.146 111.14C101.764 124.631 82.8289 120.916 66.4768 121.485C52.1297 121.984 32.587 123.64 20.7502 113.654C7.35329 102.352 0.672689 86.2291 0.0157428 69.9953C-0.569322 55.5379 15.1692 40.402 25.2345 28.4711C35.2999 16.5401 34.7435 2.04895 49.093 0.190796C65.2054 -1.89567 104.496 13.5683 117.893 24.8703C131.29 36.1724 120.881 51.6158 121.538 67.8495C122.123 82.3069 123.211 99.2091 113.146 111.14Z\" fill=\"#FFEA2F\"/>\n  </g>\n  <g id=\"spark\" transform=\"translate(37.64 37.13)\">\n    <path d=\"M27.2724 3.20926C28.9718 -1.06975 35.0282 -1.06976 36.7276 3.20925L42.7576 18.3923C43.2747 19.6943 44.3057 20.7253 45.6077 21.2424L60.7907 27.2724C65.0697 28.9718 65.0698 35.0282 60.7908 36.7276L45.6077 42.7576C44.3057 43.2747 43.2747 44.3057 42.7576 45.6077L36.7276 60.7907C35.0282 65.0697 28.9718 65.0698 27.2724 60.7908L21.2424 45.6077C20.7253 44.3057 19.6943 43.2747 18.3923 42.7576L3.20926 36.7276C-1.06975 35.0282 -1.06976 28.9718 3.20925 27.2724L18.3923 21.2424C19.6943 20.7253 20.7253 19.6943 21.2424 18.3923L27.2724 3.20926Z\" style=\"fill:var(--zara-spark, #FFFFFF)\"/>\n  </g>\n</svg>\n"};
+const SVG = {"facets": "<svg width=\"120\" height=\"120\" viewBox=\"0 0 120 120\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n  \n  <g id=\"facet-green\" transform=\"translate(0 5.33)\">\n    <path d=\"M70 2.70943C83.3334 -4.98857 100 4.63392 100 20.0299L100 89.3119C100 104.708 83.3334 114.33 70.0001 106.632L10.0001 71.9915C-3.33326 64.2935 -3.33328 45.0484 10.0001 37.3504L70 2.70943Z\" fill=\"#339F3E\"/>\n  </g>\n  <g id=\"facet-yellow\" transform=\"translate(20 5.33)\" opacity=\"0.8\">\n    <path d=\"M4.19897e-05 89.3118C4.46491e-05 104.708 16.6667 114.33 30 106.632L90 71.9914C103.333 64.2934 103.333 45.0484 90 37.3503L30.0001 2.70934C16.6667 -4.98866 4.10196e-05 4.63383 4.01199e-05 20.0298L4.19897e-05 89.3118Z\" fill=\"#FFEA2F\"/>\n  </g>\n  <g id=\"spark\" transform=\"translate(32 35.33)\" filter=\"url(#facets-spark-shadow)\">\n    <path d=\"M24.4543 2.40695C25.7288 -0.802309 30.2712 -0.802319 31.5457 2.40694L36.0682 13.7943C36.456 14.7707 37.2293 15.544 38.2057 15.9318L49.5931 20.4543C52.8023 21.7288 52.8023 26.2712 49.5931 27.5457L38.2057 32.0682C37.2293 32.456 36.456 33.2293 36.0682 34.2057L31.5457 45.5931C30.2712 48.8023 25.7288 48.8023 24.4543 45.5931L19.9318 34.2057C19.544 33.2293 18.7707 32.456 17.7943 32.0682L6.40695 27.5457C3.19769 26.2712 3.19768 21.7288 6.40694 20.4543L17.7943 15.9318C18.7707 15.544 19.544 14.7707 19.9318 13.7943L24.4543 2.40695Z\" fill=\"#FEFEFE\"/>\n  </g>\n  <defs>\n    <filter id=\"facets-spark-shadow\" x=\"-10%\" y=\"-10%\" width=\"130%\" height=\"140%\" color-interpolation-filters=\"sRGB\">\n      <feDropShadow dx=\"0\" dy=\"4\" stdDeviation=\"2\" flood-color=\"#000\" flood-opacity=\"0.16\"/>\n    </filter>\n  </defs>\n</svg>\n", "star": "<svg width=\"177\" height=\"177\" viewBox=\"0 0 177 177\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n  \n  <defs>\n    <path id=\"star-outer-shape\" d=\"M72.1877 11.746C77.2771 -3.91547 99.4339 -3.91545 104.523 11.746L113.728 40.0718C116.004 47.0756 122.531 51.8176 129.895 51.8178L159.679 51.819C176.147 51.8196 182.993 72.892 169.671 82.5719L145.576 100.079C139.618 104.408 137.125 112.081 139.401 119.085L148.604 147.411C153.692 163.073 135.767 176.097 122.444 166.418L98.3473 148.912C92.3892 144.584 84.3217 144.584 78.3636 148.912L54.2674 166.418C40.9444 176.097 23.0192 163.073 28.1074 147.411L37.31 119.085C39.5855 112.081 37.0925 104.408 31.1347 100.079L7.03978 82.5719C-6.28246 72.8919 0.564381 51.8196 17.032 51.819L46.8158 51.8178C54.1802 51.8176 60.7069 47.0756 62.9829 40.0718L72.1877 11.746Z\"/>\n    <clipPath id=\"star-clip\"><use href=\"#star-outer-shape\"/></clipPath>\n    <linearGradient id=\"star-fallback\" x1=\"20\" y1=\"20\" x2=\"160\" y2=\"160\" gradientUnits=\"userSpaceOnUse\">\n      <stop stop-color=\"#FFEA2F\"/><stop offset=\"0.5\" stop-color=\"#339F3E\"/><stop offset=\"1\" stop-color=\"#D63333\"/>\n    </linearGradient>\n    <filter id=\"star-inner-glow\" x=\"0\" y=\"0\" width=\"177\" height=\"174\" filterUnits=\"userSpaceOnUse\" color-interpolation-filters=\"sRGB\">\n      <feFlood flood-opacity=\"0\" result=\"bg\"/>\n      <feBlend in=\"SourceGraphic\" in2=\"bg\" result=\"shape\"/>\n      <feColorMatrix in=\"SourceAlpha\" type=\"matrix\" values=\"0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0\" result=\"hardAlpha\"/>\n      <feOffset dy=\"4\"/>\n      <feGaussianBlur stdDeviation=\"5\"/>\n      <feComposite in2=\"hardAlpha\" operator=\"arithmetic\" k2=\"-1\" k3=\"1\"/>\n      <feColorMatrix type=\"matrix\" values=\"0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.56 0\"/>\n      <feBlend in2=\"shape\"/>\n    </filter>\n    <filter id=\"star-inner-shadow\" x=\"-15%\" y=\"-15%\" width=\"130%\" height=\"140%\" color-interpolation-filters=\"sRGB\">\n      <feDropShadow dx=\"0\" dy=\"4\" stdDeviation=\"2\" flood-color=\"#000\" flood-opacity=\"0.25\"/>\n    </filter>\n  </defs>\n  <g transform=\"translate(0 3.5)\">\n    <g id=\"star-outer\" filter=\"url(#star-inner-glow)\">\n      <use href=\"#star-outer-shape\" fill=\"url(#star-fallback)\"/>\n      \n      <g clip-path=\"url(#star-clip)\">\n        <foreignObject x=\"0\" y=\"0\" width=\"177\" height=\"177\">\n          <div xmlns=\"http://www.w3.org/1999/xhtml\" class=\"conic\" style=\"width:100%;height:100%;background:conic-gradient(from 141deg at 85.6px 90.2px,#D63333 0deg,#339F3E 118.8deg,#FFEA2F 237.6deg,#D63333 360deg)\"></div>\n        </foreignObject>\n      </g>\n    </g>\n    <g id=\"star-inner\" transform=\"translate(54.28 60.79)\" filter=\"url(#star-inner-shadow)\">\n      <path d=\"M26.4471 5.61172C28.7875 -1.87063 39.3771 -1.87064 41.7175 5.61172L43.2394 10.4774C44.2935 13.8473 47.4321 16.1276 50.9627 16.0887L56.0606 16.0326C63.8999 15.9463 67.1723 26.0176 60.7794 30.5556L56.6221 33.5067C53.743 35.5505 52.5441 39.2401 53.6721 42.5859L55.3008 47.4169C57.8054 54.846 49.2383 61.0703 42.9468 56.3927L38.8555 53.3508C36.022 51.2441 32.1425 51.2441 29.309 53.3508L25.2178 56.3927C18.9263 61.0703 10.3592 54.846 12.8637 47.4169L14.4924 42.5859C15.6204 39.2401 14.4216 35.5505 11.5424 33.5067L7.38516 30.5556C0.992249 26.0176 4.2646 15.9463 12.104 16.0326L17.2018 16.0887C20.7325 16.1276 23.8711 13.8473 24.9251 10.4774L26.4471 5.61172Z\" fill=\"#FFFFFF\" fill-opacity=\"0.8\"/>\n    </g>\n  </g>\n</svg>\n", "blob": "<svg width=\"134\" height=\"134\" viewBox=\"0 0 134 134\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n  \n  <g id=\"blob-green\" transform=\"translate(7.29 3.13)\">\n    <path d=\"M124.842 69C124.842 86.6506 107.974 96.0211 95.842 107C85.1978 116.633 71.3285 130.5 55.842 130.5C38.3146 130.5 22.8119 122.484 11.842 110.5C2.07236 99.827 4.34192 78.1096 4.34192 62.5C4.34192 46.8904 -5.42751 36.173 4.34209 25.5C15.312 13.5156 55.3146 0 72.842 0C90.3695 0 92.3721 18.5156 103.342 30.5C113.112 41.173 124.842 53.3904 124.842 69Z\" fill=\"#339F3E\"/>\n  </g>\n  <g id=\"blob-yellow\" transform=\"translate(1.86 0.36)\" opacity=\"0.8\">\n    <path d=\"M113.146 111.14C101.764 124.631 82.8289 120.916 66.4768 121.485C52.1297 121.984 32.587 123.64 20.7502 113.654C7.35329 102.352 0.672689 86.2291 0.0157428 69.9953C-0.569322 55.5379 15.1692 40.402 25.2345 28.4711C35.2999 16.5401 34.7435 2.04895 49.093 0.190796C65.2054 -1.89567 104.496 13.5683 117.893 24.8703C131.29 36.1724 120.881 51.6158 121.538 67.8495C122.123 82.3069 123.211 99.2091 113.146 111.14Z\" fill=\"#FFEA2F\"/>\n  </g>\n  \n  <g id=\"spark\" transform=\"translate(69.64 69.13) scale(0.628) translate(-32 -32)\">\n    <path d=\"M27.2724 3.20926C28.9718 -1.06975 35.0282 -1.06976 36.7276 3.20925L42.7576 18.3923C43.2747 19.6943 44.3057 20.7253 45.6077 21.2424L60.7907 27.2724C65.0697 28.9718 65.0698 35.0282 60.7908 36.7276L45.6077 42.7576C44.3057 43.2747 43.2747 44.3057 42.7576 45.6077L36.7276 60.7907C35.0282 65.0697 28.9718 65.0698 27.2724 60.7908L21.2424 45.6077C20.7253 44.3057 19.6943 43.2747 18.3923 42.7576L3.20926 36.7276C-1.06975 35.0282 -1.06976 28.9718 3.20925 27.2724L18.3923 21.2424C19.6943 20.7253 20.7253 19.6943 21.2424 18.3923L27.2724 3.20926Z\" style=\"fill:var(--zara-spark, #141418)\"/>\n  </g>\n</svg>\n"};
 const META = {
   facets:{t:'A · Facets', d:'Two rounded facets overlap around a spark: two sources of knowledge, one answer.'},
   star:{t:'B · Star', d:'A soft star with an angular red–green–yellow gradient and an inner star: rich and celebratory.'},
@@ -78,12 +84,29 @@ const META = {
    slowly rotate in opposite directions. Base shape = circle (same centre and average radius as
    our Figma blobs); the waves turn it into a blob. */
 const ANIM = { N:12, SPEED:0.001, ROT:0.01, AMP:0.12 }; // AMP = wave depth, share of radius
-// Heartbeat of the centre spark: fast grow, slow settle back, looped
-const BEAT = { PERIOD:1200, UP:0.12, SCALE:0.2 }; // ms per beat, share of period spent growing, extra scale at peak
-function beatScale(ms){
-  const ph=(ms%BEAT.PERIOD)/BEAT.PERIOD;
-  if(ph<BEAT.UP){ const x=ph/BEAT.UP; return 1+BEAT.SCALE*(1-Math.pow(1-x,3)); }   // sharp ease-out up
-  const x=(ph-BEAT.UP)/(1-BEAT.UP); return 1+BEAT.SCALE*Math.pow(1-x,3);           // slow decay back to 1
+const ORBIT = { D:6, PERIOD:4000 }; // sideways shift of each circle (viewBox units, 134 = full mark) and time for one full orbit, ms
+let orbitAngle = 0;
+// Spark "thinking": the rays breathe in turns - vertical rays stretch while horizontal ones shorten, then the other way round.
+// The star is drawn procedurally (64x64 box, centre 32,32) so its shape itself morphs; tips are rounded with a same-colour stroke.
+const RAYS = { R:29.5, PINCH:7, AMP:0.24, PERIOD:2200 };   // base ray length, waist of the star, stretch amount, ms per full cycle
+// Spark "glint": the spark rests, then every GLINT.PERIOD it makes a quick quarter turn with a small pop,
+// lights up for a moment (flash) and sends out a soft glow - like an idea appearing. Then it rests again.
+const GLINT = { PERIOD:1800, MS:520, POP:0.18 };
+let SPARK_MODE='glint';   // 'glint' | 'rays'
+const easeIO=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+function glintState(ms){
+  const t=ms%GLINT.PERIOD;
+  if(t>GLINT.MS) return {angle:0, scale:1, flash:0, glow:0, glowR:1};
+  const p=t/GLINT.MS, bell=Math.sin(Math.PI*p);
+  return { angle:180*easeIO(p), scale:1+GLINT.POP*bell, flash:0, glow:0, glowR:1 }; // motion only: no flash, no glow
+}
+function sparkPath(ms){
+  const ph=(ms%RAYS.PERIOD)/RAYS.PERIOD*Math.PI*2;
+  const k=Math.sin(ph);                                   // -1..1, smooth
+  const rv=RAYS.R*(1+RAYS.AMP*k), rh=RAYS.R*(1-RAYS.AMP*k);
+  const w=RAYS.PINCH*(1+0.15*Math.abs(k));                // waist breathes a touch with the rays
+  const c=32, P=(x,y)=>`${(c+x).toFixed(2)} ${(c+y).toFixed(2)}`;
+  return `M ${P(0,-rv)} Q ${P(w,-w)} ${P(rh,0)} Q ${P(w,w)} ${P(0,rv)} Q ${P(-w,w)} ${P(-rh,0)} Q ${P(-w,-w)} ${P(0,-rv)} Z`;
 }
 function seededRand(seed){ const x=Math.sin(seed*127.1+311.7)*43758.5453; return x-Math.floor(x); }
 const SHAPES = [
@@ -110,6 +133,8 @@ const SPARK_D = 'M27.2724 3.20926C28.9718 -1.06975 35.0282 -1.06976 36.7276 3.20
     sh.avg=sh.base.reduce((a,b)=>a+b,0)/ANIM.N;
     // start from circles (like thinkn-animation): every point gets the same radius = average blob radius
     sh.base=sh.base.map(()=>sh.avg);
+    // both circles share one centre; each is shifted sideways by ORBIT.D and the pair orbits that centre
+    sh.cx=67; sh.cy=67; sh.side = sh.id==='green' ? 1 : -1;
     sh.params=Array.from({length:ANIM.N},(_,i)=>({freq:0.3+seededRand(i*3+sh.seed)*0.7, phase:seededRand(i*3+sh.seed+1)*Math.PI*2, amp:0.6+seededRand(i*3+sh.seed+2)*0.4}));
   });
   svg.remove();
@@ -124,14 +149,24 @@ function shapePath(sh,t,rotDeg,k=1){
   const pts=[], r0=rotDeg*Math.PI/180;
   for(let i=0;i<ANIM.N;i++){ const a=(i/ANIM.N)*Math.PI*2-Math.PI/2, {freq,phase,amp}=sh.params[i];
     const r=sh.base[i]+Math.sin(t*freq+phase)*amp*sh.avg*ANIM.AMP*k;
-    pts.push({x:67+ (sh.cx-67) + r*Math.cos(a+r0), y:67+(sh.cy-67) + r*Math.sin(a+r0)}); }
+    pts.push({x:sh.cx + sh.side*ORBIT.D*Math.cos(orbitAngle) + r*Math.cos(a+r0), y:sh.cy + sh.side*ORBIT.D*Math.sin(orbitAngle) + r*Math.sin(a+r0)}); }
   return catmullRom(pts);
 }
+let agid=0;
 function animLogo(size,speed=2.25,amp=1){
+  const g='sg'+(agid++);
   return `<svg class="zara-anim" data-speed="${speed}" data-amp="${amp}" width="${size}" height="${size}" viewBox="-8 -8 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="${g}"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.95"/><stop offset="0.45" stop-color="#FFF7B0" stop-opacity="0.55"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient></defs>
     ${SHAPES.map(sh=>`<path data-shape="${sh.id}" fill="${sh.fill}" opacity="${sh.opacity}"/>`).join('')}
-    <g transform="translate(37.64 37.13)"><g class="spark-beat"><path class="spark" d="${SPARK_D}" style="fill:var(--zara-spark,#141418)"/></g></g></svg>`;
+    <g transform="translate(67 67) scale(0.628) translate(-32 -32)">
+      <circle class="spark-glow" cx="32" cy="32" r="40" fill="url(#${g})" opacity="0"/>
+      <g class="spark-beat">
+        <path class="spark-dyn" d="${sparkPath(0)}" stroke-linejoin="round" stroke-width="5" style="fill:var(--zara-spark,#141418);stroke:var(--zara-spark,#141418)"/>
+        <path class="spark-hi" d="${SPARK_D}" fill="#FFFFFF" opacity="0"/>
+      </g>
+    </g></svg>`;
 }
+
 
 /* ---------- A · Facets animation ----------
    The two facets sway in opposite directions and drift apart / together,
@@ -231,6 +266,7 @@ let animOn=true, animStart=null, animPausedAt=0;
 function animFrame(ts){
   if(animStart===null) animStart=ts;
   const el=ts-animStart, t=el*ANIM.SPEED, rot=el*ANIM.ROT;
+  orbitAngle = (el/ORBIT.PERIOD)*Math.PI*2 + Math.PI; // start: green left, yellow right
   // speed = tempo multiplier (morph + rotation), amp = wave depth multiplier
   // default for all instances: speed 2.25, amp 1 (= 12% of radius)
   const cache={};
@@ -240,8 +276,18 @@ function animFrame(ts){
     svg.querySelectorAll('path[data-shape]').forEach(p=>p.setAttribute('d',cache[key][p.dataset.shape]));
   });
   updateFacetsStar(el);
-  const sc=beatScale(el).toFixed(4);
-  document.querySelectorAll('.zara-anim .spark-beat').forEach(g=>g.setAttribute('transform',`translate(32 32) scale(${sc}) translate(-32 -32)`));
+  if(SPARK_MODE==='rays'){
+    const sd=sparkPath(el);
+    document.querySelectorAll('.zara-anim .spark-dyn').forEach(p=>{p.setAttribute('d',sd);p.setAttribute('stroke-width','5');});
+    document.querySelectorAll('.zara-anim .spark-beat').forEach(g=>g.removeAttribute('transform'));
+    document.querySelectorAll('.zara-anim .spark-hi,.zara-anim .spark-glow').forEach(n=>n.setAttribute('opacity','0'));
+  } else {
+    const g=glintState(el), tr=`translate(32 32) rotate(${g.angle.toFixed(2)}) scale(${g.scale.toFixed(4)}) translate(-32 -32)`;
+    document.querySelectorAll('.zara-anim .spark-dyn').forEach(p=>{p.setAttribute('d',SPARK_D);p.setAttribute('stroke-width','0');});
+    document.querySelectorAll('.zara-anim .spark-beat').forEach(n=>n.setAttribute('transform',tr));
+    document.querySelectorAll('.zara-anim .spark-hi').forEach(n=>n.setAttribute('opacity',g.flash.toFixed(3)));
+    document.querySelectorAll('.zara-anim .spark-glow').forEach(n=>{n.setAttribute('opacity',g.glow.toFixed(3));n.setAttribute('transform',`translate(32 32) scale(${g.glowR.toFixed(3)}) translate(-32 -32)`);});
+  }
   if(animOn) requestAnimationFrame(animFrame); else animPausedAt=el;
 }
 
@@ -260,42 +306,36 @@ function logo(k, size){
 // In buttons the Star gets the same breathing room as in the animated buttons
 function pillLogo(k){ const svg=logo(k,40); return k==='star' ? svg.replace('viewBox="0 0 177 177"','viewBox="-14 -14 205 205"') : svg; }
 const grid = document.getElementById('grid');
-for (const k of ['facets','star','blob']){
-  const m = META[k];
+{
+  const k='blob';
   const sizes = [96,64,40,32,24,16];
-  const fig = bg => sizes.map(s => `<figure>${logo(k,s)}<figcaption>${s}</figcaption></figure>`).join('');
+  const fig = () => sizes.map(s => `<figure>${logo(k,s)}<figcaption>${s}</figcaption></figure>`).join('');
   grid.insertAdjacentHTML('beforeend', `
-  <section class="card" data-k="${k}">
-    <div><h2>${m.t}</h2><div class="tag">${m.d}</div></div>
-    <div class="hero"><div class="light">${logo(k,140)}</div><div class="dark">${logo(k,140)}</div></div>
-    <div class="label">Sizes</div>
-    <div class="sizes light">${fig()}</div>
-    <div class="sizes dark">${fig()}</div>
-    <div class="label">In context</div>
-    <div class="ctx light">
-      <div class="row">
-        <span class="pill l">${pillLogo(k)}Ask Zara AI</span>
-        <span class="pill d">${pillLogo(k)}Ask Zara AI</span>
-      </div>
-      <div class="head">${logo(k,32)}<div><b>Zara</b><small>ZiCMA Portal Assistant</small></div></div>
-      <div class="msg">${logo(k,24)}Answered 23 Oct 2026, 12:59 · <a href="#">Show sources</a></div>
+  <section class="card one" data-k="${k}">
+    <div class="hero"><div class="light">${logo(k,200)}</div><div class="dark">${logo(k,200)}</div></div>
+    <div class="two">
+      <div><div class="label">Sizes · Light</div><div class="sizes light">${fig()}</div></div>
+      <div><div class="label">Sizes · Dark</div><div class="sizes dark">${fig()}</div></div>
     </div>
-    <div class="anim-bar"><div class="label">Animation · Thinking</div><button class="animToggle">Pause</button></div>
-    <div class="anim"><div class="light">${animFor(k,160)}</div><div class="dark">${animFor(k,160)}</div></div>
-    <div class="anim-ctx light">
-      <span class="pill l">${animFor(k,40)}Ask Zara AI</span>
-      <span class="pill d">${animFor(k,40)}Ask Zara AI</span>
-      <div class="head">${animFor(k,32)}<div><b>Zara</b><small>Thinking…</small></div></div>
+    <div class="two">
+      <div><div class="label">In context</div>
+        <div class="ctx light">
+          <div class="row"><span class="pill l">${logo(k,40)}Ask Zara AI</span><span class="pill d">${logo(k,40)}Ask Zara AI</span></div>
+          <div class="head">${logo(k,32)}<div><b>Zara</b><small>ZiCMA Portal Assistant</small></div></div>
+          <div class="msg">${logo(k,24)}Answered 23 Oct 2026, 12:59 · <a href="#">Show sources</a></div>
+        </div></div>
+      <div><div class="anim-bar"><div class="label">Animation · Thinking · In context</div><button class="animToggle">Pause</button></div>
+        <div class="anim-ctx light" style="flex-direction:column;align-items:flex-start">
+          <div class="row"><span class="pill l">${animFor(k,40)}Ask Zara AI</span><span class="pill d">${animFor(k,40)}Ask Zara AI</span></div>
+          <div class="head">${animFor(k,32)}<div><b>Zara</b><small>Thinking…</small></div></div>
+        </div></div>
     </div>
+    <div class="anim-bar"><div class="label">Animation · Thinking</div><div class="seg" id="sparkMode"><button data-m="glint" class="on">Spark · Glint</button><button data-m="rays">Spark · Rays</button></div></div>
+    <div class="anim"><div class="light">${animFor(k,200)}</div><div class="dark">${animFor(k,200)}</div></div>
   </section>`);
 }
-document.getElementById('tabs').addEventListener('click', e => {
-  const b = e.target.closest('button'); if(!b) return;
-  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x===b));
-  const k = b.dataset.k;
-  document.body.classList.toggle('solo', k!=='all');
-  document.querySelectorAll('.card').forEach(c => c.classList.toggle('hide', k!=='all' && c.dataset.k!==k));
-});
+
+document.getElementById('sparkMode').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; SPARK_MODE=b.dataset.m; document.querySelectorAll('#sparkMode button').forEach(x=>x.classList.toggle('on',x===b)); if(!animOn) requestAnimationFrame(animFrame);});
 requestAnimationFrame(animFrame);
 document.querySelectorAll('.animToggle').forEach(btn=>btn.addEventListener('click', ()=>{
   animOn=!animOn; document.querySelectorAll('.animToggle').forEach(b=>b.textContent=animOn?'Pause':'Play');

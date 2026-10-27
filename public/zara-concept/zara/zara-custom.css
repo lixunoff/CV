@@ -1,0 +1,995 @@
+/* Zara — ZiCMA assistant concept: Zara-only elements.
+   Everything that has no Rui component: the symbol and launcher, the glass composer and suggestions, the chat panel,
+   history, messages and answer blocks, sources, the email check, the ticket sheet, and how the Rui components
+   from zara.css are placed or sized inside them. Colours and fonts still come from rui-tokens.css;
+   --z-* below are Zara's own surfaces (shadows, motion). */
+
+:root {
+  --z-ease: cubic-bezier(.2, .8, .2, 1);
+  --z-spring: cubic-bezier(.34, 1.36, .64, 1);
+  --z-shadow-float: 0 16px 40px rgba(8, 12, 22, .14), 0 2px 6px rgba(8, 12, 22, .08);
+  --z-mark-green: #339F3E; /* Zara mark (logo artwork), not a Rui colour */
+  --z-shadow-panel: 0 64px 96px rgba(27, 39, 69, .18), 0 8px 24px rgba(27, 39, 69, .08);
+}
+
+/* ── Symbol: Zara mark, concept C "Blob" ───────────── */
+.z-symbol {
+  position: relative;
+  display: grid; place-items: center;
+  width: 56px; height: 56px;
+  flex: none;
+}
+.z-symbol svg { width: 100%; height: 100%; overflow: visible; }
+.z-mark-green { fill: var(--z-mark-green); }
+.z-mark-yellow { fill: var(--rui-color-zicma-400); opacity: .8; }
+/* spark: dark on any surface (synced with zara-logo-concepts.html) */
+.z-mark-spark { fill: #141418 !important; }
+.z-symbol--sm { width: 36px; height: 36px; }
+.z-symbol--xs { width: 28px; height: 28px; }
+.z-symbol--lg { width: 64px; height: 64px; }
+
+/* ── Dock: states 1 and 2 are one morphing pill ─────── */
+.z-dock {
+  position: fixed; right: 24px; bottom: 24px; z-index: 2147483000;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 10px; /* anchored bottom-right: the pill grows to the left */
+  pointer-events: none;
+  transition: opacity .2s var(--z-ease);
+}
+.z-dock > * { pointer-events: auto; }
+.zara[data-state="chat"] .z-dock { opacity: 0; transition-duration: .16s; }
+.zara[data-state="chat"] .z-dock > * { pointer-events: none; }
+.z-pill {
+  --w: 56px; --h: 56px; --r: 28px;
+  position: relative;
+  width: var(--w); height: var(--h);
+  border-radius: var(--r);
+  background: var(--rui-color-neutrals-0);
+  box-shadow: 0 0 0 1px var(--rui-color-neutrals-300), 0 14px 34px rgba(8, 12, 22, .16), 0 2px 6px rgba(8, 12, 22, .08);
+  transition:
+    width .5s var(--z-spring) .04s,
+    height .32s var(--z-ease),
+    border-radius .5s var(--z-ease),
+    background-color .28s var(--z-ease),
+    box-shadow .35s var(--z-ease),
+    transform .2s var(--z-ease);
+}
+.zara[data-state="idle"] .z-pill:hover,
+.zara[data-state="idle"] .z-pill:has(.z-launch:focus-visible) { --w: var(--w-hover, 172px); }
+
+/* just returned from the chat or composer: stay a bare symbol until the pointer leaves */
+.zara[data-state="idle"] .z-pill.is-settled:hover { --w: 56px; }
+.zara[data-state="idle"] .z-pill.is-settled .z-launch-label { opacity: 0 !important; transform: translateX(-10px) !important; filter: blur(3px) !important; transition-delay: 0s !important; }
+.zara[data-state="idle"] .z-pill:active { transform: scale(.96); }
+
+/* the launcher's white surface: a soft top light over the whole pill; it fades as the composer opens */
+.z-pill::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(180deg, var(--rui-color-neutrals-0) 0%, var(--rui-color-neutrals-100) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9);
+  transition: opacity .3s var(--z-ease);
+}
+.zara[data-state="compose"] .z-pill::after { opacity: 0; }
+.zara[data-state="idle"] .z-pill.is-arriving { animation: z-arrive .55s var(--z-spring) both; }
+@keyframes z-arrive { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.zara[data-state="compose"] .z-pill {
+  --w: min(560px, calc(100vw - 48px)); --h: var(--z-pill-h, 64px); --r: 22px;
+  background: var(--rui-color-neutrals-0);
+  box-shadow: 0 0 0 1px rgba(187, 210, 224, .95), 0 1px 2px rgba(27, 39, 69, .06), 0 12px 32px rgba(27, 39, 69, .10);
+  transition:
+    width .55s var(--z-spring),
+    height .32s var(--z-ease),
+    border-radius .45s var(--z-ease),
+    background-color .22s var(--z-ease) .06s,
+    box-shadow .35s var(--z-ease);
+}
+.zara[data-state="compose"] .z-pill:focus-within {
+  box-shadow: 0 0 0 1.5px var(--rui-color-neutrals-800), 0 0 0 5px rgba(47, 186, 179, .14), 0 12px 32px rgba(27, 39, 69, .12);
+}
+
+/* persistent orb: the same symbol travels from launcher centre to the composer's left edge */
+.z-orb {
+  position: absolute; left: 0; bottom: 0; z-index: 2;
+  width: 56px; height: 56px;
+  pointer-events: none;
+  transition: left .5s var(--z-spring), bottom .32s var(--z-ease), width .45s var(--z-spring), height .45s var(--z-spring);
+}
+.z-orb .z-symbol { width: 100%; height: 100%; }
+/* on the navy launcher the mark sits inside the circle; in the white composer it fills the orb */
+.z-orb .z-symbol svg { width: 64%; height: 64%; transition: width .45s var(--z-spring), height .45s var(--z-spring); }
+.zara[data-state="compose"] .z-orb .z-symbol svg { width: 100%; height: 100%; }
+.zara[data-state="compose"] .z-orb { left: 12px; bottom: 12px; width: 40px; height: 40px; pointer-events: auto; cursor: pointer; }
+
+/* in the composer the symbol is also the Open chat button: it flips to an expand icon */
+.z-orb { perspective: 240px; }
+.z-flip { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.3, 1.4, .5, 1); }
+.z-face { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 50%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+/* the flip side is a Rui secondary button, the size of the composer's close button (36px, r6, 16px icon) */
+.z-face--back {
+  inset: 2px; transform: rotateY(180deg); border-radius: var(--rui-border-r-m);
+  background: var(--rui-palette-background-button-secondary-default); color: var(--rui-palette-icon-button-secondary-default);
+  box-shadow: inset 0 0 0 2px var(--rui-palette-stroke-button-secondary-default);
+}
+.z-face--back svg { width: 16px; height: 16px; }
+.zara[data-state="compose"] .z-orb:hover .z-flip,
+.zara[data-state="compose"] .z-orb:focus-visible .z-flip,
+.zara[data-state="compose"] .z-orb.is-hint .z-flip { transform: rotateY(180deg); }
+.z-orb:focus-visible { outline: 2px solid var(--rui-palette-stroke-basic-focus); outline-offset: 3px; border-radius: 50%; }
+.z-orb-tip {
+  position: absolute; left: -4px; bottom: calc(100% + 12px);
+  display: flex; flex-direction: column; gap: 2px; width: max-content; max-width: 220px;
+  padding: 8px 11px; border-radius: 10px; text-align: left;
+  background: var(--rui-color-neutrals-800); color: var(--rui-color-neutrals-300); font-size: 12px; line-height: 16px;
+  box-shadow: 0 8px 22px rgba(8, 12, 22, .22);
+  opacity: 0; transform: translateY(4px); pointer-events: none;
+  transition: opacity .15s var(--z-ease), transform .2s var(--z-ease);
+}
+.z-orb-tip b { font-family: var(--rui-font-bold); font-weight: normal; font-size: 13px; color: var(--rui-color-neutrals-0); }
+.z-orb-tip::after { content: ""; position: absolute; left: 18px; top: 100%; border: 6px solid transparent; border-top-color: var(--rui-color-neutrals-800); }
+.zara[data-state="compose"] .z-orb:hover .z-orb-tip,
+.zara[data-state="compose"] .z-orb:focus-visible .z-orb-tip { opacity: 1; transform: none; transition-delay: .25s; }
+
+/* Zara tooltip for header buttons: the same navy tip as the symbol's, below the button,
+   aligned to its right edge, with the arrow pointing at the button */
+.zara [data-tip] { position: relative; }
+.zara [data-tip]::after, .zara [data-tip]::before {
+  position: absolute; z-index: 1000; opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translateY(-4px); transition: opacity .15s var(--z-ease), transform .2s var(--z-ease), visibility 0s .2s;
+}
+.zara [data-tip]::after {
+  content: attr(data-tip); top: calc(100% + 10px); right: -4px; width: max-content; max-width: 220px;
+  padding: 8px 11px; border-radius: 10px; background: var(--rui-color-neutrals-800); box-shadow: 0 8px 22px rgba(8, 12, 22, .22);
+  font: 13px/16px var(--rui-font-bold); color: var(--rui-color-neutrals-0); white-space: nowrap;
+}
+.zara [data-tip]::before {
+  content: ""; top: calc(100% - 2px); right: calc(50% - 6px); border: 6px solid transparent; border-bottom-color: var(--rui-color-neutrals-800);
+}
+.zara [data-tip-at="start"]::after { right: auto; left: -4px; }
+.zara [data-tip-at="start"]::before { right: auto; left: calc(50% - 6px); }
+@media (hover: hover) {
+  .zara [data-tip]:hover::after, .zara [data-tip]:hover::before { opacity: 1; visibility: visible; transform: none; transition-delay: .25s, .25s, 0s; }
+}
+.zara [data-tip]:focus-visible::after, .zara [data-tip]:focus-visible::before { opacity: 1; visibility: visible; transform: none; }
+/* the labelled "Talk to a person" button needs no tooltip */
+.zara:not(.is-mini) .z-human-btn::after, .zara:not(.is-mini) .z-human-btn::before { content: none; }
+@media (max-width: 760px) {
+  .zara .z-human-btn::after { content: attr(data-tip); }
+  .zara .z-human-btn::before { content: ""; }
+}
+
+/* badge: an open conversation is waiting */
+.z-badge {
+  position: absolute; top: 3px; right: 3px; width: 13px; height: 13px; border-radius: 50%;
+  background: var(--rui-color-green-400); border: 2px solid var(--rui-color-neutrals-0); display: none;
+  box-shadow: 0 0 0 0 rgba(75, 213, 90, .6); animation: z-badge 2.4s ease-out infinite;
+}
+.zara.has-session[data-state="idle"] .z-badge { display: block; }
+@keyframes z-badge { 0% { box-shadow: 0 0 0 0 rgba(75, 213, 90, .55); } 70%, 100% { box-shadow: 0 0 0 7px rgba(75, 213, 90, 0); } }
+
+/* launcher layer (click target + label) */
+.z-launch {
+  position: absolute; inset: 0;
+  display: flex; align-items: center;
+  padding-left: 52px; z-index: 1;
+  border-radius: inherit; overflow: hidden;
+  color: var(--rui-color-neutrals-800); white-space: nowrap;
+}
+.z-launch-label {
+  font-family: var(--rui-font-bold); font-size: 15px; letter-spacing: -.01em;
+  opacity: 0; transform: translateX(-10px); filter: blur(3px);
+  transition: opacity .18s var(--z-ease), transform .3s var(--z-ease), filter .3s var(--z-ease);
+}
+.zara[data-state="idle"] .z-pill:hover .z-launch-label,
+.zara[data-state="idle"] .z-pill:has(.z-launch:focus-visible) .z-launch-label { opacity: 1; transform: none; filter: none; transition-delay: .12s; }
+.zara[data-state="compose"] .z-launch { pointer-events: none; }
+
+/* composer layer */
+.z-compose {
+  position: absolute; inset: 0;
+  display: flex; align-items: flex-end; gap: 8px;
+  padding: 10px 10px 10px 64px; z-index: 1;
+  opacity: 0; transform: translateX(-12px); pointer-events: none;
+  transition: opacity .12s var(--z-ease), transform .2s var(--z-ease);
+}
+.zara[data-state="compose"] .z-compose {
+  opacity: 1; transform: none; pointer-events: auto;
+  transition: opacity .3s var(--z-ease) .2s, transform .45s var(--z-ease) .2s;
+}
+
+/* glass halo around the composer */
+/* glass: shared by the composer and the chat panel */
+.z-glass, .z-panel-glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .62) 0%, rgba(244, 250, 252, .34) 100%);
+  backdrop-filter: blur(22px) saturate(1.8);
+  -webkit-backdrop-filter: blur(22px) saturate(1.8);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    inset 0 -1px 0 rgba(187, 210, 224, .35),
+    0 0 0 1px rgba(27, 39, 69, .06),
+    0 24px 56px rgba(27, 39, 69, .16);
+}
+.z-glass {
+  position: absolute; inset: -10px; z-index: -1;
+  border-radius: calc(var(--r) + 10px);
+  opacity: 0; transform: scale(.82);
+  transition: opacity .2s var(--z-ease), transform .5s var(--z-spring), border-radius .45s var(--z-ease);
+  pointer-events: none;
+}
+
+/* light catching the rim */
+.z-glass::after, .z-panel-glass::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .95), rgba(255, 255, 255, .15) 38%, rgba(255, 255, 255, 0) 60%, rgba(47, 186, 179, .35));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.zara[data-state="compose"] .z-glass { opacity: 1; transform: none; transition: opacity .35s var(--z-ease) .08s, transform .6s var(--z-spring) .04s, border-radius .45s var(--z-ease); }
+.z-input {
+  flex: 1; min-width: 0; align-self: center;
+  border: 0; outline: 0; resize: none; background: transparent;
+  font-family: var(--rui-font-regular); font-size: 16px; line-height: 24px; color: var(--rui-color-neutrals-800);
+  max-height: 120px; padding: 0; margin: 0; overflow-y: hidden;
+}
+.z-input::placeholder { color: var(--rui-palette-text-basic-secondary); }
+
+/* suggestions above the composer */
+.z-suggest {
+  display: flex; flex-direction: column; align-items: stretch; gap: 8px;
+  width: min(560px, calc(100vw - 48px)); /* same width as the composer */
+  margin-bottom: 10px;
+  pointer-events: none;
+}
+.z-suggest-row { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.z-suggest .z-chip {
+  opacity: 0; transform: translateY(10px) scale(.96);
+  transition: opacity .2s var(--z-ease), transform .3s var(--z-ease), background-color .15s, box-shadow .15s;
+}
+.zara[data-state="compose"] .z-suggest.is-on { pointer-events: auto; }
+.zara[data-state="compose"] .z-suggest.is-on .z-chip {
+  opacity: 1; transform: none;
+  transition: opacity .35s var(--z-ease) calc(.28s + var(--i, 0) * .06s), transform .5s var(--z-spring) calc(.28s + var(--i, 0) * .06s), background-color .15s, box-shadow .15s;
+}
+
+/* ── State 3: chat panel ────────────────────────────── */
+.z-scrim {
+  position: fixed; inset: 0; z-index: 2147482990;
+  background: radial-gradient(120% 90% at 50% 100%, rgba(18, 26, 47, .42), rgba(18, 26, 47, .24));
+  backdrop-filter: blur(6px) saturate(1.15); -webkit-backdrop-filter: blur(6px) saturate(1.15);
+  opacity: 0; pointer-events: none;
+  transition: opacity .4s var(--z-ease);
+}
+.zara[data-state="chat"] .z-scrim { opacity: 1; pointer-events: auto; }
+.z-panel {
+  position: fixed; z-index: 2147482995;
+  top: 40px; bottom: 40px; left: 0; right: 0; margin: 0 auto;
+  width: min(1240px, calc(100vw - 112px));
+  display: grid; grid-template-columns: 280px 1fr;
+  background: var(--rui-color-neutrals-0);
+  border-radius: var(--rui-border-r-xxl);
+  box-shadow: 0 0 0 1px rgba(187, 210, 224, .6), var(--z-shadow-panel);
+  overflow: hidden;
+  opacity: 0; pointer-events: none; visibility: hidden;
+  transition: opacity .25s var(--z-ease), visibility 0s .25s;
+}
+.zara[data-state="chat"] .z-panel {
+  opacity: 1; pointer-events: auto; visibility: visible;
+  transition: opacity .25s var(--z-ease), visibility 0s;
+}
+
+/* during the clip morph the panel content arrives a beat after the surface */
+.z-panel.is-morphing { box-shadow: none; }
+/* the panel's glass rim: 10px around the panel box (synced from JS), under the panel */
+.z-panel-glass {
+  position: fixed; z-index: 2147482994; margin: -10px; padding: 10px; box-sizing: content-box;
+  border-radius: calc(var(--rui-border-r-xxl) + 10px); pointer-events: none;
+  opacity: 0; visibility: hidden; transition: opacity .12s var(--z-ease), visibility 0s .12s;
+}
+.zara[data-state="chat"] .z-panel-glass.is-on { opacity: 1; visibility: visible; transition: opacity .3s var(--z-ease) .05s, visibility 0s; }
+
+/* sidebar */
+.z-side {
+  display: flex; flex-direction: column; min-height: 0;
+  background: var(--rui-color-neutrals-100);
+  border-right: 1px solid var(--rui-color-neutrals-200);
+}
+.z-side-head { display: flex; align-items: center; gap: 9px; padding: 16px 12px 12px 16px; }
+.z-wordmark { flex: 1; min-width: 0; font-family: var(--rui-font-black); font-size: 13.5px; letter-spacing: -.01em; line-height: 1; }
+.z-wordmark small { display: block; margin-top: 2px; font-family: var(--rui-font-regular); font-size: 10.5px; letter-spacing: 0; color: var(--rui-palette-text-basic-primary); }
+.z-side-head .z-new { margin: 0; width: 40px; height: 40px; }
+.z-search {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 12px 6px 16px; height: 36px; padding: 0 12px; border-radius: 8px;
+  background: var(--rui-color-neutrals-0); box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300);
+  color: var(--rui-palette-text-basic-secondary);
+}
+.z-search svg { width: 16px; height: 16px; }
+.z-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: 14px var(--rui-font-regular); color: var(--rui-color-neutrals-800); }
+.z-search:focus-within { box-shadow: inset 0 0 0 1px var(--rui-color-blue-400), 0 0 0 3px var(--rui-color-blue-200); }
+.z-sessions { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 8px 12px; }
+.z-group-label { padding: 14px 12px 4px; font-size: 12px; line-height: 16px; color: var(--rui-palette-text-basic-primary); }
+.z-session {
+  display: block; width: 100%; text-align: left;
+  padding: 9px 12px; border-radius: 8px;
+  transition: background-color .12s;
+}
+.z-session:hover { background: rgba(145, 179, 199, .16); }
+.z-session.is-active { background: var(--rui-color-neutrals-0); box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300), 0 1px 2px rgba(27, 39, 69, .05); }
+.z-session-title { display: block; font-size: 14px; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.z-session-meta { display: flex; align-items: center; gap: 6px; margin-top: 2px; font-size: 12px; color: var(--rui-palette-text-basic-secondary); }
+.z-tag {
+  display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 4px;
+  font-family: var(--rui-font-bold); font-size: 10.5px; letter-spacing: .02em;
+  background: var(--rui-color-neutrals-200); color: var(--rui-color-neutrals-600);
+}
+.z-empty-list { padding: 16px 12px; font-size: 13px; color: var(--rui-palette-text-basic-secondary); }
+
+/* main column */
+.z-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; }
+.z-main-head {
+  display: flex; align-items: center; gap: 12px;
+  height: 64px; padding: 0 16px 0 28px;
+  border-bottom: 1px solid var(--rui-color-neutrals-200);
+}
+.z-main-title { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
+.z-main-title h2 {
+  margin: 0; font-family: var(--rui-font-bold); font-size: 16px; font-weight: normal;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.z-head-actions { display: flex; align-items: center; gap: 4px; }
+.z-head-actions .z-icon-btn { margin: 0; width: 40px; height: 40px; }
+.z-menu-btn { display: none !important; }
+.z-thread { flex: 1; min-height: 0; overflow-y: auto; scroll-behavior: smooth; }
+.z-thread-inner { max-width: 780px; margin: 0 auto; padding: 32px 28px 24px; }
+
+/* welcome */
+.z-welcome { padding: 6vh 0 8px; text-align: center; }
+.z-welcome .z-symbol { margin: 0 auto 20px; }
+.z-welcome h3 { margin: 0 0 10px; font-family: var(--rui-font-black); font-weight: normal; font-size: 32px; line-height: 38px; letter-spacing: -.04em; }
+.z-welcome p { margin: 0 auto; max-width: 520px; font-size: 16px; line-height: 24px; color: var(--rui-color-neutrals-600); }
+.z-caps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 32px; text-align: left; }
+.z-cap {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 16px; border-radius: 8px; text-align: left; text-decoration: none; color: inherit;
+  background: var(--rui-color-neutrals-0); box-shadow: inset 0 0 0 1.5px var(--rui-color-neutrals-300);
+  transition: background-color .15s;
+}
+.z-cap:hover { background: var(--rui-color-neutrals-100); }
+.z-cap:focus-visible { outline: 2px solid var(--rui-color-zicma-600); outline-offset: 1px; }
+
+/* yellow icon discs, as on the ZiCMA home page */
+.z-cap-ico, .z-cap .z-cap-ico { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--rui-color-zicma-400); color: var(--rui-color-neutrals-800); flex: none; }
+.z-cap-ico svg { width: 20px; height: 20px; }
+.z-cap b { display: block; font-family: var(--rui-font-bold); font-weight: normal; font-size: 14px; margin-bottom: 3px; }
+.z-cap span { display: block; font-size: 13px; line-height: 18px; color: var(--rui-color-neutrals-600); }
+.z-cap.is-locked { opacity: .75; }
+.z-cap.is-locked .z-cap-ico { background: var(--rui-color-neutrals-200); color: var(--rui-palette-text-basic-secondary); }
+
+/* messages */
+.z-msg { margin-bottom: 28px; animation: z-in .35s var(--z-ease) both; }
+@keyframes z-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.z-msg--user { display: flex; justify-content: flex-end; }
+.z-bubble {
+  max-width: 78%; padding: 12px 16px; border-radius: 18px 18px 4px 18px;
+  background: var(--rui-color-neutrals-200); font-size: 16px; line-height: 24px; white-space: pre-wrap; word-wrap: break-word;
+}
+.z-msg--ai { display: grid; grid-template-columns: 28px 1fr; gap: 14px; }
+.z-ai-body { min-width: 0; padding-top: 3px; }
+.z-ai-name { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-family: var(--rui-font-bold); font-size: 14px; }
+.z-ai-name .z-restored { font-family: var(--rui-font-regular); font-size: 12px; color: var(--rui-palette-text-basic-secondary); }
+.z-ai-text { font-size: 16px; line-height: 24px; color: var(--rui-color-neutrals-800); }
+.z-ai-text p { margin: 0 0 12px; }
+.z-ai-text p:last-child { margin-bottom: 0; }
+.z-ai-text ol, .z-ai-text ul { margin: 0 0 12px; padding-left: 22px; }
+.z-ai-text li { margin-bottom: 6px; }
+.z-ai-text b { font-family: var(--rui-font-bold); font-weight: normal; }
+.z-ai-text a { color: var(--rui-color-blue-500); text-decoration: none; }
+.z-ai-text a:hover { text-decoration: underline; }
+.z-cite {
+  display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 4px; margin: 0 1px;
+  border-radius: 5px; vertical-align: 2px;
+  font-family: var(--rui-font-bold); font-size: 11px; line-height: 1;
+  background: var(--rui-color-neutrals-200); color: var(--rui-color-neutrals-600); cursor: pointer;
+}
+.z-cite:hover { background: var(--rui-color-neutrals-800); color: var(--rui-color-neutrals-0); }
+
+/* progress (tool steps) */
+.z-steps { display: flex; flex-direction: column; gap: 8px; margin: 2px 0 14px; }
+.z-step { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 22px; color: var(--rui-color-neutrals-600); }
+.z-step-dot { width: 18px; height: 18px; display: grid; place-items: center; flex: none; }
+.z-step-dot svg { width: 16px; height: 16px; }
+.z-step.is-done { color: var(--rui-palette-text-basic-secondary); }
+.z-step.is-done .z-step-dot { color: var(--rui-color-zicma-600); }
+.z-spinner { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--rui-color-neutrals-300); border-top-color: var(--rui-color-reneum-500); animation: z-spin .8s linear infinite; }
+@keyframes z-spin { to { transform: rotate(360deg); } }
+.z-steps.is-collapsed { flex-direction: row; flex-wrap: wrap; gap: 6px 14px; margin-bottom: 12px; }
+.z-steps.is-collapsed .z-step { font-size: 12px; line-height: 16px; }
+
+/* rich blocks */
+.z-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 4px 0 16px; }
+.z-stat { padding: 14px 14px 12px; border-radius: 12px; background: var(--rui-color-neutrals-100); box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300); }
+.z-stat b { display: block; font-family: var(--rui-font-black); font-weight: normal; font-size: 22px; letter-spacing: -.01em; line-height: 28px; }
+.z-stat span { display: block; margin-top: 2px; font-size: 12px; color: var(--rui-color-neutrals-600); }
+.z-table-wrap { margin: 4px 0 16px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300); overflow: hidden; overflow-x: auto; }
+.z-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.z-table th { text-align: left; padding: 10px 14px; background: var(--rui-color-neutrals-100); font-family: var(--rui-font-bold); font-weight: normal; font-size: 12px; color: var(--rui-color-neutrals-600); border-bottom: 1px solid var(--rui-color-neutrals-300); white-space: nowrap; }
+.z-table td { padding: 10px 14px; border-bottom: 1px solid var(--rui-color-neutrals-200); white-space: nowrap; }
+.z-table tr:last-child td { border-bottom: 0; }
+.z-table td.num, .z-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.z-callout {
+  display: flex; gap: 10px; margin: 4px 0 14px; padding: 12px 14px; border-radius: 10px;
+  background: var(--rui-color-yellow-100); box-shadow: inset 0 0 0 1px var(--rui-color-yellow-200); font-size: 14px; line-height: 22px; color: var(--rui-color-neutrals-800);
+}
+.z-callout svg { width: 18px; height: 18px; margin-top: 2px; color: var(--rui-color-yellow-600); }
+.z-sources { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+.z-source {
+  display: inline-flex; align-items: center; gap: 8px; max-width: 100%;
+  height: 32px; padding: 0 12px 0 6px; border-radius: 8px;
+  background: var(--rui-color-neutrals-0); box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300);
+  font-size: 13px; color: var(--rui-color-neutrals-800); text-decoration: none;
+  transition: box-shadow .15s;
+}
+.z-source:hover { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-800); }
+.z-source.is-flash { box-shadow: inset 0 0 0 1.5px var(--rui-color-reneum-500), 0 0 0 4px rgba(47, 186, 179, .15); }
+.z-source em { font-style: normal; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 5px; background: var(--rui-color-neutrals-200); font-family: var(--rui-font-bold); font-size: 11px; color: var(--rui-color-neutrals-600); }
+
+/* one line: the address at the end shrinks first and ends with an ellipsis, then the title */
+.z-source em { flex: none; }
+.z-source span { flex: none; max-width: 60%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.z-source small { flex: 0 1 auto; min-width: 24px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--rui-palette-text-basic-secondary); font-size: 12px; }
+.z-ai-actions { display: flex; align-items: center; gap: 2px; margin-top: 12px; margin-left: -8px; }
+.z-ai-actions .z-icon-btn { width: 32px; height: 32px; margin: 0; }
+.z-ai-actions .z-icon-btn svg { width: 16px; height: 16px; }
+.z-ai-actions .z-icon-btn.is-on { color: var(--rui-color-zicma-700); background: var(--rui-color-green-100); }
+
+/* not helpful: Rui error tone */
+.z-ai-actions [data-act="fb-down"].is-on { color: var(--rui-palette-icon-basic-error); background: var(--rui-color-red-100); }
+.z-provenance { margin-left: 8px; font-size: 12px; color: var(--rui-palette-text-basic-secondary); }
+.z-caret { display: inline-block; width: 8px; height: 16px; margin-left: 2px; vertical-align: -2px; border-radius: 2px; background: var(--rui-color-reneum-500); animation: z-blink 1s steps(2) infinite; }
+@keyframes z-blink { 50% { opacity: 0; } }
+.z-followups { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.z-followups .z-chip, .z-fb-hint .z-chip { box-shadow: 0 0 0 1px var(--rui-color-transparent-600); }
+.z-followups .z-chip:hover, .z-fb-hint .z-chip:hover { box-shadow: 0 0 0 2px var(--rui-color-transparent-600); }
+
+/* bottom composer inside the panel */
+
+/* above the thread: chips there are transformed (entry animation) and would otherwise paint over the outline */
+.z-foot { position: relative; z-index: 1; padding: 2px 28px 18px; }
+.z-foot-inner { max-width: 780px; margin: 0 auto; }
+.z-box {
+  display: flex; align-items: flex-end; gap: 10px;
+  padding: 10px; border-radius: 20px;
+  background: var(--rui-color-neutrals-0); box-shadow: 0 0 0 1px var(--rui-color-neutrals-400), 0 8px 24px rgba(27, 39, 69, .06);
+  transition: box-shadow .15s;
+}
+.z-box:focus-within { box-shadow: 0 0 0 1.5px var(--rui-color-neutrals-800), 0 8px 24px rgba(27, 39, 69, .08); }
+.z-box .z-input { padding-left: 8px; }
+.z-disclaimer { margin: 10px 0 0; text-align: center; font-size: 12px; line-height: 17px; color: var(--rui-palette-text-basic-secondary); }
+
+/* ── Mini: narrow panel on the right, no history; the page stays usable ── */
+.zara:not(.is-mini) .z-mini-only { display: none; }
+.zara.is-mini .z-scrim { opacity: 0 !important; pointer-events: none !important; }
+.zara.is-mini .z-panel {
+  top: 24px; bottom: 24px; left: auto; right: 24px; margin: 0;
+  width: min(440px, calc(100vw - 48px));
+  grid-template-columns: 1fr;
+}
+.zara.is-mini .z-side { display: none; }
+.zara.is-mini .z-main-head { padding: 0 12px 0 20px; gap: 8px; }
+.zara.is-mini .z-main-title h2 { font-size: 14px; }
+.zara.is-mini .z-head-actions { gap: 2px; }
+.zara.is-mini .z-head-sep { margin: 0 4px; }
+.zara.is-mini .z-head-actions .z-human-btn { width: 40px; padding: 0; justify-content: center; }
+.zara.is-mini .z-thread-inner { padding: 24px 20px 16px; }
+.zara.is-mini .z-foot { padding: 2px 16px 14px; }
+.zara.is-mini .z-welcome { padding-top: 3vh; }
+.zara.is-mini .z-welcome h3 { font-size: 24px; line-height: 30px; }
+.zara.is-mini .z-caps { grid-template-columns: 1fr; margin-top: 24px; }
+.zara.is-mini .z-stats { grid-template-columns: repeat(2, 1fr); }
+.zara.is-mini .z-bubble { max-width: 88%; }
+.zara.is-mini .z-ticket { padding: 12px; }
+.zara.is-mini .z-ticket-card { padding: 18px; }
+
+/* ── Talk to a person (ticket to a ZiCMA representative) ── */
+.z-head-sep { width: 1px; height: 22px; margin: 0 6px; background: var(--rui-color-neutrals-200); }
+.z-fb-hint { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 10px; font-size: 13px; color: var(--rui-color-neutrals-600); animation: z-in .3s var(--z-ease) both; }
+.z-human-link {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  margin-top: 12px; padding: 14px 16px; border-radius: 12px; text-align: left;
+  background: var(--rui-color-green-100); box-shadow: inset 0 0 0 1px var(--rui-color-green-200);
+  transition: box-shadow .15s, background-color .15s;
+}
+.z-human-link:hover { background: var(--rui-color-green-100); box-shadow: inset 0 0 0 1px var(--rui-color-zicma-600); }
+.z-human-link .z-cap-ico { background: var(--rui-color-neutrals-0); color: var(--rui-color-zicma-600); }
+.z-human-link > span:nth-child(2) { flex: 1; }
+.z-human-link b { display: block; font-family: var(--rui-font-bold); font-weight: normal; font-size: 14px; margin-bottom: 3px; }
+.z-human-link span span { display: block; font-size: 13px; line-height: 18px; color: var(--rui-color-neutrals-600); }
+.z-human-link > svg { width: 18px; height: 18px; color: var(--rui-color-zicma-600); transition: transform .2s var(--z-ease); }
+.z-human-link:hover > svg { transform: translateX(3px); }
+.z-tag--ticket { background: var(--rui-color-yellow-200); color: var(--rui-color-neutrals-800); }
+
+/* ticket card in the thread */
+.z-msg--ticket { display: flex; justify-content: center; }
+.z-tcard {
+  display: flex; align-items: center; gap: 12px; width: 100%; max-width: 560px;
+  padding: 12px 14px; border-radius: 14px;
+  background: var(--rui-color-neutrals-0); box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300), 0 4px 14px rgba(27, 39, 69, .05);
+}
+.z-tcard-ico { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--rui-color-green-100); color: var(--rui-color-zicma-600); flex: none; }
+.z-tcard-ico svg { width: 18px; height: 18px; }
+.z-tcard-body { flex: 1; min-width: 0; }
+.z-tcard-body b { display: block; font-family: var(--rui-font-bold); font-weight: normal; font-size: 14px; }
+.z-tcard-body span { display: block; margin-top: 2px; font-size: 12px; color: var(--rui-color-neutrals-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.z-tcard-status { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 12px; background: var(--rui-color-yellow-200); color: var(--rui-color-neutrals-800); font-family: var(--rui-font-bold); font-size: 12px; white-space: nowrap; }
+.z-tcard-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--rui-color-yellow-500); }
+
+/* the ticket sheet */
+.z-ticket {
+  position: absolute; inset: 0; z-index: 4;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background: rgba(244, 250, 252, .62);
+  backdrop-filter: blur(10px) saturate(1.3); -webkit-backdrop-filter: blur(10px) saturate(1.3);
+  opacity: 0; visibility: hidden;
+  transition: opacity .25s var(--z-ease), visibility 0s .25s;
+}
+.z-panel.ticket-open .z-ticket { opacity: 1; visibility: visible; transition: opacity .25s var(--z-ease), visibility 0s; }
+.z-ticket-card {
+  position: relative; width: 100%; max-width: 560px; max-height: 100%; overflow-y: auto;
+  padding: 24px; border-radius: 20px;
+  background: var(--rui-color-neutrals-0);
+  box-shadow: 0 0 0 1px rgba(187, 210, 224, .8), 0 24px 60px rgba(27, 39, 69, .16);
+  transform: translateY(18px) scale(.98);
+  transition: transform .45s var(--z-spring);
+}
+.z-panel.ticket-open .z-ticket-card { transform: none; }
+.z-ticket-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+.z-ticket-head > div { flex: 1; }
+.z-ticket-head h3 { margin: 2px 0 4px; font-family: var(--rui-font-black); font-weight: normal; font-size: 22px; letter-spacing: -.01em; }
+.z-ticket-head p { margin: 0; font-size: 14px; line-height: 20px; color: var(--rui-color-neutrals-600); }
+.z-ticket-head .z-icon-btn { margin: -4px -6px 0 0; }
+.z-ticket-ico { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--rui-color-green-100); color: var(--rui-color-zicma-600); flex: none; }
+.z-ticket-ico svg { width: 22px; height: 22px; }
+.z-ticket-form { display: flex; flex-direction: column; gap: 14px; }
+.z-field.is-invalid :is(input, textarea) { border-color: var(--rui-palette-stroke-input-error-default); }
+.z-ticket-form.is-sharing .z-manual, .z-ticket-form:not(.is-sharing) .z-clarify { display: none; }
+.z-manual { display: flex; flex-direction: column; gap: 14px; animation: z-in .3s var(--z-ease) both; }
+.z-context[hidden] { display: none; }
+.z-context { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: var(--rui-color-neutrals-100); }
+.z-context-label { font-family: var(--rui-font-bold); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--rui-palette-text-basic-secondary); }
+.z-attach { position: relative; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; background: var(--rui-color-neutrals-0); box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300); cursor: pointer; }
+.z-attach[hidden] { display: none; }
+.z-attach input { position: absolute; opacity: 0; pointer-events: none; }
+.z-attach-ico { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--rui-color-neutrals-100); color: var(--rui-color-neutrals-800); flex: none; }
+.z-attach-ico svg { width: 16px; height: 16px; }
+.z-attach-text { flex: 1; min-width: 0; }
+.z-attach-text b { display: block; font-family: var(--rui-font-bold); font-weight: normal; font-size: 13px; }
+.z-attach-text small { display: block; font-size: 12px; color: var(--rui-color-neutrals-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.z-check { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 4px; background: var(--rui-color-zicma-700); color: var(--rui-color-neutrals-0); flex: none; transition: background-color .15s, box-shadow .15s; }
+.z-check svg { width: 13px; height: 13px; }
+.z-attach input:not(:checked) ~ .z-check { background: var(--rui-color-neutrals-0); color: transparent; box-shadow: inset 0 0 0 1px var(--rui-color-transparent-600); }
+.z-attach input:not(:checked) ~ .z-attach-text, .z-attach input:not(:checked) ~ .z-attach-ico { opacity: .5; }
+.z-attach input:focus-visible ~ .z-check { outline: 2px solid var(--rui-palette-stroke-basic-focus); outline-offset: 2px; }
+.z-ticket-foot { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+.z-ticket-foot p { flex: 1; margin: 0; font-size: 12px; line-height: 16px; color: var(--rui-palette-text-basic-secondary); }
+.z-ticket-foot p b { font-family: var(--rui-font-bold); font-weight: normal; color: var(--rui-color-neutrals-800); }
+.z-ticket-done { display: none; text-align: center; padding: 12px 8px 4px; }
+.z-ticket.is-done .z-ticket-form, .z-ticket.is-done .z-ticket-head { display: none; }
+.z-ticket.is-done .z-ticket-done { display: block; animation: z-in .4s var(--z-ease) both; }
+.z-done-ico { display: grid; place-items: center; width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%; background: var(--rui-color-zicma-700); color: var(--rui-color-neutrals-0); animation: z-pop .5s var(--z-spring) both .05s; }
+.z-done-ico svg { width: 28px; height: 28px; }
+@keyframes z-pop { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+.z-ticket-done h3 { margin: 0 0 8px; font-family: var(--rui-font-black); font-weight: normal; font-size: 22px; }
+.z-ticket-done p { margin: 0 auto 20px; max-width: 380px; font-size: 14px; line-height: 21px; color: var(--rui-color-neutrals-600); }
+.z-ticket-done b { font-family: var(--rui-font-bold); font-weight: normal; color: var(--rui-color-neutrals-800); }
+
+/* ── Email check (before the first answer) ──────────── */
+.zara.is-gated .z-foot,
+.zara.is-gated .z-head-actions > :not([data-act="minimize"]),
+.zara.is-gated .z-menu-btn { display: none !important; }
+.z-gate { margin: 16px 0 8px; padding: 24px; border-radius: 8px; background: var(--rui-color-neutrals-100); animation: z-in .35s var(--z-ease) both; }
+.z-gate-step { display: none; flex-direction: column; gap: 16px; }
+.z-gate[data-step="email"] .z-gate-email, .z-gate[data-step="code"] .z-gate-code, .z-gate[data-step="ok"] .z-gate-ok { display: flex; animation: z-in .3s var(--z-ease) both; }
+.z-gate-head { display: flex; align-items: center; gap: 12px; }
+.z-gate-ico { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--rui-color-zicma-400); color: var(--rui-color-neutrals-800); }
+.z-gate-ico svg { width: 20px; height: 20px; }
+.z-gate h3 { margin: 0; font-family: var(--rui-font-bold); font-weight: normal; font-size: 18px; line-height: 24px; }
+.z-gate p { margin: 0; font-size: 14px; line-height: 22px; color: var(--rui-color-neutrals-600); }
+.z-gate p b { font-family: var(--rui-font-bold); font-weight: normal; color: var(--rui-color-neutrals-800); word-break: break-all; }
+.z-gate-submit { align-self: stretch; justify-content: center; }
+
+/* the card is already neutrals 100, so the disabled fill steps one shade darker */
+.z-gate-submit:disabled { background: var(--rui-color-neutrals-200) !important; border-color: var(--rui-color-neutrals-200) !important; color: var(--rui-color-neutrals-500) !important; cursor: not-allowed; }
+.z-otp { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.z-otp input {
+  width: 100%; min-width: 0; height: 64px; margin: 0; border: 1px solid var(--rui-color-neutrals-200); outline: 0;
+  border-radius: var(--rui-border-r-l); text-align: center; font: 24px/32px var(--rui-font-bold); color: var(--rui-palette-text-input-default);
+  background-color: var(--rui-palette-background-input-default); transition: border-color .2s;
+}
+.z-otp input:hover { border-color: var(--rui-color-neutrals-300); }
+.z-otp input:focus { border-color: var(--rui-color-neutrals-400); }
+.z-otp input:disabled { background-color: var(--rui-color-neutrals-100); border-color: var(--rui-color-neutrals-100); }
+.z-otp.is-invalid input:not(:disabled) { border-color: var(--rui-palette-stroke-input-error-default); }
+.z-gate-msg { margin-top: -8px; font-style: normal; font-size: 12px; line-height: 16px; color: var(--rui-color-neutrals-600); }
+.z-gate-msg:empty { display: none; }
+.z-gate-msg[data-tone="error"] { color: var(--rui-color-red-400); }
+.z-gate-links { display: flex; justify-content: space-between; gap: 8px; margin: -8px -10px 0; }
+.z-gate-ok { align-items: center; text-align: center; padding: 8px 0; }
+.z-gate-ok .z-done-ico { margin: 0; }
+.z-gate-ok h3 { margin: 0; }
+
+/* stands in for the email with the code (concept only) */
+.z-mailtoast {
+  position: fixed; z-index: 2147483001; top: 24px; left: 50%; display: flex; align-items: center; gap: 12px;
+  max-width: calc(100vw - 32px); padding: 12px 12px 12px 16px; border-radius: 8px; background: var(--rui-color-neutrals-800); color: var(--rui-color-neutrals-0); font-size: 14px; line-height: 20px;
+  box-shadow: var(--z-shadow-float); opacity: 0; transform: translate(-50%, -16px); pointer-events: none;
+  transition: opacity .25s var(--z-ease), transform .35s var(--z-spring);
+}
+.z-mailtoast.is-on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.z-mailtoast > svg { width: 20px; height: 20px; color: var(--rui-color-zicma-400); flex: none; }
+.z-mailtoast > span { min-width: 0; white-space: nowrap; }
+.z-mailtoast small { display: block; overflow: hidden; text-overflow: ellipsis; font-size: 12px; line-height: 16px; color: var(--rui-color-neutrals-400); }
+.z-mailtoast.is-copied .z-btn--toast { color: var(--rui-color-green-400); }
+.z-mailtoast b { font-family: var(--rui-font-bold); font-weight: normal; letter-spacing: .08em; color: var(--rui-color-zicma-400); }
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .z-panel { width: calc(100vw - 48px); top: 24px; bottom: 24px; grid-template-columns: 248px 1fr; }
+}
+@media (max-width: 760px) {
+  .z-dock { right: 16px; bottom: 16px; }
+  .zara[data-state="compose"] .z-pill { --w: calc(100vw - 32px); }
+  .z-panel { width: calc(100vw - 20px); top: 10px; bottom: 10px; grid-template-columns: 1fr; }
+  .z-side {
+    position: absolute; inset: 0 auto 0 0; width: 84%; max-width: 320px; z-index: 3;
+    transform: translateX(-102%); transition: transform .3s var(--z-ease);
+    box-shadow: 16px 0 40px rgba(27, 39, 69, .14);
+  }
+  .z-panel.side-open .z-side { transform: none; }
+  .z-menu-btn { display: grid !important; }
+  .z-human-btn span, .z-head-sep { display: none; }
+  .z-head-actions .z-human-btn { width: 38px; padding: 0; justify-content: center; }
+  .z-ticket { padding: 10px; align-items: flex-end; }
+  .z-ticket-card { padding: 18px; }
+  .z-ticket-foot { flex-wrap: wrap; }
+  .z-ticket-foot p { flex-basis: 100%; }
+  .z-main-head { padding: 0 8px 0 8px; }
+  .zara.is-mini .z-panel { width: calc(100vw - 20px); top: 10px; bottom: 10px; right: 10px; }
+  .z-size-btn { display: none !important; }
+  .zara.is-mini .z-menu-btn { display: none !important; }
+  .z-thread-inner { padding: 20px 16px; }
+  .z-foot { padding: 2px 12px 12px; }
+  .z-caps { grid-template-columns: 1fr; }
+  .z-stats { grid-template-columns: repeat(2, 1fr); }
+  .z-welcome h3 { font-size: 26px; }
+  .z-suggest { width: calc(100vw - 32px); }
+  .z-suggest-row { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; padding: 2px 4px 6px; scrollbar-width: none; -webkit-mask: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 40px), transparent); mask: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 40px), transparent); }
+}
+
+/* ── Overrides (lixunoff): dark launcher, no "online" badge ───────────── */
+/* the launcher (idle / closing states) sits on a dark surface; the composer stays white */
+.zara:not([data-state="compose"]) .z-pill {
+  background: var(--rui-color-neutrals-1000);
+  box-shadow: 0 14px 34px rgba(8, 12, 22, .24), 0 2px 6px rgba(8, 12, 22, .12);
+}
+.zara:not([data-state="compose"]) .z-pill::after {
+  background: linear-gradient(180deg, var(--rui-color-neutrals-900) 0%, var(--rui-color-neutrals-1000) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+.zara:not([data-state="compose"]) .z-launch-label { color: var(--rui-color-neutrals-0); }
+/* the moving mark already says Zara is alive, so the green status badge is not needed */
+.z-badge { display: none !important; }
+
+/* ── Overrides (lixunoff): composer = launcher height (56px), fully rounded ── */
+.zara[data-state="compose"] .z-pill { --h: var(--z-pill-h, 56px); --r: 28px; }
+.zara[data-state="compose"] .z-orb { left: 8px; bottom: 8px; }
+.z-compose { padding: 6px 6px 6px 56px; }
+.z-compose .z-send { margin: 0; border-radius: 999px; }
+.z-compose .z-icon-btn { border-radius: 999px; }
+/* composer = mini chat panel width (440px), so sending only grows it upward */
+.zara[data-state="compose"] .z-pill { --w: min(440px, calc(100vw - 48px)); }
+.z-suggest { width: min(440px, calc(100vw - 48px)); }
+@media (max-width: 760px) {
+  .zara[data-state="compose"] .z-pill { --w: calc(100vw - 32px); }
+  .z-suggest { width: calc(100vw - 32px); }
+}
+@media (max-width: 760px) {
+  .zara.is-mini .z-panel { width: calc(100vw - 32px); right: 16px; bottom: 16px; }
+}
+/* active composer: brand-green rim, the colour of the primary button (Create Account) */
+.zara[data-state="compose"] .z-pill:focus-within {
+  box-shadow: 0 0 0 1.5px var(--rui-palette-stroke-button-primary-default), 0 12px 32px rgba(27, 39, 69, .12);
+}
+/* send/close centred in the 56px composer: 8px insets, mirrors the orb on the left */
+.z-compose { padding: 8px 8px 8px 56px; }
+.z-compose .z-icon-btn { margin-bottom: 2px; }
+/* multi-line composer: send/close and the orb stay pinned to the top row, the field grows down */
+.z-compose { align-items: flex-start; }
+.z-compose .z-icon-btn { margin: 2px 0 0; }
+.zara[data-state="compose"] .z-orb { bottom: calc(var(--h) - 48px); }
+/* suggestion chips: fully rounded, like the composer */
+.z-suggest .z-chip { border-radius: 999px; padding: 0 16px 0 14px; }
+/* suggestions pop in one by one, bottom → top (closest to the field first) */
+.z-suggest .z-chip:nth-last-child(1) { --o: 0; }
+.z-suggest .z-chip:nth-last-child(2) { --o: 1; }
+.z-suggest .z-chip:nth-last-child(3) { --o: 2; }
+.z-suggest .z-chip:nth-last-child(4) { --o: 3; }
+.zara[data-state="compose"] .z-suggest.is-on .z-chip {
+  transition: opacity .3s var(--z-ease) calc(.3s + var(--o, 0) * .12s), transform .5s var(--z-spring) calc(.3s + var(--o, 0) * .12s), background-color .15s, box-shadow .15s;
+}
+/* chips are re-rendered on every open, so a transition never fires: use a keyframe animation instead */
+@keyframes z-chip-in {
+  from { opacity: 0; transform: translateY(12px) scale(.94); }
+  to   { opacity: 1; transform: none; }
+}
+.zara[data-state="compose"] .z-suggest.is-on .z-chip {
+  animation: z-chip-in .45s var(--z-spring) both;
+  animation-delay: calc(.3s + var(--o, 0) * .14s);
+}
+/* clear (trash) button: hidden until there is text; it empties the field, it doesn't close the composer */
+.z-icon-btn.z-clear {
+  width: 0; margin-right: -12px; opacity: 0; transform: scale(.6); pointer-events: none; overflow: hidden;
+  transition: width .25s var(--z-ease), margin .25s var(--z-ease), opacity .15s var(--z-ease), transform .25s var(--z-spring), background-color .15s, color .15s;
+}
+.z-icon-btn.z-clear.is-on { width: 40px; margin-right: 0; opacity: 1; transform: none; pointer-events: auto; }
+/* clear = Rui ghost icon button, same 40px box as send: no hover plate, only the icon colour changes */
+.z-icon-btn.z-clear { height: 40px; margin-top: 0; margin-bottom: 0; border-radius: 999px; background: transparent !important; color: var(--rui-palette-text-button-ghost-default); }
+.z-icon-btn.z-clear:hover { color: var(--rui-palette-text-button-ghost-hover); }
+.z-icon-btn.z-clear:active { color: var(--rui-palette-text-button-ghost-pressed); }
+
+/* ── Seamless open: the field grows into the chat panel, glass and all ── */
+/* chat input = the composer: 56px pill, 8px insets, green focus rim, round send */
+.z-box {
+  min-height: 56px; box-sizing: border-box; align-items: flex-start; gap: 8px;
+  padding: 8px 8px 8px 20px; border-radius: 28px;
+  box-shadow: 0 0 0 1px rgba(187, 210, 224, .95), 0 1px 2px rgba(27, 39, 69, .06);
+}
+.z-box:focus-within { box-shadow: 0 0 0 1.5px var(--rui-palette-stroke-button-primary-default), 0 1px 2px rgba(27, 39, 69, .06); }
+.z-box .z-input { padding-left: 0; align-self: flex-start; margin: 8px 0; }
+.z-box .z-send { margin: 0; border-radius: 999px; }
+/* gated (after the free answer): the input stays, disabled */
+.zara.is-gated .z-foot { display: block !important; }
+.z-box.is-disabled { background: var(--rui-color-neutrals-100); box-shadow: 0 0 0 1px var(--rui-color-neutrals-200); }
+.z-box.is-disabled .z-input { cursor: not-allowed; }
+.z-box.is-disabled .z-input::placeholder { color: var(--rui-color-neutrals-400); }
+/* mini panel: the input sits on the bottom edge (8px inset, like the composer's controls), the note goes above it */
+.zara.is-mini .z-foot-inner { display: flex; flex-direction: column-reverse; }
+/* the composer hands over instantly: its glass is replaced by the panel's growing glass in the same frame */
+.zara[data-state="chat"] .z-glass { opacity: 0; transition: none; }
+
+/* ── Mini panel: its bottom row IS the composer (same box, same place) — full width, no inset, top border only ── */
+.zara.is-mini .z-panel { border-radius: 28px; }
+.zara.is-mini .z-panel-glass { border-radius: 38px; }
+.zara.is-mini .z-foot { padding: 0; }
+.zara.is-mini .z-foot-inner { max-width: none; }
+.zara.is-mini .z-box {
+  position: relative; min-height: 56px;
+  padding: 8px 8px 8px 56px; border-radius: 28px;
+  box-shadow: inset 0 1px 0 var(--rui-color-neutrals-200);
+}
+.zara.is-mini .z-box:focus-within,
+.zara.is-mini .z-box.is-disabled { box-shadow: inset 0 1px 0 var(--rui-color-neutrals-200); }
+.z-box-orb { display: none; }
+.zara.is-mini .z-box-orb { display: block; position: absolute; left: 8px; top: 8px; width: 40px; height: 40px; pointer-events: none; }
+.zara.is-mini .z-box-orb .z-symbol { width: 100%; height: 100%; }
+.zara.is-mini .z-box-orb .z-symbol svg { width: 100%; height: 100%; }
+/* no disclaimer under/above the input */
+.z-disclaimer { display: none !important; }
+/* disabled field stays white */
+.z-box.is-disabled { background: var(--rui-color-neutrals-0); }
+/* reverse: tinted panel (the gate card's colour), white cards inside */
+.z-panel { background: var(--rui-color-neutrals-100); }
+.z-gate, .z-stat, .z-bubble { background: var(--rui-color-neutrals-0); }
+.z-gate { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300); border-radius: 12px; }
+/* thread still scrolls, the scrollbar is hidden */
+.z-thread { scrollbar-width: none; -ms-overflow-style: none; }
+.z-thread::-webkit-scrollbar { display: none; width: 0; height: 0; }
+/* field 64px (launcher stays 56): 12px insets around the 40px controls, radius 32 */
+.zara[data-state="compose"] .z-pill { --h: var(--z-pill-h, 64px); --r: 32px; }
+.zara[data-state="compose"] .z-orb { left: 12px; bottom: calc(var(--h) - 52px); }
+.z-compose { padding: 12px 12px 12px 64px; }
+.zara.is-mini .z-panel { border-radius: 32px; }
+.zara.is-mini .z-panel-glass { border-radius: 42px; }
+.zara.is-mini .z-box { min-height: 64px; padding: 12px 12px 12px 64px; border-radius: 32px; }
+.zara.is-mini .z-box-orb { left: 12px; top: 12px; }
+/* launcher 64×64, same height as the field */
+.z-pill { --w: 64px; --h: 64px; --r: 32px; }
+.zara[data-state="idle"] .z-pill.is-settled:hover { --w: 64px; }
+.z-orb { width: 64px; height: 64px; }
+.z-launch { padding-left: 60px; }
+/* user message: dark bubble (launcher navy), light text */
+.z-bubble { background: var(--rui-color-neutrals-1000) !important; color: var(--rui-color-neutrals-0); }
+.z-bubble ::selection { background: rgba(255, 255, 255, .25); }
+/* email field = Rui Base Input, Size=Small, no label: 40px, r6, 12px padding, 14px icon + 4px gap, 12/16 text */
+.z-gate .z-field > span { display: none; }
+.z-gate .z-field input {
+  height: 40px; padding: 0 12px 0 30px; border-radius: 6px;
+  font-size: 12px; line-height: 16px;
+  border: 1px solid var(--rui-palette-stroke-input-default);
+  background-color: var(--rui-palette-background-input-default);
+  transition: border-color .15s, box-shadow .15s;
+}
+.z-gate .z-field input::placeholder { color: var(--rui-palette-text-input-placeholder); }
+.z-gate .z-field input:hover { border-color: var(--rui-palette-stroke-input-hover); }
+.z-gate .z-field input:focus { border-color: var(--rui-palette-stroke-input-focus-border); box-shadow: 0 0 0 2px var(--rui-palette-stroke-input-focus-outline); }
+.z-gate .z-field--icon > svg { left: 12px; top: 13px; width: 14px; height: 14px; color: var(--rui-palette-icon-input-enabled); }
+.z-gate .z-field.is-invalid input { border-color: var(--rui-palette-stroke-input-error-default); background-color: var(--rui-palette-background-input-error-default); }
+.z-gate .z-field.is-invalid input:focus { border-color: var(--rui-palette-stroke-input-error-focus-border); box-shadow: 0 0 0 2px var(--rui-palette-stroke-input-error-focus-outline); background-color: var(--rui-palette-background-input-error-active); }
+.z-gate .z-field.is-invalid > svg { color: var(--rui-palette-icon-input-error); }
+.z-gate .z-err { font-size: 10px; line-height: 14px; padding: 0 12px; }
+/* Inter sits low in a 16px line: lift the text 1px so the lowercase is optically centred in the 40px field */
+.z-gate .z-field input { padding-bottom: 2px; }
+/* source links: fully rounded, Rui icon (external-link / file) instead of the number */
+.z-source { border-radius: 999px; padding: 0 14px 0 12px; gap: 6px; }
+.z-source em { width: 16px; height: 16px; border-radius: 0; background: none; color: var(--rui-color-neutrals-600); }
+.z-source em svg { width: 16px; height: 16px; }
+.z-source:hover em { color: var(--rui-color-neutrals-800); }
+.z-source:hover { box-shadow: inset 0 0 0 1px var(--rui-palette-stroke-button-primary-default); }
+.z-source:hover em { color: var(--rui-palette-stroke-button-primary-default); }
+/* answer meta (Figma: Zara / Assistant Message → Meta): caption, "Answered <date>, <time> · Show sources" */
+.z-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 0 4px; min-height: 28px; margin-bottom: 8px;
+  font-family: var(--rui-font-regular); font-size: 12px; line-height: 16px; color: var(--rui-color-neutrals-600); }
+.z-meta-label { white-space: pre; }
+.z-meta-link { padding: 0; border: 0; background: none; font: inherit; color: var(--rui-color-blue-500); cursor: pointer; }
+.z-meta-link:hover { text-decoration: underline; }
+/* reasoning steps fold away under the meta; "Show sources" opens them */
+.z-steps.is-folded { display: none; }
+.z-steps.is-folded.is-open { display: flex; animation: z-in .25s var(--z-ease) both; }
+/* steps under "Show sources": caption, no gap between rows */
+.z-steps.is-folded { gap: 0; }
+.z-steps.is-folded .z-step { font-size: 12px; line-height: 16px; gap: 6px; }
+.z-steps.is-folded .z-step-dot, .z-steps.is-folded .z-step-dot svg { width: 14px; height: 14px; }
+/* Zara message: logo + meta on one row, the answer runs full width from the left edge (under the logo); max 600 in the full view */
+.z-msg--ai { grid-template-columns: 28px 1fr; column-gap: 8px; row-gap: 0; max-width: 600px; }
+.z-msg--ai > .z-ai-body { display: contents; }
+.z-msg--ai > .z-ai-body > * { grid-column: 1 / -1; min-width: 0; }
+.z-msg--ai > .z-ai-body > .z-meta { grid-column: 2; grid-row: 1; align-self: center; margin: 0; }
+.z-msg--ai > .z-symbol { grid-row: 1; }
+.z-msg--ai > .z-ai-body > :nth-child(2) { margin-top: 10px; }
+/* the steps (Show sources) stay under the meta, indented next to the logo */
+.z-msg--ai > .z-ai-body > .z-steps, .z-msg--ai > .z-ai-body > .z-steps-slot { grid-column: 2; }
+.z-msg--ai > .z-ai-body > .z-steps.is-open, .z-msg--ai > .z-ai-body > .z-steps-slot { margin-top: 4px; }
+.z-msg--ai > .z-ai-body > .z-steps.is-open + .z-ai-text { margin-top: 10px; }
+/* finished answer: only the spark, 16px, brand green */
+.z-msg--ai.is-done { grid-template-columns: 16px 1fr; }
+.z-spark { grid-row: 1; align-self: center; display: block; width: 16px; height: 16px; color: var(--rui-palette-background-button-primary-default); }
+.z-spark svg { display: block; width: 100%; height: 100%; fill: currentColor; }
+/* finished answer: the full static mark at 16px (not just the spark) */
+.z-spark svg { fill: initial; }
+/* live steps (while thinking) use the same caption style as the folded ones */
+.z-msg--ai .z-steps { gap: 0; margin: 0 0 10px; }
+.z-msg--ai .z-step { font-size: 12px; line-height: 16px; gap: 6px; }
+.z-msg--ai .z-step-dot, .z-msg--ai .z-step-dot svg { width: 14px; height: 14px; }
+.z-msg--ai .z-step-dot .z-spinner { width: 10px; height: 10px; }
+/* follow-up questions: same chips as the starter suggestions — pill, same shadow — right-aligned, one per row */
+.z-followups { flex-direction: column; align-items: flex-end; flex-wrap: nowrap; gap: 8px; margin-top: 16px; }
+.z-followups .z-chip {
+  border-radius: 999px; padding: 10px 16px 10px 14px; height: auto; min-height: 40px; max-width: 100%;
+  white-space: normal; text-align: left;
+  box-shadow: 0 0 0 1px var(--rui-palette-stroke-basic-primary), 0 8px 24px rgba(27, 39, 69, .16), 0 1px 3px rgba(27, 39, 69, .10);
+}
+.z-followups .z-chip:hover { box-shadow: 0 0 0 2px var(--rui-palette-stroke-basic-primary), 0 8px 24px rgba(27, 39, 69, .16), 0 1px 3px rgba(27, 39, 69, .10); }
+/* follow-ups: no shadow, original 40px height */
+.z-followups .z-chip { height: 40px; min-height: 0; padding: 0 16px 0 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; line-height: 36px;
+  box-shadow: 0 0 0 1px var(--rui-palette-stroke-basic-primary); }
+.z-followups .z-chip:hover { box-shadow: 0 0 0 2px var(--rui-palette-stroke-basic-primary); }
+.z-followups .z-chip svg { vertical-align: -3px; margin-right: 4px; }
+/* question chips: hover = brand-green 1px border, text unchanged */
+.z-followups .z-chip:hover { box-shadow: 0 0 0 1px var(--rui-palette-stroke-button-primary-default); color: var(--rui-palette-text-button-border-default); }
+.z-suggest .z-chip:hover { box-shadow: 0 0 0 1px var(--rui-palette-stroke-button-primary-default), 0 8px 24px rgba(27, 39, 69, .16), 0 1px 3px rgba(27, 39, 69, .10); color: var(--rui-palette-text-button-border-default); }
+/* answer actions: like · dislike · copy, round hover, the first circle sits on the content's left line */
+.z-ai-actions { margin-left: 0; gap: 4px; }
+.z-ai-actions .z-icon-btn { border-radius: 999px; }
+/* the mark in the field is not a button: no hover flip, no "Open chat" tooltip */
+.zara[data-state="compose"] .z-orb { pointer-events: none; cursor: default; }
+.z-orb .z-flip { transform: none !important; }
+.z-orb .z-face--back, .z-orb .z-orb-tip { display: none !important; }
+/* 6-digit code = Rui Code Input, Size=Small: one 40px box (r6, 1px border), six 12×16 digit slots with a 1px underline, 8px apart, centred */
+.z-otp {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 40px; padding: 0 12px; border-radius: 6px; cursor: text;
+  background: var(--rui-palette-background-input-default);
+  border: 1px solid var(--rui-palette-stroke-input-default);
+  transition: border-color .15s, box-shadow .15s;
+}
+.z-otp:hover { border-color: var(--rui-palette-stroke-input-hover); }
+.z-otp:focus-within { border-color: var(--rui-palette-stroke-input-focus-border); box-shadow: 0 0 0 2px var(--rui-palette-stroke-input-focus-outline); }
+.z-otp input, .z-otp input:hover, .z-otp input:focus, .z-otp input:disabled {
+  width: 12px; height: 16px; padding: 0; margin: 0; flex: none;
+  border: 0; border-bottom: 1px solid var(--rui-palette-stroke-input-default); border-radius: 0;
+  background: transparent; outline: 0; box-shadow: none;
+  font-family: var(--rui-font-regular); font-size: 12px; line-height: 16px; text-align: center;
+  color: var(--rui-palette-text-input-default); caret-color: var(--rui-palette-text-input-default);
+}
+.z-otp input:disabled { color: var(--rui-palette-text-input-disabled); }
+.z-otp.is-invalid { border-color: var(--rui-palette-stroke-input-error-default); background: var(--rui-palette-background-input-error-default); }
+.z-otp.is-invalid:focus-within { border-color: var(--rui-palette-stroke-input-error-focus-border); box-shadow: 0 0 0 2px var(--rui-palette-stroke-input-error-focus-outline); }
+.z-otp.is-invalid input:not(:disabled) { border-color: var(--rui-palette-stroke-input-default); }
+/* header: fixed product name instead of the conversation title — "Zara" caption bold, "ZiCMA Portal Assistant" footnote */
+.z-main-title h2[hidden] { display: none; }
+.z-brand { display: flex; flex-direction: column; min-width: 0; }
+.z-brand b { font: var(--rui-font-kit-caption) var(--rui-font-bold); font-weight: normal; color: var(--rui-color-neutrals-800); }
+.z-brand small { font: var(--rui-font-kit-footnote) var(--rui-font-regular); color: var(--rui-color-neutrals-600); }
+/* header bottom line and the field's top line = card border (neutrals-300) */
+.z-main-head { border-bottom-color: var(--rui-color-neutrals-300); }
+.zara.is-mini .z-box, .zara.is-mini .z-box:focus-within, .zara.is-mini .z-box.is-disabled { box-shadow: inset 0 1px 0 var(--rui-color-neutrals-300); }
+/* content cards and question chips: neutrals-200 border (header line and field line stay neutrals-300) */
+.z-stat, .z-gate, .z-source, .z-table-wrap { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-200); }
+.z-followups .z-chip { box-shadow: 0 0 0 1px var(--rui-color-neutrals-200); }
+.z-suggest .z-chip { box-shadow: 0 0 0 1px var(--rui-color-neutrals-200), 0 8px 24px rgba(27, 39, 69, .16), 0 1px 3px rgba(27, 39, 69, .10); }
+.z-source:hover { box-shadow: inset 0 0 0 1px var(--rui-palette-stroke-button-primary-default); }
+.z-followups .z-chip:hover { box-shadow: 0 0 0 1px var(--rui-palette-stroke-button-primary-default); }
+.z-suggest .z-chip:hover { box-shadow: 0 0 0 1px var(--rui-palette-stroke-button-primary-default), 0 8px 24px rgba(27, 39, 69, .16), 0 1px 3px rgba(27, 39, 69, .10); }
+/* header status next to the name: Online green, Offline red */
+.z-brand-line { display: flex; align-items: baseline; gap: 6px; }
+.z-status { font: var(--rui-font-kit-caption) var(--rui-font-regular); }
+.z-status[data-on="true"] { color: var(--rui-palette-text-basic-success); }
+.z-status[data-on="false"] { color: var(--rui-palette-text-basic-error, var(--rui-color-red-400)); }
+/* "Zara • Online": bullet in the status colour */
+.z-brand-line { gap: 4px; }
+.z-status::before { content: "•\00a0"; }
+/* preset questions: green spark before the text (starter suggestions and follow-ups) */
+.z-chip .z-preset-ico { flex: none; width: 14px; height: 14px; fill: var(--rui-palette-background-button-primary-default); margin-right: 2px; }
+.z-followups .z-chip .z-preset-ico { width: 14px; height: 14px; vertical-align: -2px; margin-right: 6px; }
+.z-chip .z-preset-ico, .z-followups .z-chip .z-preset-ico { width: 12px; height: 12px; }
+.z-followups .z-chip .z-preset-ico { vertical-align: -1px; }
+/* follow-up chips: icon and text on one line (flex), long text ends with an ellipsis */
+.z-followups .z-chip { display: inline-flex; align-items: center; gap: 6px; line-height: 16px; overflow: visible; }
+.z-followups .z-chip .z-preset-ico { display: block; margin: 0; vertical-align: 0; }
+.z-followups .z-chip .z-chip-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* chat field: active = brand-green ring again (like the composer); at rest only the top line */
+.zara.is-mini .z-box:focus-within { box-shadow: inset 0 0 0 1.5px var(--rui-palette-stroke-button-primary-default); }
+/* panel outline drawn inside (inset), so it never doubles up next to the field's green ring */
+.z-panel { box-shadow: inset 0 0 0 1px rgba(187, 210, 224, .6), var(--z-shadow-panel); }
+.z-panel.is-morphing { box-shadow: none; }
+/* stop button: our dark navy (launcher / user message), not green */
+.z-send.is-stop, .z-send.is-stop:not(:disabled) { background: var(--rui-color-neutrals-1000); border-color: var(--rui-color-neutrals-1000) !important; color: var(--rui-color-neutrals-0); }
+.z-send.is-stop:hover:not(:disabled) { background: var(--rui-color-neutrals-900); border-color: var(--rui-color-neutrals-900) !important; }
+/* send (Enter): dark navy too, in the composer and in the chat; disabled stays light */
+.z-send:not(:disabled) { background: var(--rui-color-neutrals-1000); border-color: var(--rui-color-neutrals-1000) !important; color: var(--rui-color-neutrals-0); }
+.z-send:hover:not(:disabled) { background: var(--rui-color-neutrals-900); border-color: var(--rui-color-neutrals-900) !important; }
+.z-send:active:not(:disabled) { background: var(--rui-color-neutrals-800); border-color: var(--rui-color-neutrals-800) !important; }
+/* send = arrow-right-2: points right while disabled, turns 90° counter-clockwise (up) when it becomes active */
+.z-send svg { transform: rotate(0deg); transition: transform .3s cubic-bezier(.23, 1, .32, 1); }
+.z-send:not(:disabled) svg { transform: rotate(-90deg); }
+.z-send:not(:disabled):hover svg { transform: rotate(-90deg) translateX(2px); }
+.z-send.is-stop svg, .z-send.is-stop:hover svg { transform: none; }
+/* preset question chips: no pressed / focus states (no 2px blue border) */
+.z-suggest .z-chip, .z-suggest .z-chip:active, .z-suggest .z-chip:focus, .z-suggest .z-chip:focus-visible,
+.z-followups .z-chip, .z-followups .z-chip:active, .z-followups .z-chip:focus, .z-followups .z-chip:focus-visible {
+  border-color: transparent !important; outline: none; color: var(--rui-palette-text-button-border-default);
+}
+/* chat panel shadow = the field's shadow, so opening reads as the same object growing (the glass adds the depth) */
+.zara.is-mini .z-panel { box-shadow: inset 0 0 0 1px rgba(187, 210, 224, .6), 0 12px 32px rgba(27, 39, 69, .12); }
+.zara.is-mini .z-panel.is-morphing { box-shadow: none; }
+/* one shadow only — on the glass. The field and the chat panel have just their borders */
+.zara[data-state="compose"] .z-pill { box-shadow: 0 0 0 1px rgba(187, 210, 224, .95); }
+.zara[data-state="compose"] .z-pill:focus-within { box-shadow: 0 0 0 1.5px var(--rui-palette-stroke-button-primary-default); }
+.zara.is-mini .z-panel, .z-panel { box-shadow: inset 0 0 0 1px rgba(187, 210, 224, .6); }
+.z-panel.is-morphing, .zara.is-mini .z-panel.is-morphing { box-shadow: none; }
+/* glass shadow: Y 16, blur 48 (same rims as before) */
+.z-glass, .z-panel-glass {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), inset 0 -1px 0 rgba(187, 210, 224, .35), 0 0 0 1px rgba(27, 39, 69, .06), 0 16px 48px rgba(27, 39, 69, .16);
+}
+/* header actions (new, talk to a person, close) = ghost icon buttons: no hover plate, only the icon colour changes */
+.z-head-actions .z-icon-btn, .z-head-actions .z-human-btn,
+.z-head-actions .z-icon-btn:hover, .z-head-actions .z-human-btn:hover,
+.z-head-actions .z-icon-btn:active, .z-head-actions .z-human-btn:active { background: transparent !important; box-shadow: none !important; }
+.z-head-actions .z-icon-btn, .z-head-actions .z-human-btn { color: var(--rui-palette-text-button-ghost-default); }
+.z-head-actions .z-icon-btn:hover, .z-head-actions .z-human-btn:hover { color: var(--rui-palette-text-button-ghost-hover); }
+.z-head-actions .z-icon-btn:active, .z-head-actions .z-human-btn:active { color: var(--rui-palette-text-button-ghost-pressed); }
+/* until the email is confirmed the header has only Close: hidden by default, not hidden after the fact */
+.zara:not(.is-authed) .z-head-actions > :not([data-act="minimize"]) { display: none !important; }
+/* questions and source links: text grey (like "Answered …") at rest; on hover the border goes neutrals-400 and the text turns our dark */
+.z-suggest .z-chip, .z-followups .z-chip, .z-source span { color: var(--rui-color-neutrals-600) !important; transition: color .15s, box-shadow .15s; }
+.z-suggest .z-chip:hover, .z-followups .z-chip:hover, .z-source:hover span { color: var(--rui-color-neutrals-800) !important; }
+.z-source:hover { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-400); }
+.z-source:hover em { color: var(--rui-color-neutrals-800); }
+.z-followups .z-chip:hover { box-shadow: 0 0 0 1px var(--rui-color-neutrals-400); }
+.z-suggest .z-chip:hover { box-shadow: 0 0 0 1px var(--rui-color-neutrals-400), 0 8px 24px rgba(27, 39, 69, .16), 0 1px 3px rgba(27, 39, 69, .10); }
+/* reversed: dark at rest, grey on hover (border stays neutrals-400 on hover) */
+.z-suggest .z-chip, .z-followups .z-chip, .z-source span { color: var(--rui-color-neutrals-800) !important; }
+.z-suggest .z-chip:hover, .z-followups .z-chip:hover, .z-source:hover span { color: var(--rui-color-neutrals-600) !important; }
+.z-source em { color: var(--rui-color-neutrals-800); }
+.z-source:hover em { color: var(--rui-color-neutrals-600); }
+/* clickable items carry a green icon: source / document links like the preset questions' spark */
+.z-source em, .z-source:hover em { color: var(--rui-palette-background-button-primary-default); }
