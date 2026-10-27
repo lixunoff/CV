@@ -361,7 +361,6 @@ export default {
                 backgroundColor: "#ddf9ff",
                 darkBackgroundColor: "#2d4f5c"
               },
-
             ]
           }
         ]
