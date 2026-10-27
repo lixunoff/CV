@@ -993,3 +993,43 @@
 .z-source:hover em { color: var(--rui-color-neutrals-600); }
 /* clickable items carry a green icon: source / document links like the preset questions' spark */
 .z-source em, .z-source:hover em { color: var(--rui-palette-background-button-primary-default); }
+/* chat panel outline back outside (no shadow) */
+.zara.is-mini .z-panel, .z-panel { box-shadow: 0 0 0 1px rgba(187, 210, 224, .6); }
+.z-panel.is-morphing, .zara.is-mini .z-panel.is-morphing { box-shadow: none; }
+/* chat field: a normal 1px border all round at rest (neutrals-300), green ring when active */
+.zara.is-mini .z-box, .zara.is-mini .z-box.is-disabled { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300); }
+.zara.is-mini .z-box:focus-within { box-shadow: inset 0 0 0 1.5px var(--rui-palette-stroke-button-primary-default); }
+/* new chat (welcome): 160px living mark, gradient greeting, one line; preset questions right-aligned at the bottom by the field */
+.z-thread-inner:has(> .z-welcome) { min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
+.z-welcome, .zara.is-mini .z-welcome { flex: 1; display: flex; flex-direction: column; padding: 0; text-align: center; }
+.z-welcome-hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 0; }
+.z-welcome .z-symbol { width: 160px; height: 160px; margin: 0 0 24px; }
+.z-welcome .z-symbol svg { width: 100%; height: 100%; }
+.z-welcome h3, .zara.is-mini .z-welcome h3 {
+  margin: 0 0 10px; font-family: var(--rui-font-black); font-weight: normal; font-size: 32px; line-height: 38px; letter-spacing: -.03em;
+  background: linear-gradient(90deg, var(--z-mark-green) 0%, var(--rui-color-zicma-500) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.z-welcome p { margin: 0 auto; max-width: 340px; font-size: 14px; line-height: 22px; color: var(--rui-color-neutrals-600); }
+.z-welcome-q { margin-top: 16px; }
+/* like / dislike: Rui thumb icons; chosen = the filled icon in our dark, no plate. Hover plate is the same for both states */
+.z-ai-actions .z-icon-btn .z-fb-o, .z-ai-actions .z-icon-btn .z-fb-f { display: contents; }
+.z-ai-actions .z-icon-btn .z-fb-f, .z-ai-actions .z-icon-btn.is-on .z-fb-o { display: none; }
+.z-ai-actions .z-icon-btn.is-on .z-fb-f { display: contents; }
+.z-ai-actions .z-icon-btn.is-on, .z-ai-actions [data-act="fb-down"].is-on { background: transparent; color: var(--rui-color-neutrals-800); }
+.z-ai-actions .z-icon-btn:hover, .z-ai-actions .z-icon-btn.is-on:hover, .z-ai-actions [data-act="fb-down"].is-on:hover { background: var(--rui-palette-background-button-ghost-hover); color: var(--rui-color-neutrals-800); }
+/* "Talk to a person" after a dislike: same pill as the question chips — neutrals-200 border, neutrals-400 on hover, no shadow */
+.z-fb-hint .z-chip, .z-fb-hint .z-chip:active, .z-fb-hint .z-chip:focus, .z-fb-hint .z-chip:focus-visible {
+  border-radius: 999px; height: 40px; padding: 0 16px 0 14px; gap: 6px;
+  border-color: transparent !important; outline: none;
+  box-shadow: 0 0 0 1px var(--rui-color-neutrals-200); color: var(--rui-color-neutrals-800);
+  transition: color .15s, box-shadow .15s;
+}
+.z-fb-hint .z-chip:hover { box-shadow: 0 0 0 1px var(--rui-color-neutrals-400); color: var(--rui-color-neutrals-600); }
+.z-fb-hint .z-chip { text-transform: none; letter-spacing: normal; font: 12px/16px var(--rui-font-bold); }
+.z-fb-hint .z-chip svg { width: 14px; height: 14px; color: var(--rui-palette-background-button-primary-default); }
+/* "Talk to a person" after a dislike = the size of a source link: 32px high, 0 14 0 12, 6px gap, 16px icon, 13px text */
+.z-fb-hint .z-chip, .z-fb-hint .z-chip:active, .z-fb-hint .z-chip:focus, .z-fb-hint .z-chip:focus-visible { height: 32px; padding: 0 14px 0 12px; gap: 6px; font: 13px/16px var(--rui-font-regular); }
+.z-fb-hint .z-chip svg { width: 16px; height: 16px; }
+/* answer actions (like, dislike, copy) and "Talk to a person" exist only after the email check */
+.zara:not(.is-authed) .z-ai-actions, .zara:not(.is-authed) .z-fb-hint, .zara:not(.is-authed) .z-chip--human { display: none !important; }
