@@ -1276,3 +1276,5 @@
   }
   .zara[data-state="compose"] .z-dock::before { opacity: 1; }
 }
+/* phones: scrim only darkens (no blur) */
+@media (max-width: 639px) { .z-dock::before { -webkit-backdrop-filter: none; backdrop-filter: none; } }

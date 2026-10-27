@@ -1005,7 +1005,7 @@
     else if (act === 'clear-box') { boxInput.value = ''; fitBox(); boxInput.focus({ preventScroll: true }); }
     else if (act === 'clear') { dockInput.value = ''; fitDock(); dockInput.focus({ preventScroll: true }); }
     else if (act === 'minimize') { openSessionId = activeId; closeChat(); }
-    else if (act === 'new') { if (streaming) return; activeId = null; renderWelcome(); renderList(); boxInput.focus(); panel.classList.remove('side-open'); }
+    else if (act === 'new') { if (streaming) return; activeId = null; renderWelcome(); renderList(); if (root.contains(document.activeElement)) document.activeElement.blur(); panel.classList.remove('side-open'); } // new chat opens unfocused
     else if (act === 'side') panel.classList.toggle('side-open');
     else if (act === 'size') setMini(!mini);
     else if (act === 'copy') copyAnswer(t);
