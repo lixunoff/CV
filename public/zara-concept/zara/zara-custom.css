@@ -1033,3 +1033,13 @@
 .z-fb-hint .z-chip svg { width: 16px; height: 16px; }
 /* answer actions (like, dislike, copy) and "Talk to a person" exist only after the email check */
 .zara:not(.is-authed) .z-ai-actions, .zara:not(.is-authed) .z-fb-hint, .zara:not(.is-authed) .z-chip--human { display: none !important; }
+/* phones: the chat panel follows the visual viewport (above the keyboard) */
+@media (max-width: 760px) {
+  .zara.is-mini .z-panel { top: calc(var(--vvt, 0px) + 10px); bottom: auto; height: calc(var(--vvh, 100dvh) - 20px); }
+}
+/* touch devices: inputs at 16px so iOS doesn't zoom the page on focus; code slots grow to fit */
+@media (hover: none) and (pointer: coarse) {
+  .z-gate .z-field input, .z-box .z-input, .z-compose .z-input { font-size: 16px; }
+  .z-otp input, .z-otp input:hover, .z-otp input:focus, .z-otp input:disabled { width: 16px; height: 22px; font-size: 16px; line-height: 22px; }
+  .z-otp { gap: 10px; }
+}

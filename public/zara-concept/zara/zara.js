@@ -532,7 +532,7 @@
       // the symbol in the field is just the mark: no button, no flip; the chat opens when a question is sent
       setTimeout(() => dockInput.focus({ preventScroll: true }), 160);
     }
-    if (next === 'chat') { morphOpen(from, fromR, prev); setTimeout(() => boxInput.focus({ preventScroll: true }), 420); }
+    if (next === 'chat') { morphOpen(from, fromR, prev); if (document.activeElement && root.contains(document.activeElement)) document.activeElement.blur(); } // the chat field opens unfocused: no caret while Zara answers
     if (next !== 'compose') { orb.tabIndex = -1; orb.classList.remove('is-hint'); clearTimeout(orb._hint); }
     if (next === 'idle') {
       if (root.contains(document.activeElement)) document.activeElement.blur();
@@ -573,7 +573,6 @@
     if (fromField) {
       restorePh = boxInput.placeholder;
       boxInput.placeholder = dockInput.placeholder;
-      boxInput.focus({ preventScroll: true });
     }
     // everything else arrives a beat after the surface
     const parts = [...panel.querySelectorAll(':scope > .z-side, .z-main-head, .z-thread, .z-disclaimer')];
@@ -1193,6 +1192,19 @@
   };
   thread.addEventListener('wheel', () => { pinUntil = 0; }, { passive: true });
   thread.addEventListener('touchmove', () => { pinUntil = 0; }, { passive: true });
+
+  /* Phones: the on-screen keyboard shrinks the visual viewport, not the layout one, so a fixed panel ends up behind it.
+     Track the visual viewport (height + offset) in CSS vars the mobile panel uses, and when a field in the chat gets focus
+     keep the conversation scrolled to the bottom, so the field being typed in stays on screen. */
+  const vv = window.visualViewport;
+  const syncVV = () => { if (!vv) return; root.style.setProperty('--vvh', vv.height + 'px'); root.style.setProperty('--vvt', vv.offsetTop + 'px'); };
+  const typingInChat = () => { const a = document.activeElement; return !!a && root.contains(a) && a.matches('.z-gate input, .z-otp input, .z-box .z-input'); };
+  if (vv) {
+    vv.addEventListener('resize', () => { syncVV(); if (typingInChat()) pinBottom(700); });
+    vv.addEventListener('scroll', syncVV);
+    syncVV();
+  }
+  root.addEventListener('focusin', (e) => { if (e.target.matches && e.target.matches('.z-gate input, .z-otp input')) setTimeout(() => pinBottom(900), 60); });
 
   function gateAfter() {
     root.classList.add('is-gated');
