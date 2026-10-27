@@ -24,6 +24,8 @@
     ext: R(["e:M4.9999 6.84999C4.6949 6.84999 4.4024 6.97115 4.18673 7.18682C3.97106 7.40249 3.8499 7.69499 3.8499 7.99999V19C3.8499 19.305 3.97106 19.5975 4.18673 19.8132C4.4024 20.0288 4.6949 20.15 4.9999 20.15H15.9999C16.3049 20.15 16.5974 20.0288 16.8131 19.8132C17.0287 19.5975 17.1499 19.305 17.1499 19V13C17.1499 12.5306 17.5305 12.15 17.9999 12.15C18.4693 12.15 18.8499 12.5306 18.8499 13V19C18.8499 19.7559 18.5496 20.4808 18.0152 21.0152C17.4807 21.5497 16.7558 21.85 15.9999 21.85H4.9999C4.24403 21.85 3.51913 21.5497 2.98465 21.0152C2.45017 20.4808 2.1499 19.7559 2.1499 19V7.99999C2.1499 7.24413 2.45017 6.51922 2.98465 5.98474C3.51913 5.45026 4.24404 5.14999 4.9999 5.14999H10.9999C11.4693 5.14999 11.8499 5.53055 11.8499 5.99999C11.8499 6.46944 11.4693 6.84999 10.9999 6.84999H4.9999Z", "M14.1499 2.99999C14.1499 2.53055 14.5305 2.14999 14.9999 2.14999H20.9999C21.4693 2.14999 21.8499 2.53055 21.8499 2.99999V8.99999C21.8499 9.46944 21.4693 9.84999 20.9999 9.84999C20.5305 9.84999 20.1499 9.46944 20.1499 8.99999V5.05207L10.6009 14.601C10.269 14.933 9.73081 14.933 9.39886 14.601C9.06692 14.2691 9.06692 13.7309 9.39886 13.399L18.9478 3.84999H14.9999C14.5305 3.84999 14.1499 3.46944 14.1499 2.99999Z"]), // Rui Icons Set / external-link
     file: R(["e:M4.98465 2.98474C5.51913 2.45026 6.24404 2.14999 6.9999 2.14999H13.9999C14.2253 2.14999 14.4415 2.23955 14.6009 2.39895L19.6009 7.39895C19.7603 7.55836 19.8499 7.77456 19.8499 7.99999L19.8499 19C19.8499 19.7559 19.5496 20.4808 19.0152 21.0152C18.4807 21.5497 17.7558 21.85 16.9999 21.85H6.9999C6.24403 21.85 5.51913 21.5497 4.98465 21.0152C4.45017 20.4808 4.1499 19.7559 4.1499 19V4.99999C4.1499 4.24413 4.45017 3.51922 4.98465 2.98474ZM13.6918 8.30814C14.0387 8.65508 14.5093 8.84999 14.9999 8.84999H18.1499V19C18.1499 19.305 18.0287 19.5975 17.8131 19.8132C17.5974 20.0288 17.3049 20.15 16.9999 20.15H6.9999C6.6949 20.15 6.4024 20.0288 6.18673 19.8132C5.97106 19.5975 5.8499 19.305 5.8499 19V4.99999C5.8499 4.69499 5.97106 4.40249 6.18673 4.18682C6.4024 3.97115 6.6949 3.84999 6.9999 3.84999H13.1499V6.99999C13.1499 7.49064 13.3448 7.9612 13.6918 8.30814ZM14.8499 6.99999C14.8499 7.03978 14.8657 7.07793 14.8938 7.10606C14.922 7.13419 14.9601 7.14999 14.9999 7.14999H16.9478L14.8499 5.05207V6.99999Z"]), // Rui Icons Set / file
     headset: R(["M19.1504 14C19.1504 13.695 19.0291 13.4022 18.8135 13.1865C18.5978 12.9709 18.305 12.8496 18 12.8496H17C16.695 12.8496 16.4022 12.9709 16.1865 13.1865C15.9709 13.4022 15.8496 13.695 15.8496 14V17C15.8496 17.305 15.9709 17.5978 16.1865 17.8135C16.4022 18.0291 16.695 18.1504 17 18.1504H18C18.305 18.1504 18.5978 18.0291 18.8135 17.8135C19.0291 17.5978 19.1504 17.305 19.1504 17V14ZM8.15039 14C8.15039 13.695 8.02914 13.4022 7.81348 13.1865C7.59781 12.9709 7.305 12.8496 7 12.8496H6C5.695 12.8496 5.40219 12.9709 5.18652 13.1865C4.97086 13.4022 4.84961 13.695 4.84961 14V17C4.84961 17.305 4.97086 17.5978 5.18652 17.8135C5.40219 18.0291 5.695 18.1504 6 18.1504H7C7.305 18.1504 7.59781 18.0291 7.81348 17.8135C8.02914 17.5978 8.15039 17.305 8.15039 17V14ZM20.8496 17C20.8496 17.7559 20.5501 18.4811 20.0156 19.0156C19.6568 19.3744 19.2107 19.6233 18.7285 19.751C18.4218 20.6957 17.5639 21.4114 16.623 21.8818C15.3961 22.4953 13.7603 22.8496 12 22.8496C11.5306 22.8496 11.1504 22.4694 11.1504 22C11.1504 21.5306 11.5306 21.1504 12 21.1504C13.5535 21.1504 14.9178 20.8335 15.8623 20.3613C16.2149 20.1851 16.4785 20.0034 16.6729 19.8291C16.0375 19.7556 15.4411 19.4724 14.9844 19.0156C14.4499 18.4811 14.1504 17.7559 14.1504 17V14C14.1504 13.2441 14.4499 12.5189 14.9844 11.9844C15.5189 11.4499 16.2441 11.1504 17 11.1504H18C18.4003 11.1504 18.7911 11.2359 19.1504 11.3945V11C19.1504 9.1037 18.3965 7.28522 17.0557 5.94434C15.7148 4.60345 13.8963 3.84961 12 3.84961C10.1037 3.84961 8.28522 4.60345 6.94434 5.94434C5.60345 7.28522 4.84961 9.1037 4.84961 11V11.3945C5.20885 11.2359 5.59971 11.1504 6 11.1504H7C7.75587 11.1504 8.48115 11.4499 9.01562 11.9844C9.5501 12.5189 9.84961 13.2441 9.84961 14V17C9.84961 17.7559 9.5501 18.4811 9.01562 19.0156C8.48115 19.5501 7.75587 19.8496 7 19.8496H6C5.24413 19.8496 4.51885 19.5501 3.98438 19.0156C3.4499 18.4811 3.15039 17.7559 3.15039 17V11C3.15039 8.65283 4.08249 6.40188 5.74219 4.74219C7.40188 3.08249 9.65283 2.15039 12 2.15039C14.3472 2.15039 16.5981 3.08249 18.2578 4.74219C19.9175 6.40188 20.8496 8.65283 20.8496 11V17Z"]), // Rui Icons Set / headset (Zara / Panel Header → Support)
+    backArrow: R(["M10.3993 5.39941C10.7313 5.06747 11.2686 5.06747 11.6005 5.39941C11.9325 5.73136 11.9325 6.26864 11.6005 6.60058L7.05072 11.1504H18.9999C19.4694 11.1504 19.8495 11.5306 19.8495 12C19.8495 12.4694 19.4694 12.8496 18.9999 12.8496H7.05072L11.6005 17.3994C11.9325 17.7314 11.9325 18.2686 11.6005 18.6006C11.2686 18.9325 10.7313 18.9325 10.3993 18.6006L4.39935 12.6006C4.0674 12.2686 4.0674 11.7314 4.39935 11.3994L10.3993 5.39941Z"]), // Rui Icons Set / arrow-left-2
+    chevUp: R(["e:M11.3989 8.39898C11.7308 8.06704 12.269 8.06704 12.6009 8.39898L18.6009 14.399C18.9329 14.7309 18.9329 15.2691 18.6009 15.6011C18.269 15.933 17.7308 15.933 17.3989 15.6011L11.9999 10.2021L6.60094 15.6011C6.269 15.933 5.73081 15.933 5.39886 15.6011C5.06692 15.2691 5.06692 14.7309 5.39886 14.399L11.3989 8.39898Z"]), // Rui Icons Set / chevron-up
     close: R(["M18.6009 5.39896C18.9329 5.7309 18.9329 6.2691 18.6009 6.60104L13.202 12L18.6009 17.399C18.9329 17.7309 18.9329 18.2691 18.6009 18.601C18.269 18.933 17.7308 18.933 17.3989 18.601L11.9999 13.2021L6.60094 18.601C6.269 18.933 5.73081 18.933 5.39886 18.601C5.06692 18.2691 5.06692 17.7309 5.39886 17.399L10.7978 12L5.39886 6.60104C5.06692 6.2691 5.06692 5.7309 5.39886 5.39896C5.73081 5.06701 6.269 5.06701 6.60094 5.39896L11.9999 10.7979L17.3989 5.39896C17.7308 5.06701 18.269 5.06701 18.6009 5.39896Z"]),
     minimize: R(["e:M4.1499 12C4.1499 11.5306 4.53046 11.15 4.9999 11.15H18.9999C19.4693 11.15 19.8499 11.5306 19.8499 12C19.8499 12.4694 19.4693 12.85 18.9999 12.85H4.9999C4.53046 12.85 4.1499 12.4694 4.1499 12Z"]),
     plus: R(["M12.8499 5C12.8499 4.53056 12.4693 4.15 11.9999 4.15C11.5305 4.15 11.1499 4.53056 11.1499 5V11.15H4.9999C4.53046 11.15 4.1499 11.5306 4.1499 12C4.1499 12.4694 4.53046 12.85 4.9999 12.85H11.1499V19C11.1499 19.4694 11.5305 19.85 11.9999 19.85C12.4693 19.85 12.8499 19.4694 12.8499 19V12.85H18.9999C19.4693 12.85 19.8499 12.4694 19.8499 12C19.8499 11.5306 19.4693 11.15 18.9999 11.15H12.8499V5Z"]),
@@ -370,32 +372,18 @@
 
         <section class="z-ticket" aria-label="Talk to a person">
           <div class="z-ticket-card">
+            <button class="z-back-btn" type="button" data-act="ticket-close" aria-label="Hide and return to the conversation">${ICON.chevUp}<span>Hide</span></button>
             <header class="z-ticket-head">
               <span class="z-ticket-ico">${ICON.person}</span>
               <div><h3>Talk to a person</h3><p>Open a ticket with a ZiCMA representative. Their reply comes to this chat and to your email; this request doesn’t go to Zara.</p></div>
-              <button class="z-icon-btn" type="button" data-act="ticket-close" aria-label="Close">${ICON.close}</button>
             </header>
             <form class="z-ticket-form" novalidate>
-              <label class="z-field z-field--icon">${ICON.person}<input name="name" autocomplete="name" placeholder="Your name"><span>Full name</span></label>
+              <label class="z-field z-field--icon z-field--sm">${ICON.person}<input name="name" autocomplete="name" placeholder="Your name"><span>Full name</span></label>
+              <label class="z-field"><textarea name="msg" rows="4" placeholder=" "></textarea><span>How can we help? <i>*</i></span><em class="z-err">Add a short description.</em></label>
               <div class="z-context">
                 <span class="z-context-label">Shared with the representative</span>
-                <label class="z-attach z-attach-conv"><input type="checkbox" name="conv" checked><span class="z-attach-ico">${ICON.chat}</span><span class="z-attach-text"><b>This conversation with Zara</b><small class="z-conv-ctx"></small></span><span class="z-check">${ICON.check}</span></label>
+                <label class="z-attach z-attach-conv"><input type="checkbox" name="conv" checked><span class="z-attach-ico">${ICON.chat}</span><span class="z-attach-text"><b>Attach this chat with Zara to this ticket</b><small class="z-conv-ctx"></small></span><span class="z-check">${ICON.check}</span></label>
               </div>
-              <!-- without a shared conversation the representative needs a topic and a description -->
-              <div class="z-manual">
-                <label class="z-field">
-                  <select name="topic">
-                    <option>Registration &amp; accounts</option>
-                    <option>Project onboarding</option>
-                    <option>Credits &amp; registry data</option>
-                    <option>Article 6 &amp; corresponding adjustments</option>
-                    <option>Technical issue</option>
-                    <option>Other</option>
-                  </select><span>Topic</span>
-                </label>
-                <label class="z-field"><textarea name="msg" rows="4" placeholder="Describe your question or issue"></textarea><span>How can we help? <i>*</i></span><em class="z-err">Add a short description.</em></label>
-              </div>
-              <label class="z-field z-clarify"><textarea name="note" rows="3" placeholder="Anything the representative should know beyond the conversation"></textarea><span>Clarify your request <small>optional</small></span></label>
               <footer class="z-ticket-foot">
                 <button type="button" class="z-btn z-btn--ghost" data-act="ticket-close">Cancel</button>
                 <button type="submit" class="z-btn z-btn--primary">Submit ticket</button>
@@ -1064,7 +1052,8 @@
     ticket.classList.remove('is-done');
     panel.classList.add('ticket-open');
     $('.z-ticket-to').textContent = auth.email; // already confirmed, so the form doesn't ask for it
-    setTimeout(() => (tForm.name.value ? (ticketSession ? tForm.note : tForm.msg) : tForm.name).focus({ preventScroll: true }), 300);
+    // opens without focusing a field: people first see what it is
+    if (root.contains(document.activeElement)) document.activeElement.blur();
   }
 
   function closeTicket() {
@@ -1078,12 +1067,12 @@
     tForm.classList.add('was-validated');
     const sharing = tForm.classList.contains('is-sharing');
     const email = auth.email, msg = tForm.msg.value.trim();
-    const okMsg = sharing || !!msg;
+    const okMsg = !!msg; // name, the question and (optionally) the conversation: that's the whole form
     tForm.msg.closest('.z-field').classList.toggle('is-invalid', !okMsg);
     if (!okMsg) return tForm.msg.focus();
 
     const id = 'ZCR-' + String(Math.floor(10000 + Math.random() * 89999));
-    const topicName = sharing ? TOPIC_BY_TAG[ticketSession.tag] || TOPIC_BY_TAG.guide : tForm.topic.value;
+    const topicName = (ticketSession && TOPIC_BY_TAG[ticketSession.tag]) || TOPIC_BY_TAG.guide;
     let s = activeId && sessions.find((x) => x.id === activeId);
     if (!s) {
       s = { id: 's' + Date.now(), title: 'Ticket: ' + topicName, tag: 'ticket', updated: Date.now(), messages: [] };
@@ -1102,7 +1091,6 @@
   });
   tForm.conv.addEventListener('change', () => {
     syncTicketMode();
-    if (!tForm.conv.checked) setTimeout(() => tForm.msg.focus({ preventScroll: true }), 50);
   });
   tForm.addEventListener('input', (e) => {
     if (tForm.classList.contains('was-validated')) e.target.closest('.z-field')?.classList.remove('is-invalid');

@@ -1043,3 +1043,115 @@
   .z-otp input, .z-otp input:hover, .z-otp input:focus, .z-otp input:disabled { width: 16px; height: 22px; font-size: 16px; line-height: 22px; }
   .z-otp { gap: 10px; }
 }
+/* Talk to a person: not a popup over a blurred chat, a full view — covers the thread and the field, only the header stays */
+.z-ticket, .zara.is-mini .z-ticket {
+  top: 64px; padding: 0; align-items: stretch; justify-content: stretch;
+  background: var(--rui-color-neutrals-0);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  border-radius: 0 0 28px 28px;
+}
+.z-ticket-card, .zara.is-mini .z-ticket-card {
+  max-width: none; max-height: none; height: 100%; box-sizing: border-box;
+  padding: 24px 20px; border-radius: 0; box-shadow: none;
+  scrollbar-width: none;
+  transform: translateY(8px); transition: transform .3s cubic-bezier(.23, 1, .32, 1);
+}
+.z-ticket-card::-webkit-scrollbar { display: none; }
+@media (max-width: 760px) { .z-ticket { padding: 0; align-items: stretch; } .z-ticket-card { padding: 20px 16px; } }
+/* ticket view: "Back" pill top-right instead of a close cross — same size/style as the link pills */
+.z-back-btn {
+  flex: none; display: inline-flex; align-items: center; gap: 6px;
+  height: 32px; padding: 0 14px 0 12px; border-radius: 999px; border: 0; cursor: pointer;
+  background: var(--rui-color-neutrals-0); box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-200);
+  font: 13px/16px var(--rui-font-regular); color: var(--rui-color-neutrals-800);
+  transition: color .15s, box-shadow .15s;
+}
+.z-back-btn svg { width: 16px; height: 16px; color: var(--rui-palette-background-button-primary-default); }
+.z-back-btn:hover { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-400); color: var(--rui-color-neutrals-600); }
+.z-ticket-card > .z-back-btn { margin: 0 0 20px; }
+/* ticket view slides in from the right (and back out to the right on Back) */
+.z-ticket, .zara.is-mini .z-ticket {
+  opacity: 1; transform: translateX(100%);
+  transition: transform .3s cubic-bezier(.4, 0, .2, 1), visibility 0s .3s;
+}
+.z-panel.ticket-open .z-ticket {
+  opacity: 1; transform: none;
+  transition: transform .4s cubic-bezier(.23, 1, .32, 1), visibility 0s;
+}
+.z-ticket-card, .z-panel.ticket-open .z-ticket-card { transform: none; transition: none; }
+@media (prefers-reduced-motion: reduce) { .z-ticket, .z-panel.ticket-open .z-ticket { transition: visibility 0s; } }
+/* ticket view drops down from under the header and folds back up on Hide */
+.z-ticket, .zara.is-mini .z-ticket { transform: translateY(-100%); }
+.z-panel.ticket-open .z-ticket { transform: none; }
+/* the header sits above the sliding sheet, so the sheet appears from under it */
+.z-main-head { position: relative; z-index: 5; background: var(--rui-color-neutrals-100); }
+.z-ticket-card > .z-back-btn { display: flex; margin: 0 auto 20px; }
+/* Hide = floating button at the bottom centre of the ticket view, with a soft shadow */
+.z-ticket-card, .zara.is-mini .z-ticket-card { position: static; padding-bottom: 80px; }
+.z-ticket-card > .z-back-btn {
+  position: absolute; left: 50%; bottom: 16px; z-index: 2; margin: 0;
+  transform: translateX(-50%);
+  height: 40px; padding: 0 18px 0 14px;
+  box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-200), 0 8px 24px rgba(27, 39, 69, .16), 0 1px 3px rgba(27, 39, 69, .10);
+}
+.z-ticket-card > .z-back-btn:hover { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-400), 0 8px 24px rgba(27, 39, 69, .16), 0 1px 3px rgba(27, 39, 69, .10); }
+/* Hide button shadow: Y 4, blur 16, 8% */
+.z-ticket-card > .z-back-btn { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-200), 0 4px 16px rgba(27, 39, 69, .08); }
+.z-ticket-card > .z-back-btn:hover { box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-400), 0 4px 16px rgba(27, 39, 69, .08); }
+/* ── Talk to a person: content ── */
+.z-ticket-ico { display: none; }
+.z-ticket-head { margin-bottom: 16px; }
+.z-ticket-head h3 { margin: 0 0 4px; font-size: 18px; line-height: 24px; letter-spacing: -.01em; }
+
+/* name = Rui Base Input, Size=Small, no label (same as the email field) */
+.z-ticket .z-field--sm > span { display: none; }
+.z-ticket .z-field--sm input {
+  height: 40px; padding: 0 12px 2px 30px; border-radius: 6px; font-size: 12px; line-height: 16px;
+  border: 1px solid var(--rui-palette-stroke-input-default); background-color: var(--rui-palette-background-input-default);
+  transition: border-color .15s, box-shadow .15s;
+}
+.z-ticket .z-field--sm input::placeholder { color: var(--rui-palette-text-input-placeholder); }
+.z-ticket .z-field--sm input:hover { border-color: var(--rui-palette-stroke-input-hover); }
+.z-ticket .z-field--sm input:focus { border-color: var(--rui-palette-stroke-input-focus-border); box-shadow: 0 0 0 2px var(--rui-palette-stroke-input-focus-outline); }
+.z-ticket .z-field--sm > svg { left: 12px; top: 13px; width: 14px; height: 14px; color: var(--rui-palette-icon-input-enabled); }
+.z-ticket .z-field--sm.is-invalid input { border-color: var(--rui-palette-stroke-input-error-default); background-color: var(--rui-palette-background-input-error-default); }
+
+/* text areas = Rui Text Area, Size=Medium: label sits inside as the placeholder (14/22);
+   on focus or with text it moves to the top and shrinks (10/14), the text goes under it */
+.z-ticket .z-field:has(> textarea) > span {
+  top: 16px; left: 16px; right: 16px; max-width: none; padding: 0; background: none;
+  font-size: 14px; line-height: 22px; color: var(--rui-palette-text-input-placeholder);
+  transition: top .18s cubic-bezier(.23, 1, .32, 1), font-size .18s cubic-bezier(.23, 1, .32, 1), line-height .18s cubic-bezier(.23, 1, .32, 1), color .15s;
+}
+.z-ticket .z-field > textarea {
+  height: 152px; min-height: 152px; resize: none; box-sizing: border-box;
+  padding: 16px; border-radius: 8px; font-size: 14px; line-height: 22px;
+  border: 1px solid var(--rui-palette-stroke-input-default); background-color: var(--rui-palette-background-input-default);
+  transition: border-color .15s, box-shadow .15s, padding .18s cubic-bezier(.23, 1, .32, 1);
+}
+.z-ticket .z-field > textarea::placeholder { color: transparent; }
+.z-ticket .z-field > textarea:hover { border-color: var(--rui-palette-stroke-input-hover); }
+.z-ticket .z-field > textarea:focus { border-color: var(--rui-palette-stroke-input-focus-border); box-shadow: 0 0 0 2px var(--rui-palette-stroke-input-focus-outline); }
+.z-ticket .z-field > textarea:focus, .z-ticket .z-field > textarea:not(:placeholder-shown) { padding: 30px 16px 12px; }
+.z-ticket .z-field:has(> textarea:focus) > span, .z-ticket .z-field:has(> textarea:not(:placeholder-shown)) > span {
+  top: 12px; font-size: 10px; line-height: 14px; color: var(--rui-palette-text-input-placeholder);
+}
+.z-ticket .z-field.is-invalid > textarea { border-color: var(--rui-palette-stroke-input-error-default); background-color: var(--rui-palette-background-input-error-default); }
+.z-ticket .z-field.is-invalid:has(> textarea) > span { color: var(--rui-palette-text-input-error-placeholder); }
+@media (hover: none) and (pointer: coarse) { .z-ticket .z-field--sm input { font-size: 16px; } .z-ticket .z-field > textarea { font-size: 16px; } }
+/* ticket footer: Cancel / Submit right-aligned right under "Shared with the representative", the note goes below them */
+.z-ticket-foot { flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 0; }
+.z-ticket-foot p { order: 2; flex: 1 0 100%; margin-top: 4px; }
+/* the note goes above the buttons */
+.z-ticket-foot p { order: -1; margin: 0 0 4px; }
+/* share the conversation: just a checkbox and one regular line, no box, no label, no icon */
+.z-context { padding: 0; background: none; gap: 0; }
+.z-context-label, .z-attach-ico, .z-attach-text small { display: none; }
+.z-attach { padding: 2px 0; gap: 8px; background: none; box-shadow: none; cursor: pointer; }
+.z-attach .z-check { order: -1; }
+.z-attach-text b { font-family: var(--rui-font-regular); font-size: 13px; line-height: 18px; color: var(--rui-color-neutrals-800); }
+.z-attach input:not(:checked) ~ .z-attach-text { opacity: 1; }
+/* "How can we help?" text area: 104px high (≈ 1.5× lower than 152, on the 8px grid) */
+.z-ticket .z-field > textarea { height: 104px; min-height: 104px; }
+/* twice the space above the buttons: 12 → 24px */
+.z-ticket-foot p { margin: 0 0 16px; }
