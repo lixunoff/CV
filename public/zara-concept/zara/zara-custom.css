@@ -151,7 +151,7 @@
 .zara [data-tip]:focus-visible::after, .zara [data-tip]:focus-visible::before { opacity: 1; visibility: visible; transform: none; }
 /* the labelled "Talk to a person" button needs no tooltip */
 .zara:not(.is-mini) .z-human-btn::after, .zara:not(.is-mini) .z-human-btn::before { content: none; }
-@media (max-width: 760px) {
+@media (max-width: 639px) {
   .zara .z-human-btn::after { content: attr(data-tip); }
   .zara .z-human-btn::before { content: ""; }
 }
@@ -635,7 +635,7 @@
 @media (max-width: 1024px) {
   .z-panel { width: calc(100vw - 48px); top: 24px; bottom: 24px; grid-template-columns: 248px 1fr; }
 }
-@media (max-width: 760px) {
+@media (max-width: 639px) {
   .z-dock { right: 16px; bottom: 16px; }
   .zara[data-state="compose"] .z-pill { --w: calc(100vw - 32px); }
   .z-panel { width: calc(100vw - 20px); top: 10px; bottom: 10px; grid-template-columns: 1fr; }
@@ -688,11 +688,11 @@
 /* composer = mini chat panel width (440px), so sending only grows it upward */
 .zara[data-state="compose"] .z-pill { --w: min(440px, calc(100vw - 48px)); }
 .z-suggest { width: min(440px, calc(100vw - 48px)); }
-@media (max-width: 760px) {
+@media (max-width: 639px) {
   .zara[data-state="compose"] .z-pill { --w: calc(100vw - 32px); }
   .z-suggest { width: calc(100vw - 32px); }
 }
-@media (max-width: 760px) {
+@media (max-width: 639px) {
   .zara.is-mini .z-panel { width: calc(100vw - 32px); right: 16px; bottom: 16px; }
 }
 /* active composer: brand-green rim, the colour of the primary button (Create Account) */
@@ -1034,7 +1034,7 @@
 /* answer actions (like, dislike, copy) and "Talk to a person" exist only after the email check */
 .zara:not(.is-authed) .z-ai-actions, .zara:not(.is-authed) .z-fb-hint, .zara:not(.is-authed) .z-chip--human { display: none !important; }
 /* phones: the chat panel follows the visual viewport (above the keyboard) */
-@media (max-width: 760px) {
+@media (max-width: 639px) {
   .zara.is-mini .z-panel { top: calc(var(--vvt, 0px) + 10px); bottom: auto; height: calc(var(--vvh, 100dvh) - 20px); }
 }
 /* touch devices: inputs at 16px so iOS doesn't zoom the page on focus; code slots grow to fit */
@@ -1057,7 +1057,7 @@
   transform: translateY(8px); transition: transform .3s cubic-bezier(.23, 1, .32, 1);
 }
 .z-ticket-card::-webkit-scrollbar { display: none; }
-@media (max-width: 760px) { .z-ticket { padding: 0; align-items: stretch; } .z-ticket-card { padding: 20px 16px; } }
+@media (max-width: 639px) { .z-ticket { padding: 0; align-items: stretch; } .z-ticket-card { padding: 20px 16px; } }
 /* ticket view: "Back" pill top-right instead of a close cross — same size/style as the link pills */
 .z-back-btn {
   flex: none; display: inline-flex; align-items: center; gap: 6px;
@@ -1236,3 +1236,43 @@
 .z-source small { flex: none; }
 /* short trailing text ("p.8") had a 24px min-width, which looked like extra right padding */
 .z-source small { min-width: 0; }
+/* ── Phones ──
+   composer: no glass, sits right above the keyboard (the field opens focused, so the keyboard comes up with it);
+   chat: full screen on our background, no glass, no outline, no rounding; the field keeps an 8px inset */
+@media (max-width: 639px) {
+  .z-glass, .z-panel-glass { display: none !important; }
+  .z-dock { bottom: calc(16px + var(--kb, 0px)); }
+  .zara.is-mini .z-panel {
+    top: var(--vvt, 0px); left: 0; right: 0; bottom: auto; margin: 0;
+    width: 100%; height: var(--vvh, 100dvh);
+    border-radius: 0; box-shadow: none;
+  }
+  .zara.is-mini .z-foot { padding: 0 8px 8px; }
+  .z-ticket, .zara.is-mini .z-ticket { border-radius: 0; }
+}
+/* phones: starter questions stacked on the right above the field, like on desktop — no sideways scroller */
+@media (max-width: 639px) {
+  .z-suggest-row { flex-direction: column; align-items: flex-end; flex-wrap: nowrap; overflow: visible; padding: 0; -webkit-mask: none; mask: none; }
+  .z-suggest .z-chip { max-width: 100%; }
+}
+/* phones, open field: a dark scrim from the bottom of the screen up to the first question,
+   our dark #080C16 at 100% fading to 0%, the whole layer at 40% */
+@media (max-width: 639px) {
+  .z-dock::before {
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    left: -16px; right: -16px; top: 0; bottom: calc(-16px - var(--kb, 0px));
+    background: linear-gradient(to top, var(--rui-color-neutrals-1000) 0%, rgba(8, 12, 22, 0) 100%);
+    opacity: 0; transition: opacity .25s var(--z-ease);
+  }
+  .zara[data-state="compose"] .z-dock::before { opacity: .4; }
+}
+/* the scrim also blurs what's under it (16px); the 40% is baked into the colour and the fade is a mask,
+   so the blur fades out towards the first question together with the darkening */
+@media (max-width: 639px) {
+  .z-dock::before {
+    background: rgba(8, 12, 22, .4);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 100%); mask-image: linear-gradient(to top, #000 0%, transparent 100%);
+  }
+  .zara[data-state="compose"] .z-dock::before { opacity: 1; }
+}

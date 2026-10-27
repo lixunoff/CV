@@ -522,7 +522,9 @@
       renderSuggestions();
       pill.style.setProperty('--z-pill-h', '64px');
       // the symbol in the field is just the mark: no button, no flip; the chat opens when a question is sent
-      setTimeout(() => dockInput.focus({ preventScroll: true }), 160);
+      // phones: focus right away, inside the tap, so the keyboard opens with the field (iOS ignores a delayed focus)
+      if (window.matchMedia('(max-width: 639px)').matches) dockInput.focus({ preventScroll: true });
+      else setTimeout(() => dockInput.focus({ preventScroll: true }), 160);
     }
     if (next === 'chat') { morphOpen(from, fromR, prev); if (document.activeElement && root.contains(document.activeElement)) document.activeElement.blur(); } // the chat field opens unfocused: no caret while Zara answers
     if (next !== 'compose') { orb.tabIndex = -1; orb.classList.remove('is-hint'); clearTimeout(orb._hint); }
@@ -1220,7 +1222,7 @@
      Track the visual viewport (height + offset) in CSS vars the mobile panel uses, and when a field in the chat gets focus
      keep the conversation scrolled to the bottom, so the field being typed in stays on screen. */
   const vv = window.visualViewport;
-  const syncVV = () => { if (!vv) return; root.style.setProperty('--vvh', vv.height + 'px'); root.style.setProperty('--vvt', vv.offsetTop + 'px'); };
+  const syncVV = () => { if (!vv) return; root.style.setProperty('--vvh', vv.height + 'px'); root.style.setProperty('--vvt', vv.offsetTop + 'px'); root.style.setProperty('--kb', Math.max(0, window.innerHeight - vv.height - vv.offsetTop) + 'px'); };
   const typingInChat = () => { const a = document.activeElement; return !!a && root.contains(a) && a.matches('.z-gate input, .z-otp input, .z-box .z-input'); };
   if (vv) {
     vv.addEventListener('resize', () => { syncVV(); if (typingInChat()) pinBottom(700); });
