@@ -1328,3 +1328,10 @@
   font: 10px/1 var(--rui-font-bold); vertical-align: middle; top: -1px;
 }
 .z-ai-text .z-cite:hover { background: var(--rui-color-neutrals-800); color: var(--rui-color-neutrals-0); }
+/* phones: pin the dock to the bottom of the *visible* area (visual viewport) by its top edge,
+   instead of "bottom + keyboard height" — that estimate used window.innerHeight, which some phones report
+   differently with the keyboard open and pushed the field far up */
+@media (max-width: 639px) {
+  .z-dock { bottom: auto; top: calc(var(--vvt, 0px) + var(--vvh, 100dvh) - 16px); transform: translateY(-100%); }
+  .z-dock::before { bottom: -16px; }
+}
