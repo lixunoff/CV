@@ -1278,3 +1278,53 @@
 }
 /* phones: scrim only darkens (no blur) */
 @media (max-width: 639px) { .z-dock::before { -webkit-backdrop-filter: none; backdrop-filter: none; } }
+/* tooltips = Rui Tooltip: #53607C (ColorKit/background/tooltip), r2, padding 0.5/4/1.5/4, white 10/14 regular, no arrow, no shadow */
+.zara [data-tip]::after {
+  top: calc(100% + 4px); right: 0; max-width: 220px;
+  padding: .5px 4px 1.5px; border-radius: 2px; box-shadow: none;
+  background: var(--rui-color-neutrals-600);
+  font: 10px/14px var(--rui-font-regular); color: var(--rui-color-neutrals-0);
+}
+.zara [data-tip]::before { content: none !important; }
+.zara [data-tip-at="start"]::after { right: auto; left: 0; }
+/* send: not shown while there's nothing to send; it slides in (and turns its arrow up) with the first character */
+.z-send {
+  flex: none; overflow: hidden;
+  transition: width .25s var(--z-ease), margin .25s var(--z-ease), opacity .15s var(--z-ease), transform .25s cubic-bezier(.23, 1, .32, 1), background-color .15s, border-color .15s, color .15s;
+}
+.z-send:disabled:not(.is-stop) { width: 0; margin-left: -8px; border-width: 0 !important; opacity: 0; transform: scale(.6); pointer-events: none; }
+/* figures in an answer: a simple list (one-column table) — label left, number right (body bold), divider between rows */
+.z-stats, .zara.is-mini .z-stats {
+  display: flex; flex-direction: column; gap: 0; margin: 4px 0 16px;
+  border-radius: 12px; box-shadow: inset 0 0 0 1px var(--rui-color-neutrals-300); overflow: hidden;
+}
+.z-stat, .z-stat:hover {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  padding: 10px 14px; border-radius: 0; background: none; box-shadow: none;
+  border-bottom: 1px solid var(--rui-color-neutrals-300);
+}
+.z-stat:last-child { border-bottom: 0; }
+.z-stat span { order: -1; margin: 0; font: var(--rui-font-kit-body) var(--rui-font-regular); color: var(--rui-color-neutrals-600); }
+.z-stat b { font: var(--rui-font-kit-body) var(--rui-font-bold); font-weight: normal; letter-spacing: 0; color: var(--rui-color-neutrals-800); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* figures list: labels dark bold (they read as row headings), numbers dark regular */
+.z-stat span { font: var(--rui-font-kit-body) var(--rui-font-bold); color: var(--rui-color-neutrals-800); }
+.z-stat b { font: var(--rui-font-kit-body) var(--rui-font-regular); color: var(--rui-color-neutrals-800); }
+/* answer tables: project names dark bold, other cells dark regular, header labels grey (#53607C) */
+.z-table th { color: var(--rui-color-neutrals-600); }
+.z-table td { color: var(--rui-color-neutrals-800); font-family: var(--rui-font-regular); }
+.z-table td:first-child { color: var(--rui-color-neutrals-800); font-family: var(--rui-font-bold); font-weight: normal; }
+/* typing caret takes no height in the line, so the line doesn't grow/shrink by a pixel while text is written */
+.z-caret { display: inline-block; position: relative; width: 10px; height: 0; margin: 0; vertical-align: baseline; background: none; border-radius: 0; animation: none; }
+.z-caret::after {
+  content: ""; position: absolute; left: 2px; bottom: -0.2em; width: 8px; height: 1.15em; border-radius: 2px;
+  background: var(--rui-color-neutrals-1000); animation: z-blink 1s steps(2) infinite;
+}
+/* citation chip never makes its line taller (it did while the line was still being typed: 24 → 26px) */
+.z-ai-text .z-cite { vertical-align: middle; position: relative; top: -1px; }
+/* footnote numbers in the text: round, our dark background, white figure — they point to "1. …", "2. …" in the sources */
+.z-ai-text .z-cite {
+  display: inline-grid; place-items: center; width: 16px; height: 16px; min-width: 0; padding: 0; border-radius: 50%;
+  background: var(--rui-color-neutrals-1000); color: var(--rui-color-neutrals-0);
+  font: 10px/1 var(--rui-font-bold); vertical-align: middle; top: -1px;
+}
+.z-ai-text .z-cite:hover { background: var(--rui-color-neutrals-800); color: var(--rui-color-neutrals-0); }

@@ -207,7 +207,7 @@
         { p: 'About <b>1.6%</b> of issued mitigation outcomes (MOs) have been retired so far. Each MO represents one tonne of CO₂e reduced or removed <span class="z-cite" data-n="2">2</span>.' },
         { p: 'Want a breakdown by sector or by year of issuance? I can build a table from the credit registry.' },
       ],
-      sources: ['registry', 'report', 'faq'],
+      sources: ['registry', 'faq', 'report'],
       followups: ['Break it down by sector', 'What does “retired” mean?', 'Which projects issued the most?'],
     },
     projects: {
@@ -242,7 +242,7 @@
         ] },
         { p: 'If you get stuck, ZiCMA support is at <a href="mailto:support@zicma.org.zw">support@zicma.org.zw</a> <span class="z-cite" data-n="2">2</span>.' },
       ],
-      sources: ['howDev', 'regGuide', 'contacts'],
+      sources: ['howDev', 'contacts', 'regGuide'],
       followups: ['Which documents does a company need?', 'How do I onboard a project?', 'What are the registration fees?'],
     },
     ca: {
@@ -253,7 +253,7 @@
         { p: 'ZiCMA is Zimbabwe’s Designated National Authority under <b>Article 6 of the Paris Agreement</b>. It authorises activities and mitigation outcomes that can be used as ITMOs <span class="z-cite" data-n="2">2</span>. Credits on the registry can be retired with a corresponding adjustment inside the same digital system <span class="z-cite" data-n="3">3</span>.' },
         { p: 'So far, <b>45,595</b> MOs carry a corresponding adjustment on the registry.' },
       ],
-      sources: ['art6', 'art6Guide', 'about', 'howCA'],
+      sources: ['art6', 'about', 'howCA', 'art6Guide'],
       followups: ['How do I apply a corresponding adjustment?', 'What is an ITMO?', 'Can I use credits for voluntary offsets?'],
     },
     voluntary: {
@@ -693,6 +693,28 @@
     markAlive($('.z-welcome .z-symbol'), true); // a new chat waits with a living mark until the first question
   }
 
+  // "+" new chat: the current conversation lifts away and fades (ease-in, quick), then the welcome builds up:
+  // the mark grows in, the greeting and the line rise after it, the three questions arrive one by one
+  let newChatBusy = false;
+  function newChatTransition() {
+    if (newChatBusy) return;
+    const show = () => {
+      renderWelcome(); renderList(); thread.scrollTop = 0;
+      if (reduced()) return;
+      const ease = 'cubic-bezier(.23, 1, .32, 1)';
+      const mark = $('.z-welcome .z-symbol'), h = $('.z-welcome h3'), p = $('.z-welcome p');
+      mark && mark.animate([{ opacity: 0, transform: 'scale(.92)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: ease, fill: 'backwards' });
+      [h, p].forEach((x, i) => x && x.animate([{ opacity: 0, translate: '0 8px' }, { opacity: 1, translate: '0 0' }], { duration: 360, delay: 120 + i * 70, easing: ease, fill: 'backwards' }));
+      [...threadInner.querySelectorAll('.z-welcome-q .z-chip')].forEach((x, i) => x.animate(
+        [{ opacity: 0, translate: '0 8px' }, { opacity: 1, translate: '0 0' }], { duration: 320, delay: 300 + i * 70, easing: ease, fill: 'backwards' }));
+    };
+    const old = [...threadInner.children];
+    if (reduced() || !old.length) return show();
+    newChatBusy = true;
+    const outs = old.map((x) => x.animate([{ opacity: 1, translate: '0 0' }, { opacity: 0, translate: '0 -8px' }], { duration: 180, easing: 'cubic-bezier(.4, 0, 1, 1)', fill: 'forwards' }));
+    outs[outs.length - 1].onfinish = () => { newChatBusy = false; show(); };
+  }
+
   function renderSession(s) {
     title.textContent = s.title;
     boxInput.placeholder = 'Ask a follow-up…';
@@ -745,7 +767,7 @@
     }
     return '';
   }
-  const sourcesHTML = (a) => `<div class="z-sources">${a.sources.map((k, i) => { const s = SRC[k]; return `<a class="z-source" data-src="${i + 1}" href="${s.u}" target="_blank" rel="noopener"><em>${s.k === 'doc' || /\.(pdf|docx?|xlsx?)$/i.test(s.u) ? ICON.file : ICON.ext}</em><span>${s.t}</span><small>${s.d}</small></a>`; }).join('')}</div>`;
+  const sourcesHTML = (a) => `<div class="z-sources">${a.sources.map((k, i) => { const s = SRC[k]; return `<a class="z-source" data-src="${i + 1}" href="${s.u}" target="_blank" rel="noopener"><em>${s.k === 'doc' || /\.(pdf|docx?|xlsx?)$/i.test(s.u) ? ICON.file : ICON.ext}</em><span>${i + 1}. ${s.t}</span><small>${s.d}</small></a>`; }).join('')}</div>`;
   const stepsHTML = (steps, doneCount, collapsed) => `<div class="z-steps ${collapsed ? 'is-collapsed' : ''}">${steps.map((s, i) => {
     const done = i < doneCount;
     return `<div class="z-step ${done ? 'is-done' : ''}"><span class="z-step-dot">${done ? ICON.check : '<span class="z-spinner"></span>'}</span>${s}</div>`;
@@ -824,7 +846,19 @@
     const timers = [];
     let cancelled = false;
     const later = (fn, ms) => { const t = setTimeout(fn, ms); timers.push(t); return t; };
-    const scroll = () => { thread.scrollTop = thread.scrollHeight; };
+    // while the answer is written the thread glides after the text (eased each frame) instead of jumping a line at a time;
+    // it lets go as soon as the reader scrolls up
+    let follow = true, glideRaf = 0;
+    const glide = () => {
+      const max = thread.scrollHeight - thread.clientHeight, d = max - thread.scrollTop;
+      if (!follow || Math.abs(d) < 0.5) { glideRaf = 0; return; }
+      thread.scrollTop += d * 0.18;
+      glideRaf = requestAnimationFrame(glide);
+    };
+    const scroll = () => { if (reduced()) { thread.scrollTop = thread.scrollHeight; return; } if (follow && !glideRaf) { thread.style.scrollBehavior = 'auto'; glideRaf = requestAnimationFrame(glide); } };
+    const stopFollow = (e) => { if (e.deltaY < 0 || e.type === 'touchmove') follow = false; };
+    thread.addEventListener('wheel', stopFollow, { passive: true });
+    thread.addEventListener('touchmove', stopFollow, { passive: true });
 
     setBusy(true);
     streaming = { cancel() {
@@ -920,11 +954,21 @@
         wrap.insertAdjacentHTML('beforeend', sourcesHTML(a));
       }
       wrap.insertAdjacentHTML('beforeend', actionsHTML(msg) + (msg.stopped || !auth ? '' : followHTML(a)));
+      // sources, documents, the action row and the follow-up questions arrive one by one: a small lift from below + fade
+      if (!reduced()) {
+        const items = [...wrap.querySelectorAll(':scope > .z-sources > .z-source, :scope > .z-ai-actions, :scope > .z-followups > .z-chip')]
+          .filter((x) => x.offsetParent !== null);
+        items.forEach((x, i) => x.animate(
+          [{ opacity: 0, translate: '0 8px' }, { opacity: 1, translate: '0 0' }],
+          { duration: 320, delay: 80 + i * 70, easing: 'cubic-bezier(.23, 1, .32, 1)', fill: 'backwards' }));
+      }
       s.messages.push(msg);
       s.updated = Date.now();
       save(); renderList();
       streaming = null;
       setBusy(false);
+      thread.removeEventListener('wheel', stopFollow); thread.removeEventListener('touchmove', stopFollow);
+      setTimeout(() => { thread.style.scrollBehavior = ''; }, 800);
       if (!auth) gateAfter();
       scroll();
     }
@@ -985,7 +1029,15 @@
       return;
     }
     const act = t.dataset.act;
-    if (act === 'open') setState('compose');
+    if (act === 'open') {
+      // the field-with-questions preview is only for an empty chat; with a conversation open, the launcher reopens it directly
+      const s0 = openSessionId && sessions.find((x) => x.id === openSessionId);
+      if (s0 && s0.messages.length) {
+        setMini(true, false);
+        openChat(s0.id);
+        if (!auth && guestUsed) gateAfter();
+      } else setState('compose');
+    }
     else if (act === 'ticket') openTicket();
     else if (act === 'ticket-close') closeTicket();
     else if (act === 'gate-back') gateStep('email');
@@ -1005,7 +1057,7 @@
     else if (act === 'clear-box') { boxInput.value = ''; fitBox(); boxInput.focus({ preventScroll: true }); }
     else if (act === 'clear') { dockInput.value = ''; fitDock(); dockInput.focus({ preventScroll: true }); }
     else if (act === 'minimize') { openSessionId = activeId; closeChat(); }
-    else if (act === 'new') { if (streaming) return; activeId = null; renderWelcome(); renderList(); if (root.contains(document.activeElement)) document.activeElement.blur(); panel.classList.remove('side-open'); } // new chat opens unfocused
+    else if (act === 'new') { if (streaming) return; activeId = null; if (root.contains(document.activeElement)) document.activeElement.blur(); panel.classList.remove('side-open'); newChatTransition(); } // new chat opens unfocused
     else if (act === 'side') panel.classList.toggle('side-open');
     else if (act === 'size') setMini(!mini);
     else if (act === 'copy') copyAnswer(t);
